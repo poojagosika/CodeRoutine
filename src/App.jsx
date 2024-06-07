@@ -1,9 +1,12 @@
-import React from 'react'
+import React from "react";
+import Problems from "./Pages/ProblemSet/Problems";
 
 const App = () => {
   return (
-    <div>App</div>
-  )
-}
+    <div>
+      <Problems />
+    </div>
+  );
+};
 
-export default App
+export default App;
