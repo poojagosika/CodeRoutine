@@ -1,9 +1,14 @@
-import React from 'react'
+import React from "react";
+import { BrowserRouter, Routes } from "react-router-dom";
+import ResponsiveAppBar from "./Component/ResponsiveAppBar";
 
 const App = () => {
   return (
-    <div>App</div>
-  )
-}
+    <BrowserRouter>
+      <ResponsiveAppBar />
+      <Routes></Routes>
+    </BrowserRouter>
+  );
+};
 
-export default App
+export default App;
