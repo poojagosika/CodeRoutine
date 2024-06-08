@@ -7,17 +7,14 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Icon, IconButton } from "@mui/material";
+import { toast } from "react-toastify";
 
 const defaultTheme = createTheme();
 
@@ -26,9 +23,22 @@ const CombinedLink = React.forwardRef(function CombinedLink(props, ref) {
 });
 
 export default function SignIn() {
+  const navigate = useNavigate();
+  const [data, setData] = React.useState({
+    email: "",
+    password: "",
+  });
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
+    LoginUser(data)
+      .then((res) => {
+        toast.success(res.data.message);
+        navigate("/");
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+      });
   };
 
   return (
@@ -57,20 +67,22 @@ export default function SignIn() {
               margin="normal"
               required
               fullWidth
-              id="email"
+              type="email"
+              id={"email"}
               label="Email Address"
-              name="email"
+              name={"email"}
               autoComplete="email"
-              autoFocus
+              onChange={(e) => setData({ ...data, email: e.target.value })}
             />
             <TextField
               margin="normal"
               required
               fullWidth
-              name="password"
+              name={"password"}
               label="Password"
               type="password"
-              id="password"
+              id={"password"}
+              onChange={(e) => setData({ ...data, password: e.target.value })}
               autoComplete="current-password"
             />
             <Button
