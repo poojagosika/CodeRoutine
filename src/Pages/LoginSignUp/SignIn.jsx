@@ -15,6 +15,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { toast } from "react-toastify";
+import { LoginUser } from "../../Services/AuthService";
 
 const defaultTheme = createTheme();
 
@@ -29,16 +30,20 @@ export default function SignIn() {
     password: "",
   });
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    LoginUser(data)
-      .then((res) => {
-        toast.success(res.data.message);
-        navigate("/");
-      })
-      .catch((err) => {
-        toast.error(err.response.data.message);
-      });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      // setIsLoading(true);
+      console.log(data);
+      const res = await LoginUser(data);
+      toast.success(res?.data?.message);
+      navigate("/");
+    } catch (err) {
+      toast.error(err.response.data.message);
+      // setError(err.response.data?.message);
+    } finally {
+      // setIsLoading(false);
+    }
   };
 
   return (
