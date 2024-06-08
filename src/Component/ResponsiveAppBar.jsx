@@ -20,7 +20,7 @@ import ThirtyFpsSelectTwoToneIcon from "@mui/icons-material/ThirtyFpsSelectTwoTo
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import { Badge } from "@mui/material";
-
+import codeRoutineLogo from "../assets/logo.png"
 const pages = [
   { name: "Explore", path: "/explore" },
   { name: "Problems", path: "/problems" },
@@ -66,7 +66,12 @@ function ResponsiveAppBar() {
     <AppBar position="static" sx={{ backgroundColor: "#424242" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+          <Avatar
+            alt="codeRoutineLogo"
+            src={codeRoutineLogo}
+            sx={{ width: 56, height: 56 }}
+            variant="square"
+          />
           <Typography
             component={Link}
             to="/"
