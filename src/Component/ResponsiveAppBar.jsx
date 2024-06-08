@@ -20,7 +20,8 @@ import ThirtyFpsSelectTwoToneIcon from "@mui/icons-material/ThirtyFpsSelectTwoTo
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import { Badge } from "@mui/material";
-import codeRoutineLogo from "../assets/logo.png"
+import codeRoutineLogo from "../assets/logo.png";
+
 const pages = [
   { name: "Explore", path: "/explore" },
   { name: "Problems", path: "/problems" },
@@ -29,16 +30,24 @@ const pages = [
   { name: "Interview", path: "/interview" },
   { name: "Store", path: "/store" },
 ];
+
 const storeSubmenuItems = [
   { name: "Redeem", path: "/store/redeem" },
   { name: "Premimum", path: "/store/premimum" },
 ];
+
+const interviewSubmenuItems = [
+  { name: "Online Interview", path: "/interview/onlineinterview" },
+  { name: "Assessment", path: "/interview/assessment" },
+];
+
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [anchorElStore, setAnchorElStore] = React.useState(null);
+  const [anchorElInterview, setAnchorElInterview] = React.useState(null);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -49,17 +58,21 @@ function ResponsiveAppBar() {
   const handleOpenStoreMenu = (event) => {
     setAnchorElStore(event.currentTarget);
   };
+  const handleOpenInterviewMenu = (event) => {
+    setAnchorElInterview(event.currentTarget);
+  };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
-
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-
   const handleCloseStoreMenu = () => {
     setAnchorElStore(null);
+  };
+  const handleCloseInterviewMenu = () => {
+    setAnchorElInterview(null);
   };
 
   return (
@@ -121,7 +134,20 @@ function ResponsiveAppBar() {
                 page.name === "Store" ? (
                   <MenuItem key={page.name} onClick={handleOpenStoreMenu}>
                     <Typography textAlign="center">{page.name}</Typography>
-                    {Boolean(anchorElStore) ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                    {Boolean(anchorElStore) ? (
+                      <ExpandLessIcon />
+                    ) : (
+                      <ExpandMoreIcon />
+                    )}
+                  </MenuItem>
+                ) : page.name === "Interview" ? (
+                  <MenuItem key={page.name} onClick={handleOpenInterviewMenu}>
+                    <Typography textAlign="center">{page.name}</Typography>
+                    {Boolean(anchorElInterview) ? (
+                      <ExpandLessIcon />
+                    ) : (
+                      <ExpandMoreIcon />
+                    )}
                   </MenuItem>
                 ) : (
                   <MenuItem
@@ -161,10 +187,19 @@ function ResponsiveAppBar() {
                 <Box key={page.name} sx={{ position: "relative" }}>
                   <Button
                     onClick={handleOpenStoreMenu}
-                    sx={{ my: 2, color: "white", display: "flex", alignItems: "center" }}
+                    sx={{
+                      my: 2,
+                      color: "white",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
                   >
                     {page.name}
-                    {Boolean(anchorElStore) ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                    {Boolean(anchorElStore) ? (
+                      <ExpandLessIcon />
+                    ) : (
+                      <ExpandMoreIcon />
+                    )}
                   </Button>
                   <Menu
                     anchorEl={anchorElStore}
@@ -192,6 +227,50 @@ function ResponsiveAppBar() {
                     ))}
                   </Menu>
                 </Box>
+              ) : page.name === "Interview" ? (
+                <Box key={page.name} sx={{ position: "relative" }}>
+                  <Button
+                    onClick={handleOpenInterviewMenu}
+                    sx={{
+                      my: 2,
+                      color: "white",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    {page.name}
+                    {Boolean(anchorElInterview) ? (
+                      <ExpandLessIcon />
+                    ) : (
+                      <ExpandMoreIcon />
+                    )}
+                  </Button>
+                  <Menu
+                    anchorEl={anchorElInterview}
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "left",
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "left",
+                    }}
+                    open={Boolean(anchorElInterview)}
+                    onClose={handleCloseInterviewMenu}
+                  >
+                    {interviewSubmenuItems.map((item) => (
+                      <MenuItem
+                        key={item.name}
+                        component={Link}
+                        to={item.path}
+                        onClick={handleCloseInterviewMenu}
+                      >
+                        {item.name}
+                      </MenuItem>
+                    ))}
+                  </Menu>
+                </Box>
               ) : (
                 <Button
                   key={page.name}
@@ -205,7 +284,6 @@ function ResponsiveAppBar() {
               )
             )}
           </Box>
-
           <Box sx={{ flexGrow: 0 }}>
             <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
