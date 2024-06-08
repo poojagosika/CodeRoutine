@@ -17,6 +17,9 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { toast } from "react-toastify";
 import { LoginUser } from "../../Services/AuthService";
 
+import codeRoutineLogo from "../../assets/logo.png";
+import { Avatar } from "@mui/material";
+
 const defaultTheme = createTheme();
 
 const CombinedLink = React.forwardRef(function CombinedLink(props, ref) {
@@ -58,9 +61,12 @@ export default function SignIn() {
             alignItems: "center",
           }}
         >
-          <img
-            src="https://assets.leetcode.com/static_assets/public/webpack_bundles/images/logo.c36eaf5e6.svg"
-            alt="leetcode logo"
+          <Avatar
+            alt="codeRoutineLogo"
+            src={codeRoutineLogo}
+            sx={{ width: 56, height: 56 }}
+            variant="square"
+            style={{ backgroundColor: "grey" }}
           />
           <Box
             component="form"
