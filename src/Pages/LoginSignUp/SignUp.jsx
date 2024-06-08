@@ -29,20 +29,20 @@ export default function SignUp() {
     confirmPassword: "",
     email: "",
   });
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log(data);
-    RegisterUser(data)
-      .then((res) => {
-        toast.success(res.data.message);
-        navigate("/login");
-      })
-      .catch((err) => {
-        toast.error(err.response.data.message);
-      });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      // setIsLoading(true);
+      console.log(data)
+      const res = await RegisterUser(data);
+      toast.success(res?.data?.message);
+      navigate("/login");
+    } catch (err) {
+      // setError(err.response.data?.message);
+    } finally {
+      // setIsLoading(false);
+    }
   };
-
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
