@@ -15,6 +15,9 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { RegisterUser } from "../../Services/AuthService";
 import { toast } from "react-toastify";
 
+import codeRoutineLogo from "../../assets/logo.png";
+import { Avatar } from "@mui/material";
+
 const defaultTheme = createTheme();
 
 const CombinedLink = React.forwardRef(function CombinedLink(props, ref) {
@@ -33,7 +36,7 @@ export default function SignUp() {
     e.preventDefault();
     try {
       // setIsLoading(true);
-      console.log(data)
+      console.log(data);
       const res = await RegisterUser(data);
       toast.success(res?.data?.message);
       navigate("/login");
@@ -57,9 +60,12 @@ export default function SignUp() {
             justifyContent: "center",
           }}
         >
-          <img
-            src="https://assets.leetcode.com/static_assets/public/webpack_bundles/images/logo.c36eaf5e6.svg"
-            alt="leetcode logo"
+          <Avatar
+            alt="codeRoutineLogo"
+            src={codeRoutineLogo}
+            sx={{ width: 56, height: 56 }}
+            variant="square"
+            style={{ backgroundColor: "grey" }}
           />
           <Box
             component="form"
