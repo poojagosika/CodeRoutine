@@ -6,17 +6,14 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
-import { Link as RouterLink } from "react-router-dom";
-import Grid from "@mui/material/Grid";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Icon, IconButton } from "@mui/material";
+import { RegisterUser } from "../../Services/AuthService";
+import { toast } from "react-toastify";
 
 const defaultTheme = createTheme();
 
@@ -25,9 +22,25 @@ const CombinedLink = React.forwardRef(function CombinedLink(props, ref) {
 });
 
 export default function SignUp() {
+  const navigate = useNavigate();
+  const [data, setData] = React.useState({
+    userName: "",
+    password: "",
+    confirmPassword: "",
+    email: "",
+  });
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
+    console.log(data);
+    RegisterUser(data)
+      .then((res) => {
+        toast.success(res.data.message);
+        navigate("/login");
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+      });
   };
 
   return (
@@ -58,9 +71,12 @@ export default function SignUp() {
               margin="normal"
               required
               fullWidth
-              id="username"
+              type="text"
+              id={"userName"}
               label="User Name"
-              name="username"
+              name={"userName"}
+              value={data.userName}
+              onChange={(e) => setData({ ...data, userName: e.target.value })}
               autoComplete="username"
               autoFocus
             />
@@ -68,30 +84,36 @@ export default function SignUp() {
               margin="normal"
               required
               fullWidth
-              name="password"
+              name={"password"}
               label="Password"
               type="password"
-              id="password"
+              id={"password"}
+              onChange={(e) => setData({ ...data, password: e.target.value })}
               autoComplete="current-password"
             />
             <TextField
               margin="normal"
               required
               fullWidth
-              name="confirm password"
+              name={"confirmPassword"}
               label="Confirm Password"
               type="password"
-              id="confirm-password"
+              id={"confirmPassword"}
               autoComplete="current-password"
+              onChange={(e) =>
+                setData({ ...data, confirmPassword: e.target.value })
+              }
             />
             <TextField
               margin="normal"
               required
               fullWidth
-              id="email"
+              type="email"
+              id={"email"}
               label="Email Address"
-              name="email"
+              name={"email"}
               autoComplete="email"
+              onChange={(e) => setData({ ...data, email: e.target.value })}
               autoFocus
             />
             <Button
