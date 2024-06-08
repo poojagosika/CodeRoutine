@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -16,27 +17,37 @@ import AdbIcon from "@mui/icons-material/Adb";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
 import ThirtyFpsSelectTwoToneIcon from "@mui/icons-material/ThirtyFpsSelectTwoTone";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import { Badge } from "@mui/material";
 
 const pages = [
-  "Explore",
-  "Problems",
-  "Contest",
-  "Discuss",
-  "Interview",
-  "Store",
+  { name: "Explore", path: "/explore" },
+  { name: "Problems", path: "/problems" },
+  { name: "Contest", path: "/contest" },
+  { name: "Discuss", path: "/discuss" },
+  { name: "Interview", path: "/interview" },
+  { name: "Store", path: "/store" },
+];
+const storeSubmenuItems = [
+  { name: "Redeem", path: "/store/redeem" },
+  { name: "Premimum", path: "/store/premimum" },
 ];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorElStore, setAnchorElStore] = React.useState(null);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
+  };
+  const handleOpenStoreMenu = (event) => {
+    setAnchorElStore(event.currentTarget);
   };
 
   const handleCloseNavMenu = () => {
@@ -47,12 +58,18 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
+  const handleCloseStoreMenu = () => {
+    setAnchorElStore(null);
+  };
+
   return (
     <AppBar position="static" sx={{ backgroundColor: "#424242" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
           <Typography
+            component={Link}
+            to="/"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -95,19 +112,31 @@ function ResponsiveAppBar() {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
+              {pages.map((page) =>
+                page.name === "Store" ? (
+                  <MenuItem key={page.name} onClick={handleOpenStoreMenu}>
+                    <Typography textAlign="center">{page.name}</Typography>
+                    {Boolean(anchorElStore) ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                  </MenuItem>
+                ) : (
+                  <MenuItem
+                    key={page.name}
+                    component={Link}
+                    to={page.path}
+                    onClick={handleCloseNavMenu}
+                  >
+                    <Typography textAlign="center">{page.name}</Typography>
+                  </MenuItem>
+                )
+              )}
             </Menu>
           </Box>
           <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
           <Typography
             variant="h5"
             noWrap
-            component="a"
-            href="#"
+            component={Link}
+            to="/"
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
@@ -119,18 +148,57 @@ function ResponsiveAppBar() {
               textDecoration: "none",
             }}
           >
-            Explore
+            CODEROUTINE
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page}
-              </Button>
-            ))}
+            {pages.map((page) =>
+              page.name === "Store" ? (
+                <Box key={page.name} sx={{ position: "relative" }}>
+                  <Button
+                    onClick={handleOpenStoreMenu}
+                    sx={{ my: 2, color: "white", display: "flex", alignItems: "center" }}
+                  >
+                    {page.name}
+                    {Boolean(anchorElStore) ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                  </Button>
+                  <Menu
+                    anchorEl={anchorElStore}
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "left",
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "left",
+                    }}
+                    open={Boolean(anchorElStore)}
+                    onClose={handleCloseStoreMenu}
+                  >
+                    {storeSubmenuItems.map((item) => (
+                      <MenuItem
+                        key={item.name}
+                        component={Link}
+                        to={item.path}
+                        onClick={handleCloseStoreMenu}
+                      >
+                        {item.name}
+                      </MenuItem>
+                    ))}
+                  </Menu>
+                </Box>
+              ) : (
+                <Button
+                  key={page.name}
+                  component={Link}
+                  to={page.path}
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: "white", display: "block" }}
+                >
+                  {page.name}
+                </Button>
+              )
+            )}
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
@@ -189,4 +257,5 @@ function ResponsiveAppBar() {
     </AppBar>
   );
 }
+
 export default ResponsiveAppBar;
