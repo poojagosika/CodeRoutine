@@ -9,7 +9,7 @@ const App = () => {
     <BrowserRouter>
       <ResponsiveAppBar />
       <Routes>
-        <Route path="/problemset" element={<Problems />} />
+        <Route path="/problems" element={<Problems />} />
         <Route path="/login" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
       </Routes>
