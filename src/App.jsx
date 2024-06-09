@@ -7,6 +7,7 @@ import SignUp from "./Pages/LoginSignUp/SignUp";
 import { Store } from "./Context/ContextStore";
 import Home from "./Pages/Home";
 import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   return (
