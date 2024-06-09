@@ -21,7 +21,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import { Badge } from "@mui/material";
 import codeRoutineLogo from "../assets/logo.png";
-
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 const pages = [
   { name: "Explore", path: "/explore" },
   { name: "Problems", path: "/problems" },
@@ -41,7 +41,13 @@ const interviewSubmenuItems = [
   { name: "Assessment", path: "/interview/assessment" },
 ];
 
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const settings = [
+  { name: "Profile", path: "/settings/profile", icon: <AccountCircleIcon /> },
+  { name: "Orders", path: "/settings/Orders" },
+  { name: "My Playgrounds", path: "/settings/playgrounds" },
+  { name: "Appearance", path: "/settings/appearance" },
+  { name: "Sign Out", path: "/settings/signout" },
+];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -329,8 +335,13 @@ function ResponsiveAppBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                <MenuItem key={setting.name} onClick={handleCloseUserMenu}>
+                  <Typography textAlign="center">
+                    <Button component={Link}
+                      to={setting.path}>
+                      {setting?.icon}  {setting?.name}
+                    </Button>
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>
