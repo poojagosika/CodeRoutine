@@ -19,6 +19,7 @@ import { LoginUser } from "../../Services/AuthService";
 
 import codeRoutineLogo from "../../assets/logo.png";
 import { Avatar } from "@mui/material";
+import { ContextStore } from "../../Context/ContextStore";
 
 const defaultTheme = createTheme();
 
@@ -28,6 +29,7 @@ const CombinedLink = React.forwardRef(function CombinedLink(props, ref) {
 
 export default function SignIn() {
   const navigate = useNavigate();
+  const { setUserData, setToken } = ContextStore();
   const [data, setData] = React.useState({
     email: "",
     password: "",
@@ -37,14 +39,16 @@ export default function SignIn() {
     e.preventDefault();
     try {
       // setIsLoading(true);
-      console.log(data);
       const res = await LoginUser(data);
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("user", JSON.stringify(res.data.existingProfile));
+      localStorage.setItem("token", res?.data?.token);
+      localStorage.setItem("user", JSON.stringify(res?.data?.existingProfile));
+      setUserData(res.data.existingProfile);
+      setToken(res.data.token);
       toast.success(res?.data?.message);
       navigate("/");
+      console.log(res);
     } catch (err) {
-      toast.error(err.response.data.message);
+      toast.error(err?.response?.data?.message);
       // setError(err.response.data?.message);
     } finally {
       // setIsLoading(false);

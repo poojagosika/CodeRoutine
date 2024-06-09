@@ -10,11 +10,11 @@ export const ContextStore = () => {
 
 export const Store = (props) => {
     const [user, setUser] = useState("user");
-    // const [token, setToken] = useState(localStorage.getItem("token"));
-    // const [userData, setUserData] = useState(JSON.parse(localStorage.getItem("user")));
+    const [token, setToken] = useState(localStorage.getItem("token"));
+    const [userData, setUserData] = useState(JSON.parse(localStorage.getItem("user")));
 
 
-    return (<storeData.Provider value={{ user, setUser, }}>
+    return (<storeData.Provider value={{ user, setUser, token, setToken, userData, setUserData }}>
         {props.children}
     </storeData.Provider>)
 
