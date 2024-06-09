@@ -40,6 +40,7 @@ export default function SignIn() {
       console.log(data);
       const res = await LoginUser(data);
       toast.success(res?.data?.message);
+      localStorage.setItem("token", res?.data?.token);
       navigate("/");
     } catch (err) {
       toast.error(err.response.data.message);
