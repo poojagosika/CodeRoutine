@@ -39,6 +39,8 @@ export default function SignIn() {
       // setIsLoading(true);
       console.log(data);
       const res = await LoginUser(data);
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.existingProfile));
       toast.success(res?.data?.message);
       navigate("/");
     } catch (err) {
