@@ -13,15 +13,16 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
-import ThirtyFpsSelectTwoToneIcon from "@mui/icons-material/ThirtyFpsSelectTwoTone";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import { Badge } from "@mui/material";
 import codeRoutineLogo from "../assets/logo.png";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import ListAltIcon from "@mui/icons-material/ListAlt";
+import ImportantDevicesIcon from "@mui/icons-material/ImportantDevices";
+import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
+import LogoutIcon from "@mui/icons-material/Logout";
 const pages = [
   { name: "Explore", path: "/explore" },
   { name: "Problems", path: "/problems" },
@@ -30,7 +31,6 @@ const pages = [
   { name: "Interview", path: "/interview" },
   { name: "Store", path: "/store" },
 ];
-
 const storeSubmenuItems = [
   { name: "Redeem", path: "/store/redeem" },
   { name: "Premimum", path: "/store/premimum" },
@@ -42,11 +42,23 @@ const interviewSubmenuItems = [
 ];
 
 const settings = [
-  { name: "Profile", path: "/settings/profile", icon: <AccountCircleIcon /> },
-  { name: "Orders", path: "/settings/orders" },
-  { name: "My Playgrounds", path: "/settings/playgrounds" },
-  { name: "Appearance", path: "/settings/appearance" },
-  { name: "Sign Out", path: "/settings/signout" },
+  {
+    name: "Profile",
+    path: "/settings/profile",
+    icon: <AccountCircleIcon />,
+  },
+  { name: "Orders", path: "/settings/orders", icon: <ListAltIcon /> },
+  {
+    name: "My Playgrounds",
+    path: "/settings/playgrounds",
+    icon: <ImportantDevicesIcon />,
+  },
+  {
+    name: "Appearance",
+    path: "/settings/appearance",
+    icon: <DarkModeOutlinedIcon />,
+  },
+  { name: "Sign Out", path: "/settings/signout", icon: <LogoutIcon /> },
 ];
 
 function ResponsiveAppBar() {
@@ -292,31 +304,20 @@ function ResponsiveAppBar() {
           </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Badge
-                  color="error"
-                  variant="dot"
-                  overlap="circular"
-                  sx={{ "& .MuiBadge-dot": { border: "2px solid white" } }}
-                >
-                  <NotificationsIcon sx={{ color: "white" }} />
-                </Badge>
-              </IconButton>
-
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <LocalFireDepartmentIcon sx={{ color: "orange" }} />
-              </IconButton>
-
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <ThirtyFpsSelectTwoToneIcon sx={{ color: "orange" }} />
-              </IconButton>
+              <Badge
+                color="error"
+                variant="dot"
+                overlap="circular"
+                sx={{ "& .MuiBadge-dot": { border: "2px solid white" } }}
+              >
+                <NotificationsIcon sx={{ color: "white" }} />
+              </Badge>
 
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
                 </IconButton>
               </Tooltip>
-              <Button variant="outlined">Premium</Button>
             </Box>
             <Menu
               sx={{ mt: "45px" }}
@@ -337,9 +338,13 @@ function ResponsiveAppBar() {
               {settings.map((setting) => (
                 <MenuItem key={setting.name} onClick={handleCloseUserMenu}>
                   <Typography textAlign="center">
-                    <Button component={Link}
-                      to={setting.path}>
-                      {setting?.icon}  {setting?.name}
+                    <Button component={Link} to={setting.path}>
+                      {setting?.icon && (
+                        <span style={{ marginRight: "8px" }}>
+                          {setting.icon}
+                        </span>
+                      )}
+                      {setting?.name}
                     </Button>
                   </Typography>
                 </MenuItem>
