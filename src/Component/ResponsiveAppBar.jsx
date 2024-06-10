@@ -26,12 +26,13 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { ContextStore } from "../Context/ContextStore";
 import { toast } from "react-toastify";
 const pages = [
-  { name: "Explore", path: "/explore" },
-  { name: "Problems", path: "/problems" },
-  { name: "Contest", path: "/contest" },
-  { name: "Discuss", path: "/discuss" },
-  { name: "Interview", path: "/interview" },
-  { name: "Store", path: "/store" },
+  { name: "Explore", path: "/explore", role: "user", login: false },
+  { name: "Problems", path: "/problems", role: "user", login: false },
+  { name: "Add Problems", path: "/addProblems", role: "admin", login: true },
+  { name: "Contest", path: "/contest", role: "user", login: false },
+  { name: "Discuss", path: "/discuss", role: "user", login: true },
+  { name: "Interview", path: "/interview", role: "user", login: false },
+  { name: "Store", path: "/store", role: "user", login: true },
 ];
 const storeSubmenuItems = [
   { name: "Redeem", path: "/store/redeem" },
