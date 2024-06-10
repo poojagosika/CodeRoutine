@@ -6,11 +6,12 @@ import SignIn from "./Pages/LoginSignUp/SignIn";
 import SignUp from "./Pages/LoginSignUp/SignUp";
 import { Store } from "./Context/ContextStore";
 import Home from "./Pages/Home";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Playgrounds from "./Component/profile/Playgrounds";
 import Orders from "./Component/profile/Orders";
 import Profile from "./Component/profile/Profile";
+import AddProblem from "./Pages/ProblemSet/AddProblem";
 
 const App = () => {
   return (
@@ -26,6 +27,7 @@ const App = () => {
           <Route path="/settings/profile" element={<Profile />} />
           <Route path="/settings/orders" element={<Orders />} />
           <Route path="/settings/playgrounds" element={<Playgrounds />} />
+          <Route path="/addProblems" element={<AddProblem />} />
         </Routes>
       </BrowserRouter>
     </Store>
