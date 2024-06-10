@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -23,6 +23,8 @@ import ListAltIcon from "@mui/icons-material/ListAlt";
 import ImportantDevicesIcon from "@mui/icons-material/ImportantDevices";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import LogoutIcon from "@mui/icons-material/Logout";
+import { ContextStore } from "../Context/ContextStore";
+import { toast } from "react-toastify";
 const pages = [
   { name: "Explore", path: "/explore" },
   { name: "Problems", path: "/problems" },
@@ -58,7 +60,7 @@ const settings = [
     path: "/settings/appearance",
     icon: <DarkModeOutlinedIcon />,
   },
-  { name: "Sign Out", path: "/settings/signout", icon: <LogoutIcon /> },
+  { name: "Sign Out", icon: <LogoutIcon /> },
 ];
 
 function ResponsiveAppBar() {
@@ -66,6 +68,8 @@ function ResponsiveAppBar() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [anchorElStore, setAnchorElStore] = React.useState(null);
   const [anchorElInterview, setAnchorElInterview] = React.useState(null);
+  const { userData, setUserData } = ContextStore();
+  const navigate = useNavigate();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -91,6 +95,14 @@ function ResponsiveAppBar() {
   };
   const handleCloseInterviewMenu = () => {
     setAnchorElInterview(null);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    toast.success("Logout Successful");
+    setUserData(null);
+    navigate("/");
   };
 
   return (
@@ -302,55 +314,87 @@ function ResponsiveAppBar() {
               )
             )}
           </Box>
-          <Box sx={{ flexGrow: 0 }}>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-              <Badge
-                color="error"
-                variant="dot"
-                overlap="circular"
-                sx={{ "& .MuiBadge-dot": { border: "2px solid white" } }}
-              >
-                <NotificationsIcon sx={{ color: "white" }} />
-              </Badge>
+          {userData?.userName ? (
+            <Box sx={{ flexGrow: 0 }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                <Badge
+                  color="error"
+                  variant="dot"
+                  overlap="circular"
+                  sx={{ "& .MuiBadge-dot": { border: "2px solid white" } }}
+                >
+                  <NotificationsIcon sx={{ color: "white" }} />
+                </Badge>
 
-              <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-                </IconButton>
-              </Tooltip>
+                <Tooltip title="Open settings">
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Avatar
+                      alt="Remy Sharp"
+                      src="/static/images/avatar/2.jpg"
+                    />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+              <Menu
+                sx={{ mt: "45px" }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {settings.map((setting) => (
+                  <MenuItem
+                    key={setting.name}
+                    onClick={
+                      setting?.name === "Sign Out"
+                        ? handleLogout
+                        : handleCloseUserMenu
+                    }
+                  >
+                    <Typography textAlign="center">
+                      <Button component={Link} to={setting.path}>
+                        {setting?.icon && (
+                          <span style={{ marginRight: "8px" }}>
+                            {setting.icon}
+                          </span>
+                        )}
+                        {setting?.name}
+                      </Button>
+                    </Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
             </Box>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting.name} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">
-                    <Button component={Link} to={setting.path}>
-                      {setting?.icon && (
-                        <span style={{ marginRight: "8px" }}>
-                          {setting.icon}
-                        </span>
-                      )}
-                      {setting?.name}
-                    </Button>
-                  </Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+          ) : (
+            <>
+              <Button
+                component={Link}
+                to={"/signup"}
+                variant="contained"
+                sx={{ margin: "8px" }}
+              >
+                SignUp
+              </Button>
+              <Typography>or</Typography>
+              <Button
+                component={Link}
+                to={"/login"}
+                variant="contained"
+                sx={{ margin: "8px" }}
+              >
+                Login
+              </Button>
+            </>
+          )}
         </Toolbar>
       </Container>
     </AppBar>
