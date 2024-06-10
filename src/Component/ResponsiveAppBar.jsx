@@ -43,7 +43,7 @@ const interviewSubmenuItems = [
 
 const settings = [
   { name: "Profile", path: "/settings/profile", icon: <AccountCircleIcon /> },
-  { name: "Orders", path: "/settings/Orders" },
+  { name: "Orders", path: "/settings/orders" },
   { name: "My Playgrounds", path: "/settings/playgrounds" },
   { name: "Appearance", path: "/settings/appearance" },
   { name: "Sign Out", path: "/settings/signout" },

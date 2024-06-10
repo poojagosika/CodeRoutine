@@ -8,6 +8,9 @@ import { Store } from "./Context/ContextStore";
 import Home from "./Pages/Home";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Playgrounds from "./Component/profile/Playgrounds";
+import Orders from "./Component/profile/Orders";
+import Profile from "./Component/profile/Profile";
 
 const App = () => {
   return (
@@ -20,6 +23,9 @@ const App = () => {
           <Route path="/problems" element={<Problems />} />
           <Route path="/login" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/settings/profile" element={<Profile />} />
+          <Route path="/settings/orders" element={<Orders />} />
+          <Route path="/settings/playgrounds" element={<Playgrounds />} />
         </Routes>
       </BrowserRouter>
     </Store>
