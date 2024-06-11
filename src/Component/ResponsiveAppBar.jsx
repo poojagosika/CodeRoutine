@@ -104,6 +104,7 @@ function ResponsiveAppBar() {
     toast.success("Logout Successful");
     setUserData(null);
     navigate("/");
+    setAnchorElUser(null);
   };
 
   return (
