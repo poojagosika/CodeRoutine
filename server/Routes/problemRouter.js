@@ -1,8 +1,8 @@
 import express from "express";
-import { addPoblem, getPoblem } from "../Controllers/problemController.js";
+import { addProblem, getAllProblem } from "../Controllers/problemController.js";
 const problemRouter = express.Router();
 
-problemRouter.post("/", addPoblem);
-problemRouter.get("/", getPoblem);
+problemRouter.post("/", addProblem);
+problemRouter.get("/", getAllProblem);
 
 export default problemRouter;

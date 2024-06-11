@@ -1,6 +1,6 @@
 import Problem from "../Model/problemModel.js";
 
-export const addPoblem = async (req, res) => {
+export const addProblem = async (req, res) => {
   console.log(req.body);
   try {
     const {
@@ -12,6 +12,7 @@ export const addPoblem = async (req, res) => {
       examples,
       tags,
       difficulty,
+      solution,
       author,
     } = req.body;
     const problem = await Problem.create({
@@ -23,6 +24,7 @@ export const addPoblem = async (req, res) => {
       examples,
       tags,
       difficulty,
+      solution,
       author,
     });
     return res
@@ -33,4 +35,12 @@ export const addPoblem = async (req, res) => {
     return res.status(500).json({ message: "Something went wrong" });
   }
 };
-export const getPoblem = async (req, res) => {};
+export const getAllProblem = async (req, res) => {
+  try {
+    const problems = await Problem.find();
+    return res.status(200).json({ problems });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Something went wrong" });
+  }
+};

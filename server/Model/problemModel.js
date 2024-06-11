@@ -20,6 +20,7 @@ const problemSchema = new Schema({
     enum: ["Easy", "Medium", "Hard"],
     required: true,
   },
+  solution: { type: String },
   author: { type: String, required: true },
 });
 
