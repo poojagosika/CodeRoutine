@@ -1,6 +1,6 @@
 import * as React from "react";
 import PropTypes from "prop-types";
-import { styled } from "@mui/material/styles";
+import { alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -10,66 +10,49 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
+import DeleteIcon from "@mui/icons-material/Delete";
+import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
+import { getAllQuestionsData } from "../../Services/AuthService";
+import Link from "@mui/material/Link";
+import { Link as RouterLink } from "react-router-dom";
+import PlayCircleIcon from "@mui/icons-material/PlayCircle";
+import { green, red, yellow } from "@mui/material/colors";
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  "&:nth-of-type(odd)": {
-    backgroundColor: theme.palette.action.hover,
-  },
-  // hide last border
-  "&:last-child td, &:last-child th": {
-    border: 0,
-  },
-}));
+// function createData(id, name, calories, fat, carbs, protein) {
+//   return {
+//     id,
+//     name,
+//     calories,
+//     fat,
+//     carbs,
+//     protein,
+//   };
+// }
 
-function createData(id, title, solution, acceptance, difficulty, frequency) {
-  return {
-    id,
-    title,
-    solution,
-    acceptance,
-    difficulty,
-    frequency,
-  };
-}
-
-const rows = [
-  createData(1, "1. Two Sum", "🎥", "52.8%", "Easy", "4.9"),
-  createData(2, "2. Add Two Numbers", "🎥", "43.1%", "Medium", 6.0),
-  createData(
-    3,
-    "3. Longest Substring Without Repeating",
-    "🎥",
-    "34.9%",
-    "Medium",
-    4.0
-  ),
-  createData(4, "4. Median of Two Sorted Arrays", "🎥", "40.3%", "Hard", 3.9),
-  createData(
-    5,
-    "5. Longest Palindromic Substring",
-    "🎥",
-    "34.0%",
-    "Medium",
-    6.5
-  ),
-  createData(6, "6. Zigzag Conversion", "🎥", "48.2%", "Medium", 4.3),
-  createData(7, "7. Reverse Integer", "🎥", "28.7%", "Medium", 0.0),
-  createData(8, "8. String to Integer (atoi)", "🎥", "17.4%", "Medium", 7.0),
-  createData(9, "9. Palindrome Number", "🎥", "56.6%", "Easy", 0.0),
-  createData(10, "10. Regular Expression Matching", "🎥", "28.2%", "Hard", 2.0),
-  createData(
-    11,
-    "11. Container With Most Water",
-    "🎥",
-    "55.4%",
-    "Medium",
-    37.0
-  ),
-  createData(12, "12. Integer to Roman", "🎥", "65.0%", "Medium", 4.0),
-];
+// const rows = [
+//   createData(1, "Cupcake", 305, 3.7, 67, 4.3),
+//   createData(2, "Donut", 452, 25.0, 51, 4.9),
+//   createData(3, "Eclair", 262, 16.0, 24, 6.0),
+//   createData(4, "Frozen yoghurt", 159, 6.0, 24, 4.0),
+//   createData(5, "Gingerbread", 356, 16.0, 49, 3.9),
+//   createData(6, "Honeycomb", 408, 3.2, 87, 6.5),
+//   createData(7, "Ice cream sandwich", 237, 9.0, 37, 4.3),
+//   createData(8, "Jelly Bean", 375, 0.0, 94, 0.0),
+//   createData(9, "KitKat", 518, 26.0, 65, 7.0),
+//   createData(10, "Lollipop", 392, 0.2, 98, 0.0),
+//   createData(11, "Marshmallow", 318, 0, 81, 2.0),
+//   createData(12, "Nougat", 360, 19.0, 9, 37.0),
+//   createData(13, "Oreo", 437, 18.0, 63, 4.0),
+// ];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -99,40 +82,40 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-const headCells = [
-  {
-    id: "title",
-    numeric: false,
-    disablePadding: true,
-    label: "Title",
-  },
-  {
-    id: "solution",
-    numeric: true,
-    disablePadding: false,
-    label: "Solution",
-  },
-  {
-    id: "acceptance",
-    numeric: true,
-    disablePadding: false,
-    label: "Acceptance",
-  },
-  {
-    id: "difficulty",
-    numeric: true,
-    disablePadding: false,
-    label: "Difficulty",
-  },
-  {
-    id: "frequency",
-    numeric: true,
-    disablePadding: false,
-    label: "Frequency",
-  },
-];
+// const headCells = [
+//   {
+//     id: "name",
+//     numeric: false,
+//     disablePadding: true,
+//     label: "Dessert (100g serving)",
+//   },
+//   {
+//     id: "calories",
+//     numeric: true,
+//     disablePadding: false,
+//     label: "Calories",
+//   },
+//   {
+//     id: "fat",
+//     numeric: true,
+//     disablePadding: false,
+//     label: "Fat (g)",
+//   },
+//   {
+//     id: "carbs",
+//     numeric: true,
+//     disablePadding: false,
+//     label: "Carbs (g)",
+//   },
+//   {
+//     id: "protein",
+//     numeric: true,
+//     disablePadding: false,
+//     label: "Protein (g)",
+//   },
+// ];
 
-function ProblemsHead(props) {
+function EnhancedTableHead(props) {
   const {
     onSelectAllClick,
     order,
@@ -148,8 +131,28 @@ function ProblemsHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell>Status</TableCell>
-        {headCells.map((headCell) => (
+        <TableCell
+          padding="checkbox"
+          color="primary"
+          indeterminate={numSelected > 0 && numSelected < rowCount}
+          checked={rowCount > 0 && numSelected === rowCount}
+          onChange={onSelectAllClick}
+          inputProps={{
+            "aria-label": "select all desserts",
+          }}
+        >
+          {/* <Checkbox
+            color="primary"
+            indeterminate={numSelected > 0 && numSelected < rowCount}
+            checked={rowCount > 0 && numSelected === rowCount}
+            onChange={onSelectAllClick}
+            inputProps={{
+              "aria-label": "select all desserts",
+            }}
+          /> */}
+          Status
+        </TableCell>
+        {/* {questions.map((headCell) => (
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? "right" : "left"}
@@ -169,13 +172,18 @@ function ProblemsHead(props) {
               ) : null}
             </TableSortLabel>
           </TableCell>
-        ))}
+        ))} */}
+        <TableCell>Title</TableCell>
+        <TableCell>Solution</TableCell>
+        <TableCell>Acceptance</TableCell>
+        <TableCell>Difficulty</TableCell>
+        <TableCell>Frequency</TableCell>
       </TableRow>
     </TableHead>
   );
 }
 
-ProblemsHead.propTypes = {
+EnhancedTableHead.propTypes = {
   numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
   onSelectAllClick: PropTypes.func.isRequired,
@@ -184,12 +192,36 @@ ProblemsHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
-export default function Problems() {
+export default function EnhancedTable() {
   const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("solution");
+  const [orderBy, setOrderBy] = React.useState("calories");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
+  const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [questions, setQuestions] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState(null);
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getAllQuestionsData();
+        setQuestions(response.data.problems);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setError("Error fetching data. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [setQuestions]);
+
+  const CombinedLink = React.forwardRef(function CombinedLink(props, ref) {
+    return <RouterLink ref={ref} {...props} />;
+  });
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -234,15 +266,18 @@ export default function Problems() {
     setPage(0);
   };
 
+  const handleChangeDense = (event) => {
+    setDense(event.target.checked);
+  };
+
   const isSelected = (id) => selected.indexOf(id) !== -1;
 
-  // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - questions.length) : 0;
 
   const visibleRows = React.useMemo(
     () =>
-      stableSort(rows, getComparator(order, orderBy)).slice(
+      stableSort(questions, getComparator(order, orderBy)).slice(
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage
       ),
@@ -252,29 +287,34 @@ export default function Problems() {
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
+        {/* <EnhancedTableToolbar numSelected={selected.length} /> */}
         <TableContainer>
-          <Table aria-labelledby="tableTitle">
-            <ProblemsHead
+          <Table
+            sx={{ minWidth: 750 }}
+            aria-labelledby="tableTitle"
+            size={dense ? "small" : "medium"}
+          >
+            <EnhancedTableHead
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={questions.length}
             />
             <TableBody>
-              {visibleRows.map((row, index) => {
-                const isItemSelected = isSelected(row.id);
+              {questions.map((row, index) => {
+                const isItemSelected = isSelected(row._id);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
                 return (
-                  <StyledTableRow
+                  <TableRow
                     hover
-                    onClick={(event) => handleClick(event, row.id)}
+                    onClick={(event) => handleClick(event, row._id)}
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
-                    key={row.id}
+                    key={row._id}
                     selected={isItemSelected}
                     sx={{ cursor: "pointer" }}
                   >
@@ -288,23 +328,45 @@ export default function Problems() {
                       />
                     </TableCell>
                     <TableCell
-                      component="th"
-                      id={labelId}
-                      scope="row"
-                      padding="none"
+                    // component="th"
+                    // id={labelId}
+                    // scope="row"
+                    // padding="none"
                     >
                       {row.title}
                     </TableCell>
-                    <TableCell align="right">{row.solution}</TableCell>
-                    <TableCell align="right">{row.acceptance}</TableCell>
-                    <TableCell align="right">{row.difficulty}</TableCell>
-                    <TableCell align="right">{row.frequency}</TableCell>
-                  </StyledTableRow>
+                    <TableCell
+                      component={CombinedLink}
+                      to={row.solution}
+                      variant="body2"
+                    >
+                      <PlayCircleIcon />
+                    </TableCell>
+                    <TableCell>22.4%</TableCell>
+                    {row.difficulty === "Easy" ? (
+                      <TableCell style={{ color: "#357a38" }}>
+                        {row.difficulty}
+                      </TableCell>
+                    ) : row.difficulty === "Hard" ? (
+                      <TableCell style={{ color: "#f44336" }}>
+                        {row.difficulty}
+                      </TableCell>
+                    ) : (
+                      <TableCell style={{ color: "#ffc107" }}>
+                        {row.difficulty}
+                      </TableCell>
+                    )}
+                    <TableCell>frequency</TableCell>
+                  </TableRow>
                 );
               })}
               {emptyRows > 0 && (
-                <TableRow>
-                  <TableCell />
+                <TableRow
+                  style={{
+                    height: (dense ? 33 : 53) * emptyRows,
+                  }}
+                >
+                  <TableCell colSpan={6} />
                 </TableRow>
               )}
             </TableBody>
@@ -313,7 +375,7 @@ export default function Problems() {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={questions.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
