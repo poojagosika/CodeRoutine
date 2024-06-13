@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   TextField,
   Button,
@@ -6,34 +6,34 @@ import {
   Box,
   Typography,
   Grid,
-  Container
-} from '@mui/material';
-import { addProblem } from '../../Services/AuthService';
-import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+  Container,
+} from "@mui/material";
+import { addProblem } from "../../Services/AuthService";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const difficultyOptions = ["Easy", "Medium", "Hard"];
 
 const AddProblem = () => {
   const navigate = useNavigate();
   const [problemData, setProblemData] = useState({
-    title: '',
-    description: '',
-    inputDescription: '',
-    outputDescription: '',
-    constraints: '',
-    examples: [{ input: '', output: '', explanation: '' }],
-    tags: '',
-    difficulty: '',
-    solution: '',
-    author: ''
+    title: "",
+    description: "",
+    inputDescription: "",
+    outputDescription: "",
+    constraints: "",
+    examples: [{ input: "", output: "", explanation: "" }],
+    tags: "",
+    difficulty: "",
+    solution: "",
+    author: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProblemData({
       ...problemData,
-      [name]: value
+      [name]: value,
     });
   };
 
@@ -43,14 +43,17 @@ const AddProblem = () => {
     examples[index][name] = value;
     setProblemData({
       ...problemData,
-      examples
+      examples,
     });
   };
 
   const addExample = () => {
     setProblemData({
       ...problemData,
-      examples: [...problemData.examples, { input: '', output: '', explanation: '' }]
+      examples: [
+        ...problemData.examples,
+        { input: "", output: "", explanation: "" },
+      ],
     });
   };
 
@@ -58,7 +61,7 @@ const AddProblem = () => {
     e.preventDefault();
     const formattedData = {
       ...problemData,
-      tags: problemData.tags.split(',').map(tag => tag.trim())
+      tags: problemData.tags.split(",").map((tag) => tag.trim()),
     };
     try {
       const respons = await addProblem(formattedData);
@@ -74,7 +77,7 @@ const AddProblem = () => {
     <Container maxWidth="md">
       <Box sx={{ mt: 4 }}>
         <Typography variant="h4" gutterBottom>
-          Submit a New Problem
+          Add a New Problem
         </Typography>
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2}>
@@ -137,6 +140,7 @@ const AddProblem = () => {
                   fullWidth
                   label="Input"
                   name="input"
+                  style={{ marginBottom: 15 }}
                   value={example.input}
                   onChange={(e) => handleExampleChange(index, e)}
                   required
@@ -145,6 +149,7 @@ const AddProblem = () => {
                   fullWidth
                   label="Output"
                   name="output"
+                  style={{ marginBottom: 15 }}
                   value={example.output}
                   onChange={(e) => handleExampleChange(index, e)}
                   required
@@ -212,7 +217,7 @@ const AddProblem = () => {
             </Grid>
             <Grid item xs={12}>
               <Button type="submit" variant="contained" color="primary">
-                Submit Problem
+                Add Problem
               </Button>
             </Grid>
           </Grid>
