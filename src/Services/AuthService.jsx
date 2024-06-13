@@ -12,6 +12,9 @@ export const LoginUser = async (data) => {
   return await axios.post(`${API}/api/users/login`, data);
 };
 
+export const addProblem = async (data) => {
+  return await axios.post(`${API}/api/problem`, data);
+};
 export const getAllQuestionsData = async () => {
   return await axios.get(`${API}/api/problem`);
 };
