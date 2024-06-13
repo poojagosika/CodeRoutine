@@ -25,6 +25,7 @@ import { getAllQuestionsData } from "../../Services/AuthService";
 import Link from "@mui/material/Link";
 import { Link as RouterLink } from "react-router-dom";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
+import EditIcon from "@mui/icons-material/Edit";
 import { green, red, yellow } from "@mui/material/colors";
 
 // function createData(id, name, calories, fat, carbs, protein) {
@@ -178,6 +179,8 @@ function EnhancedTableHead(props) {
         <TableCell>Acceptance</TableCell>
         <TableCell>Difficulty</TableCell>
         <TableCell>Frequency</TableCell>
+        <TableCell>Edit</TableCell>
+        <TableCell>Delete</TableCell>
       </TableRow>
     </TableHead>
   );
@@ -357,6 +360,20 @@ export default function EnhancedTable() {
                       </TableCell>
                     )}
                     <TableCell>frequency</TableCell>
+                    <TableCell
+                      component={CombinedLink}
+                      to={row.edit}
+                      variant="body2"
+                    >
+                      <EditIcon style={{ color: "green" }} />
+                    </TableCell>
+                    <TableCell
+                      component={CombinedLink}
+                      to={row.delete}
+                      variant="body2"
+                    >
+                      <DeleteIcon style={{ color: "red" }} />
+                    </TableCell>
                   </TableRow>
                 );
               })}
