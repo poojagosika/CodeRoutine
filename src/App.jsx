@@ -12,6 +12,7 @@ import Playgrounds from "./Component/profile/Playgrounds";
 import Orders from "./Component/profile/Orders";
 import Profile from "./Component/profile/Profile";
 import AddProblem from "./Pages/ProblemSet/AddProblem";
+import Redeem from "./Pages/Store/Redeem";
 
 const App = () => {
   return (
@@ -28,6 +29,7 @@ const App = () => {
           <Route path="/settings/orders" element={<Orders />} />
           <Route path="/settings/playgrounds" element={<Playgrounds />} />
           <Route path="/addProblems" element={<AddProblem />} />
+          <Route path="/store/redeem" element={<Redeem />} />
         </Routes>
       </BrowserRouter>
     </Store>
