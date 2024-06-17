@@ -210,7 +210,7 @@ export default function EnhancedTable() {
     const fetchData = async () => {
       try {
         const response = await getAllQuestionsData();
-        setQuestions(response.data.problems);
+        setQuestions(response.data.problemsData);
       } catch (error) {
         console.error("Error fetching data:", error);
         setError("Error fetching data. Please try again later.");
