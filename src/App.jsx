@@ -13,6 +13,7 @@ import Orders from "./Component/profile/Orders";
 import Profile from "./Component/profile/Profile";
 import AddProblem from "./Pages/ProblemSet/AddProblem";
 import Redeem from "./Pages/Store/Redeem";
+import Problem from "./Pages/problem/Problem";
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/problems" element={<Problems />} />
+          <Route path="/problems/test" element={<Problem />} />
           <Route path="/login" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/settings/profile" element={<Profile />} />
