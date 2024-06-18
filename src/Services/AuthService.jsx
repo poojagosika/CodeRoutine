@@ -20,3 +20,7 @@ export const addProblem = async (data) => {
 export const getAllQuestionsData = async () => {
   return await axios.get(`${API}/api/problem`);
 };
+
+export const getProblemById = async (id) => {
+  return await axios.get(`${API}/api/problem/${id}`);
+};

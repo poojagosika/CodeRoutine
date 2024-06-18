@@ -1,68 +1,115 @@
-import React from "react";
-import { Container, Typography, Paper, Box, Button } from "@mui/material";
-
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { getProblemById } from '../../../Services/AuthService';
+import {
+  Typography,
+  Card,
+  CardContent,
+  Box,
+} from '@mui/material';
 const Description = () => {
-  const description = `
-    <div>
-      <p>Given an array of integers <code>nums</code> and an integer <code>target</code>, return indices of the two numbers such that they add up to <code>target</code>.</p>
-      <p>You may assume that each input would have exactly one solution, and you may not use the same element twice.</p>
-      <p>You can return the answer in any order.</p>
-      <h4>Example 1:</h4>
-      <p><strong>Input:</strong> nums = [2,7,11,15], target = 9<br /><strong>Output:</strong> [0,1]<br /><strong>Explanation:</strong> Because nums[0] + nums[1] == 9, we return [0, 1].</p>
-      <h4>Example 2:</h4>
-      <p><strong>Input:</strong> nums = [3,2,4], target = 6<br /><strong>Output:</strong> [1,2]</p>
-      <h4>Example 3:</h4>
-      <p><strong>Input:</strong> nums = [3,3], target = 6<br /><strong>Output:</strong> [0,1]</p>
-      <h4>Constraints:</h4>
-      <ul>
-        <li>2 &lt;= nums.length &lt;= 10<sup>4</sup></li>
-        <li>-10<sup>9</sup> &lt;= nums[i] &lt;= 10<sup>9</sup></li>
-        <li>-10<sup>9</sup> &lt;= target &lt;= 10<sup>9</sup></li>
-        <li>Only one valid answer exists.</li>
-      </ul>
-    </div>
-  `;
+  const [problem, setProblem] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const { id } = useParams();
+
+  useEffect(() => {
+    const fetchProblem = async () => {
+      try {
+        const response = await getProblemById(id);
+        setProblem(response.data.problem);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProblem();
+  }, [id]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error?.message}</div>;
+  }
+  const getDifficultyColor = (difficulty) => {
+    switch (difficulty) {
+      case 'Easy':
+        return 'green';
+      case 'Medium':
+        return 'orange';
+      case 'Hard':
+        return 'red';
+      default:
+        return 'black';
+    }
+  };
 
   return (
-    <Container style={{ overflow: "auto" }}>
-      <Paper style={{ padding: "20px", marginTop: "20px" }}>
-        <Typography variant="h4" gutterBottom>
-          Two Sum
-        </Typography>
-        {["Easy", "Topics", "Companies", "Hint"].map((text) => (
-          <Button
-            key={text}
-            variant="contained"
-            sx={{
-              backgroundColor: "transparent",
-              borderColor: "gray",
-              color: "black",
-              marginRight: "10px",
-              marginBottom: "15px",
-            }}
+    <div style={{
+      backgroundColor: "#262626",
+    }}>
+      <Card
+        sx={{
+          maxWidth: 800,
+          margin: "auto",
+          mt: 4,
+          backgroundColor: "#262626",
+          color: "#ffffff",
+        }}
+      >
+        <CardContent>
+          <Typography variant="h4" component="div" gutterBottom>
+            {problem.title}
+          </Typography>
+          <Typography
+            variant="subtitle1"
+            component="div"
+            gutterBottom
+            sx={{ color: getDifficultyColor(problem.difficulty) }}
           >
-            {text}
-          </Button>
-        ))}
-        <Box
-          component="div"
-          dangerouslySetInnerHTML={{ __html: description }}
-          sx={{
-            "& p": { marginBottom: "16px" },
-            "& h4": { margin: "24px 0 16px" },
-            "& ul": { marginTop: "16px" },
-          }}
-        />
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-around",
-            marginTop: "20px",
-          }}
-        ></Box>
-      </Paper>
-    </Container>
-  );
+            Difficulty: {problem.difficulty}
+          </Typography>
+          <Typography variant="body1" paragraph>
+            {problem.description}
+          </Typography>
+          <Typography variant="h6" component="div" gutterBottom>
+            Example:
+          </Typography>
+          {
+            problem.examples.map((example) => (
+              <Box
+                component="pre"
+                bgcolor="#3c3b3b"
+                p={2}
+                borderRadius={1}
+                mb={2}
+              >
+                Input: {example.input} <br />
+                Output: {example.output}
+                {example.explanation ? (
+                  <span> <br />Explanation : {example.explanation}</span>
+                ) : (
+                  <span> </span>
+                )}
+              </Box>
+            ))
+          }
+
+          <Typography variant="h6" component="div" gutterBottom>
+            Constraints:
+          </Typography>
+          <Typography variant="body2" component="ul" sx={{ ml: 4 }} >
+            {problem.constraints}
+            <li>1 ≤ nums.length ≤ 10<sup>4</sup></li>
+            <li>-10<sup>9</sup> ≤ nums[i] ≤ 10<sup>9</sup></li>
+          </Typography>
+        </CardContent>
+      </Card>
+    </div>)
 };
 
 export default Description;
