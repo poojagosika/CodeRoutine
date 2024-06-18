@@ -9,51 +9,14 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import TableSortLabel from "@mui/material/TableSortLabel";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
 import DeleteIcon from "@mui/icons-material/Delete";
-import FilterListIcon from "@mui/icons-material/FilterList";
-import { visuallyHidden } from "@mui/utils";
 import { getAllQuestionsData } from "../../Services/AuthService";
 import Link from "@mui/material/Link";
 import { Link as RouterLink } from "react-router-dom";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import EditIcon from "@mui/icons-material/Edit";
-import { green, red, yellow } from "@mui/material/colors";
-
-// function createData(id, name, calories, fat, carbs, protein) {
-//   return {
-//     id,
-//     name,
-//     calories,
-//     fat,
-//     carbs,
-//     protein,
-//   };
-// }
-
-// const rows = [
-//   createData(1, "Cupcake", 305, 3.7, 67, 4.3),
-//   createData(2, "Donut", 452, 25.0, 51, 4.9),
-//   createData(3, "Eclair", 262, 16.0, 24, 6.0),
-//   createData(4, "Frozen yoghurt", 159, 6.0, 24, 4.0),
-//   createData(5, "Gingerbread", 356, 16.0, 49, 3.9),
-//   createData(6, "Honeycomb", 408, 3.2, 87, 6.5),
-//   createData(7, "Ice cream sandwich", 237, 9.0, 37, 4.3),
-//   createData(8, "Jelly Bean", 375, 0.0, 94, 0.0),
-//   createData(9, "KitKat", 518, 26.0, 65, 7.0),
-//   createData(10, "Lollipop", 392, 0.2, 98, 0.0),
-//   createData(11, "Marshmallow", 318, 0, 81, 2.0),
-//   createData(12, "Nougat", 360, 19.0, 9, 37.0),
-//   createData(13, "Oreo", 437, 18.0, 63, 4.0),
-// ];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -83,39 +46,6 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-// const headCells = [
-//   {
-//     id: "name",
-//     numeric: false,
-//     disablePadding: true,
-//     label: "Dessert (100g serving)",
-//   },
-//   {
-//     id: "calories",
-//     numeric: true,
-//     disablePadding: false,
-//     label: "Calories",
-//   },
-//   {
-//     id: "fat",
-//     numeric: true,
-//     disablePadding: false,
-//     label: "Fat (g)",
-//   },
-//   {
-//     id: "carbs",
-//     numeric: true,
-//     disablePadding: false,
-//     label: "Carbs (g)",
-//   },
-//   {
-//     id: "protein",
-//     numeric: true,
-//     disablePadding: false,
-//     label: "Protein (g)",
-//   },
-// ];
-
 function EnhancedTableHead(props) {
   const {
     onSelectAllClick,
@@ -132,48 +62,16 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell
-          padding="checkbox"
-          color="primary"
-          indeterminate={numSelected > 0 && numSelected < rowCount}
-          checked={rowCount > 0 && numSelected === rowCount}
-          onChange={onSelectAllClick}
-          inputProps={{
-            "aria-label": "select all desserts",
-          }}
-        >
-          {/* <Checkbox
+        <TableCell padding="checkbox">
+          <Checkbox
             color="primary"
-            indeterminate={numSelected > 0 && numSelected < rowCount}
+            indeterminate={
+              numSelected > 0 && numSelected < rowCount ? true : undefined
+            }
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
-            inputProps={{
-              "aria-label": "select all desserts",
-            }}
-          /> */}
-          Status
+          />
         </TableCell>
-        {/* {questions.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align={headCell.numeric ? "right" : "left"}
-            padding={headCell.disablePadding ? "none" : "normal"}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </Box>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))} */}
         <TableCell>Title</TableCell>
         <TableCell>Solution</TableCell>
         <TableCell>Acceptance</TableCell>
@@ -195,7 +93,7 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
-export default function EnhancedTable() {
+export default function Problems() {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
   const [selected, setSelected] = React.useState([]);
@@ -203,7 +101,7 @@ export default function EnhancedTable() {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [questions, setQuestions] = React.useState([]);
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(true); // Start with loading state true
   const [error, setError] = React.useState(null);
 
   React.useEffect(() => {
@@ -234,29 +132,25 @@ export default function EnhancedTable() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.id);
+      const newSelected = questions.map((n) => n.id);
       setSelected(newSelected);
-      return;
+    } else {
+      setSelected([]);
     }
-    setSelected([]);
   };
+
+  const isSelected = (id) => selected.indexOf(id) !== -1;
 
   const handleClick = (event, id) => {
     const selectedIndex = selected.indexOf(id);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
+      newSelected = [...selected, id];
+    } else {
+      newSelected = selected.filter((selectedId) => selectedId !== id);
     }
+
     setSelected(newSelected);
   };
 
@@ -273,8 +167,6 @@ export default function EnhancedTable() {
     setDense(event.target.checked);
   };
 
-  const isSelected = (id) => selected.indexOf(id) !== -1;
-
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - questions.length) : 0;
 
@@ -290,7 +182,6 @@ export default function EnhancedTable() {
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
-        {/* <EnhancedTableToolbar numSelected={selected.length} /> */}
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -306,77 +197,83 @@ export default function EnhancedTable() {
               rowCount={questions.length}
             />
             <TableBody>
-              {questions.map((row, index) => {
-                const isItemSelected = isSelected(row._id);
-                const labelId = `enhanced-table-checkbox-${index}`;
-
-                return (
-                  <TableRow
-                    hover
-                    onClick={(event) => handleClick(event, row._id)}
-                    role="checkbox"
-                    aria-checked={isItemSelected}
-                    tabIndex={-1}
-                    key={row._id}
-                    selected={isItemSelected}
-                    sx={{ cursor: "pointer" }}
-                  >
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        color="primary"
-                        checked={isItemSelected}
-                        inputProps={{
-                          "aria-labelledby": labelId,
+              {stableSort(questions, getComparator(order, orderBy))
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row, index) => {
+                  const isItemSelected = isSelected(row.id);
+                  const labelId = `enhanced-table-checkbox-${index}`;
+                  return (
+                    <TableRow
+                      hover
+                      onClick={(event) => handleClick(event, row.id)}
+                      role="checkbox"
+                      aria-checked={isItemSelected}
+                      tabIndex={-1}
+                      key={row.id}
+                      selected={isItemSelected}
+                      sx={{ cursor: "pointer" }}
+                    >
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          color="primary"
+                          checked={isItemSelected}
+                          inputProps={{
+                            "aria-labelledby": labelId,
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <RouterLink
+                          to={`/problems/${row.id}`}
+                          style={{ textDecoration: "none" }}
+                        >
+                          {row.title}
+                        </RouterLink>
+                      </TableCell>
+                      <TableCell>
+                        <Link
+                          component={CombinedLink}
+                          to={row.solution}
+                          variant="body2"
+                        >
+                          <PlayCircleIcon />
+                        </Link>
+                      </TableCell>
+                      <TableCell>22.4%</TableCell>
+                      <TableCell
+                        style={{
+                          color:
+                            row.difficulty === "Easy"
+                              ? "#357a38"
+                              : row.difficulty === "Hard"
+                              ? "#f44336"
+                              : "#ffc107",
                         }}
-                      />
-                    </TableCell>
-                    <TableCell
-                    // component="th"
-                    // id={labelId}
-                    // scope="row"
-                    // padding="none"
-                    >
-                      {row.title}
-                    </TableCell>
-                    <TableCell
-                      component={CombinedLink}
-                      to={row.solution}
-                      variant="body2"
-                    >
-                      <PlayCircleIcon />
-                    </TableCell>
-                    <TableCell>22.4%</TableCell>
-                    {row.difficulty === "Easy" ? (
-                      <TableCell style={{ color: "#357a38" }}>
+                      >
                         {row.difficulty}
                       </TableCell>
-                    ) : row.difficulty === "Hard" ? (
-                      <TableCell style={{ color: "#f44336" }}>
-                        {row.difficulty}
+                      <TableCell>frequency</TableCell>
+                      <TableCell>
+                        <Link
+                          component={CombinedLink}
+                          to={row.edit}
+                          variant="body2"
+                        >
+                          <EditIcon style={{ color: "green" }} />
+                        </Link>
                       </TableCell>
-                    ) : (
-                      <TableCell style={{ color: "#ffc107" }}>
-                        {row.difficulty}
+                      <TableCell>
+                        <Link
+                          component={CombinedLink}
+                          to={row.delete}
+                          variant="body2"
+                        >
+                          <DeleteIcon style={{ color: "red" }} />
+                        </Link>
                       </TableCell>
-                    )}
-                    <TableCell>frequency</TableCell>
-                    <TableCell
-                      component={CombinedLink}
-                      to={row.edit}
-                      variant="body2"
-                    >
-                      <EditIcon style={{ color: "green" }} />
-                    </TableCell>
-                    <TableCell
-                      component={CombinedLink}
-                      to={row.delete}
-                      variant="body2"
-                    >
-                      <DeleteIcon style={{ color: "red" }} />
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+                    </TableRow>
+                  );
+                })}
               {emptyRows > 0 && (
                 <TableRow
                   style={{
