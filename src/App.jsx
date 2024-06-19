@@ -14,6 +14,7 @@ import Profile from "./Component/profile/Profile";
 import AddProblem from "./Pages/ProblemSet/AddProblem";
 import Redeem from "./Pages/Store/Redeem";
 import Problem from "./Pages/problem/Problem";
+import Contest from "./Pages/Contest/Contest";
 
 const App = () => {
   return (
@@ -31,6 +32,8 @@ const App = () => {
           <Route path="/settings/orders" element={<Orders />} />
           <Route path="/settings/playgrounds" element={<Playgrounds />} />
           <Route path="/addProblems" element={<AddProblem />} />
+          <Route path="/contest" element={<Contest />} />
+
           <Route path="/store/redeem" element={<Redeem />} />
         </Routes>
       </BrowserRouter>
