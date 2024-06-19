@@ -8,7 +8,7 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { getProblemById } from "../../../../Services/AuthService";
 import { useParams } from "react-router-dom";
 export default function Test() {
-  const [showCases, setShowCases] = React.useState(false);
+  const [showCases, setShowCases] = React.useState(true);
   const [activeCase, setActiveCase] = React.useState(0);
   const [showTestResult, setShowTestResult] = React.useState(false);
   const [questions, setQuestions] = React.useState([]);
@@ -59,7 +59,10 @@ export default function Test() {
           <Button
             variant="text"
             onClick={handleTestcase}
-            style={{ color: "white" }}
+            style={{
+              color: "white",
+              backgroundColor: showCases ? "#3c3c3c" : "#333333",
+            }}
           >
             <CheckCircleOutlineIcon
               style={{ color: "#02b128", fontSize: 16 }}
@@ -69,7 +72,10 @@ export default function Test() {
           <Button
             variant="text"
             onClick={handleTestResult}
-            style={{ color: "white" }}
+            style={{
+              color: "white",
+              backgroundColor: showTestResult ? "#3c3c3c" : "#333333",
+            }}
           >
             <NavigateNextIcon style={{ color: "#02b128" }} />
             Test Result
@@ -130,9 +136,17 @@ export default function Test() {
           </Stack>
         )}
         {showTestResult && (
-          <Typography variant="body1" gutterBottom>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-            convallis libero non eros fringilla, sed mattis risus mollis.
+          <Typography
+            variant="body1"
+            gutterBottom
+            style={{
+              display: "flex",
+              alignItems: "center",
+              textAlign: "center",
+              justifyContent: "center",
+            }}
+          >
+            You must run your code first
           </Typography>
         )}
       </Stack>
