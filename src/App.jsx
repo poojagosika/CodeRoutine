@@ -15,8 +15,10 @@ import AddProblem from "./Pages/ProblemSet/AddProblem";
 import Redeem from "./Pages/Store/Redeem";
 import Problem from "./Pages/problem/Problem";
 import Contest from "./Pages/Contest/Contest";
+import Explore from "./Pages/Explore/Explore";
 import DiscussList from "./Pages/Discuss/DiscussList";
 import DiscussDetails from "./Pages/Discuss/DiscussDetails";
+
 
 const App = () => {
   return (
@@ -35,6 +37,7 @@ const App = () => {
           <Route path="/settings/playgrounds" element={<Playgrounds />} />
           <Route path="/addProblems" element={<AddProblem />} />
           <Route path="/contest" element={<Contest />} />
+          <Route path="/explore" element={<Explore />} />
           <Route path="/store/redeem" element={<Redeem />} />
           <Route path="/discuss" element={<DiscussList />} />
           <Route path="/discuss/:id" element={<DiscussDetails />} />
