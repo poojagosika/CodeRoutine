@@ -15,8 +15,6 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  InputBase,
-  Grid,
 } from "@mui/material";
 import { createAvatar } from "@dicebear/core";
 import {
@@ -28,7 +26,6 @@ import {
   initials,
 } from "@dicebear/collection";
 import { ContextStore } from "../../Context/ContextStore";
-import { Padding } from "@mui/icons-material";
 
 const getCuteAvatar = (author) => {
   const styles = [avataaars, micah, bottts, adventurer, identicon, initials];
@@ -49,7 +46,7 @@ const DiscussList = () => {
     title: "",
     content: "",
     tags: "",
-    author: userData.userName,
+    author: userData?.userName,
   });
 
   useEffect(() => {
@@ -99,29 +96,21 @@ const DiscussList = () => {
   };
 
   return (
-    <Container style={{ marginTop: 20 }}>
+    <Container mt={4}>
       <Box display="flex" justifyContent="right" gap={2} alignItems="center">
         {/* Search Bar */}
-        <Grid display="flex" justifyContent="right" gap={1} alignItems="center">
-          <InputBase
-            sx={{ ml: 1, flex: 1 }}
-            placeholder="Search posts..."
-            inputProps={{ "aria-label": "Search posts..." }}
-            value={searchTerm}
-            onChange={handleSearch}
-            style={{ border: "1px solid grey", borderRadius: "4px", width:"250px", padding:2 }}
-          />
-          {/* Create Post Button */}
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleOpenDialog}
-          >
-            New +
-          </Button>
-        </Grid>
-      </Box>
+        <TextField
+          variant="outlined"
+          placeholder="Search posts..."
+          value={searchTerm}
+          onChange={handleSearch}
+        />
 
+        {/* Create Post Button */}
+        <Button variant="contained" color="primary" onClick={handleOpenDialog}>
+          New +
+        </Button>
+      </Box>
       <List>
         {discussions.map((discussion) => (
           <ListItem
