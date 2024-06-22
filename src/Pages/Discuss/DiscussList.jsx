@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import {
     List,
@@ -27,6 +27,8 @@ import {
 } from "@dicebear/collection";
 import { ContextStore } from "../../Context/ContextStore";
 import ReactTimeAgo from 'react-time-ago'
+import ReactQuill from 'react-quill';
+import { styled } from '@mui/system';
 
 const getCuteAvatar = (author) => {
     const styles = [avataaars, micah, bottts, adventurer, identicon, initials];
@@ -37,6 +39,13 @@ const getCuteAvatar = (author) => {
     });
     return avatar.toDataUri();
 };
+const PreviewArea = styled('div')(({ theme }) => ({
+    border: '1px solid #ccc',
+    padding: theme.spacing(2),
+    minHeight: '200px',
+    marginTop: theme.spacing(2),
+    backgroundColor: '#f9f9f9'
+}));
 
 const DiscussList = () => {
     const { userData } = ContextStore();
@@ -49,6 +58,7 @@ const DiscussList = () => {
         tags: "",
         author: userData?.userName,
     });
+    const quillRef = useRef(null);
 
     useEffect(() => {
         const fetchDiscussions = async () => {
@@ -95,7 +105,9 @@ const DiscussList = () => {
             console.error("Error creating post:", error);
         }
     };
-
+    const handleContentChange = (value) => {
+        setNewPostData({ ...newPostData, content: quillRef.current?.getEditor().root.innerHTML })
+    };
     return (
         <Container mt={4}>
             <Box display="flex" justifyContent="right" gap={2} alignItems="center">
@@ -136,7 +148,7 @@ const DiscussList = () => {
                                         color="textPrimary"
                                     >
                                         By: {discussion.author} Created At:{" "}
-                                        <ReactTimeAgo date={discussion.createdAt} locale="en-US" />
+                                        <ReactTimeAgo date={new Date(discussion.createdAt).getTime()} locale="en-US" />
                                     </Typography>
 
                                 </React.Fragment>
@@ -178,18 +190,25 @@ const DiscussList = () => {
                             setNewPostData({ ...newPostData, tags: e.target.value })
                         }
                     />
-
-                    <TextField
-                        margin="dense"
-                        id="content"
-                        label="Content"
-                        multiline
-                        rows={4}
-                        fullWidth
+                    <ReactQuill
+                        ref={quillRef}
                         value={newPostData.content}
-                        onChange={(e) =>
-                            setNewPostData({ ...newPostData, content: e.target.value })
-                        }
+                        onChange={handleContentChange}
+                        modules={{
+                            toolbar: [
+                                [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
+                                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                                ['bold', 'italic', 'underline'],
+                                ['link', 'image']
+                            ]
+                        }}
+                        formats={[
+                            'header', 'font',
+                            'list', 'bullet',
+                            'bold', 'italic', 'underline',
+                            'link', 'image'
+                        ]}
+                        style={{ height: '200px', marginBottom: '20px' }}
                     />
                 </DialogContent>
                 <DialogActions>

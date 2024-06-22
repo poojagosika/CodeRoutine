@@ -12,8 +12,8 @@ import {
 } from "@mui/material";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
-import imgBlue from "../../assets/images/blueImage.png";
-import imgGreen from "../../assets/images/greenImage.png";
+import imgBlue from "../../assets/Contest/blueImage.png";
+import imgGreen from "../../assets/Contest/greenImage.png";
 import googleImg from "../../assets/images/googleImg.jpeg";
 import microsoftImg from "../../assets/images/microsoftImg.jpeg";
 import facebookImg from "../../assets/images/facebookImg.jpeg";

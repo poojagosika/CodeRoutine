@@ -21,6 +21,8 @@ import DiscussDetails from "./Pages/Discuss/DiscussDetails";
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
 import ru from 'javascript-time-ago/locale/ru'
+import 'react-quill/dist/quill.snow.css';
+
 TimeAgo.addDefaultLocale(en)
 TimeAgo.addLocale(ru)
 

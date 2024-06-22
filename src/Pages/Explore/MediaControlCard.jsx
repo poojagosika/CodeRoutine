@@ -6,7 +6,7 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 
-import imgGreen from "../../assets/images/greenImage.png";
+import imgGreen from "../../assets/Contest/greenImage.png";
 
 export default function MediaControlCard() {
   const theme = useTheme();
