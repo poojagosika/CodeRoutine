@@ -29,6 +29,7 @@ import ReactTimeAgo from "react-time-ago";
 import ReactQuill from "react-quill";
 import { styled } from "@mui/system";
 import { createDiscuss, getDiscuss } from "../../Services/AuthService";
+import { useNavigate } from "react-router-dom";
 
 const getCuteAvatar = (author) => {
     const styles = [avataaars, micah, bottts, adventurer, identicon, initials];
@@ -58,6 +59,7 @@ const DiscussList = () => {
         tags: "",
         author: userData?.userName,
     });
+    const navagate = useNavigate();
 
     useEffect(() => {
         const fetchDiscussions = async () => {
@@ -90,7 +92,8 @@ const DiscussList = () => {
         setOpenDialog(false);
     };
 
-    const handleCreatePost = async () => {
+    const handleCreatePost = async (e) => {
+        e.preventDefault();
         try {
             const response = await createDiscuss(newPostData);
             // Optionally, you can update discussions state to include the new post
@@ -130,7 +133,7 @@ const DiscussList = () => {
                             key={discussion._id}
                             button
                             component="a"
-                            href={`/discuss/${discussion._id}`}
+                            onClick={() => navagate(`${discussion._id}`)}
                         >
                             <ListItemAvatar>
                                 <Avatar
