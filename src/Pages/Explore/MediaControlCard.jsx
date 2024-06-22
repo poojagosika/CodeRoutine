@@ -13,7 +13,7 @@ export default function MediaControlCard() {
 
   return (
     <Card
-      sx={{ display: "flex", marginTop: 5, marginLeft: 40 }}
+      sx={{ display: "flex", marginBottom: 10, marginTop: 10 }}
       style={{
         width: "500px",
         height: "200px",
@@ -24,7 +24,7 @@ export default function MediaControlCard() {
       <Box sx={{ display: "flex", flexDirection: "column" }}>
         <CardContent sx={{ flex: "1 0 auto", padding: "10px" }}>
           <Typography component="div" variant="h5">
-            <p>LeetCode's Interview Crash Course</p>
+            <p>CodeRoutine's Interview Crash Course</p>
           </Typography>
           <Typography
             variant="subtitle1"
