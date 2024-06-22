@@ -23,3 +23,27 @@ export const getAllQuestionsData = async () => {
 export const getProblemById = async (id) => {
   return await axios.get(`${API}/api/problem/${id}`);
 };
+
+
+
+// Discuss 
+
+export const createDiscuss = async (data) => {
+  return await axios.post(`${API}/api/discuss`, data);
+};
+
+export const getDiscuss = async () => {
+  return await axios.get(`${API}/api/discuss`);
+};
+
+export const getDiscussById = async (id) => {
+  return await axios.get(`${API}/api/discuss/${id}`);
+};
+
+export const updateDiscussByI = async (id, data) => {
+  return await axios.put(`${API}/api/discuss/${id}`, data);
+};
+
+export const ddeleteDiscussById = async (id) => {
+  return await axios.delete(`${API}/api/discuss/${id}`);
+};

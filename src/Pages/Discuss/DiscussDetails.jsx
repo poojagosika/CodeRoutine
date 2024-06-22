@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link, Navigate, useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
     Container,
@@ -12,7 +12,10 @@ import {
     ListItemAvatar,
     Avatar,
     TextField,
-    IconButton,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    Dialog,
 } from "@mui/material";
 import { createAvatar } from "@dicebear/core";
 import {
@@ -26,6 +29,9 @@ import {
 import { ContextStore } from "../../Context/ContextStore";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { ddeleteDiscussById, getDiscussById, updateDiscussByI } from "../../Services/AuthService";
+import ReactQuill from "react-quill";
+
 const getCuteAvatar = (author) => {
     const styles = [avataaars, micah, bottts, adventurer, identicon, initials];
     const style = styles[author.length % styles.length];
@@ -39,17 +45,18 @@ const getCuteAvatar = (author) => {
 const DiscussDetails = () => {
     const { id } = useParams();
     const [topic, setTopic] = useState(null);
+    const [update, setUpdate] = useState(topic);
     const [newComment, setNewComment] = useState("");
     const { userData } = ContextStore();
+    const [openDialog, setOpenDialog] = useState(false);
     const navagate = useNavigate();
 
     useEffect(() => {
         const fetchTopic = async () => {
             try {
-                const response = await axios.get(
-                    `http://localhost:8000/api/discuss/${id}`
-                );
+                const response = await getDiscussById(id);
                 setTopic(response.data);
+                setUpdate(response.data);
             } catch (error) {
                 console.error("Error fetching topic:", error);
             }
@@ -60,7 +67,7 @@ const DiscussDetails = () => {
 
     const handleDelete = async () => {
         try {
-            await axios.delete(`http://localhost:8000/api/discuss/${id}`);
+            await ddeleteDiscussById(id);
             navagate("/discuss");
             // Redirect or show a message indicating successful deletion
         } catch (error) {
@@ -85,7 +92,29 @@ const DiscussDetails = () => {
     };
 
     if (!topic) return <Typography>Loading...</Typography>;
+    const handleOpenDialog = () => {
+        setOpenDialog(true);
+    };
 
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    };
+    const handleContentChange = (value) => {
+        setUpdate({
+            ...update,
+            content: value,
+        });
+    };
+    const handleUpdatePost = async () => {
+        try {
+            const response = await updateDiscussByI(id, update);
+            setTopic(response.data.topic);
+            //messge display for updated
+            setOpenDialog(false);
+        } catch (error) {
+            console.error("Error updating post:", error);
+        }
+    };
     return (
         <Container style={{ marginTop: 30, padding: 5 }}>
             <Typography variant="h4" gutterBottom>
@@ -95,10 +124,17 @@ const DiscussDetails = () => {
                 <Typography variant="subtitle1" gutterBottom>
                     By {topic.author}
                 </Typography>
+                {/* Add Like button and total count of like */}
+                <Typography variant="subtitle1" gutterBottom>
+                    Like : {topic.likes}
+                </Typography>
+
                 <Box ml={2} display="flex">
                     <Button
                         component={Link}
-                        to={`/update/${topic._id}`}
+                        onClick={() => {
+                            setOpenDialog(true);
+                        }}
                         style={{ minWidth: "auto", padding: 0, color: "green" }}
                     >
                         <EditIcon />
@@ -220,6 +256,71 @@ const DiscussDetails = () => {
                     Add Comment
                 </Button>
             </Box>
+            <Dialog
+                open={openDialog}
+                onClose={handleCloseDialog}
+                fullWidth
+                maxWidth="md"
+            >
+                <DialogTitle>Create New Post</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="title"
+                        label="Title"
+                        type="text"
+                        fullWidth
+                        value={update.title}
+                        onChange={(e) =>
+                            setUpdate({ ...update, title: e.target.value })
+                        }
+                    />
+                    <TextField
+                        label="Tags (comma separated)"
+                        fullWidth
+                        id="tags"
+                        margin="dense"
+                        type="text"
+                        value={update.tags}
+                        onChange={(e) =>
+                            setUpdate({ ...update, tags: e.target.value })
+                        }
+                    />
+                    <ReactQuill
+                        value={update.content}
+                        onChange={handleContentChange}
+                        modules={{
+                            toolbar: [
+                                [{ header: "1" }, { header: "2" }, { font: [] }],
+                                [{ list: "ordered" }, { list: "bullet" }],
+                                ["bold", "italic", "underline"],
+                                ["link", "image"],
+                            ],
+                        }}
+                        formats={[
+                            "header",
+                            "font",
+                            "list",
+                            "bullet",
+                            "bold",
+                            "italic",
+                            "underline",
+                            "link",
+                            "image",
+                        ]}
+                        style={{ height: "200px", marginBottom: "20px" }}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDialog} color="secondary">
+                        Cancel
+                    </Button>
+                    <Button onClick={handleUpdatePost} color="primary">
+                        Post
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Container>
     );
 };
