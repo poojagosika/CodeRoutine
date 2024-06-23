@@ -15,6 +15,8 @@ import {
     DialogTitle,
     DialogContent,
     DialogActions,
+    Grid,
+    InputBase,
 } from "@mui/material";
 import { createAvatar } from "@dicebear/core";
 import {
@@ -109,20 +111,26 @@ const DiscussList = () => {
         setNewPostData({ ...newPostData, content: quillRef.current?.getEditor().root.innerHTML })
     };
     return (
-        <Container mt={4}>
+      <Container style={{ marginTop: 20 }}>
             <Box display="flex" justifyContent="right" gap={2} alignItems="center">
                 {/* Search Bar */}
-                <TextField
-                    variant="outlined"
-                    placeholder="Search posts..."
-                    value={searchTerm}
-                    onChange={handleSearch}
-                />
-
-                {/* Create Post Button */}
-                <Button variant="contained" color="primary" onClick={handleOpenDialog}>
+                <Grid display="flex" justifyContent="right" gap={1} alignItems="center">
+                    <InputBase
+                      placeholder="Search posts..."
+                      inputProps={{ "aria-label": "Search posts..." }}
+                      value={searchTerm}
+                      onChange={handleSearch}
+                      style={{ border: "1px solid grey", borderRadius: "4px", width:"250px", padding:1, paddingLeft:"6px" }}
+                    />
+                    {/* Create Post Button */}
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleOpenDialog}
+                  >
                     New +
-                </Button>
+                  </Button>
+                </Grid>
             </Box>
             <List>
                 {discussions.map((discussion) => (
