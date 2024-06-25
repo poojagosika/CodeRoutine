@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   TextField,
   Button,
@@ -7,6 +7,8 @@ import {
   Typography,
   Grid,
   Container,
+  CircularProgress,
+  Skeleton,
 } from "@mui/material";
 import { addProblem } from "../../Services/AuthService";
 import { toast } from "react-toastify";
@@ -28,6 +30,18 @@ const AddProblem = () => {
     solution: "",
     author: "",
   });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+  useEffect(() => {
+    const isFormFilled = Object.values(problemData).every((value) =>
+      Array.isArray(value)
+        ? value.length > 0 && value.every((ex) => ex.input && ex.output)
+        : value !== ""
+    );
+    setIsButtonDisabled(!isFormFilled);
+  }, [problemData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -59,13 +73,19 @@ const AddProblem = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true); // Set submitting state to true
     const formattedData = {
       ...problemData,
       tags: problemData.tags.split(",").map((tag) => tag.trim()),
     };
+
+    // Simulate a delay for the loading indicator
+
     try {
-      const respons = await addProblem(formattedData);
-      toast.success(respons?.data?.message);
+      const response = await addProblem(formattedData);
+      toast.success(response?.data?.message);
+      setIsSubmitting(false); // Set submitting state to false
+
       navigate("/problems");
     } catch (error) {
       console.error(error);
@@ -216,8 +236,21 @@ const AddProblem = () => {
               />
             </Grid>
             <Grid item xs={12}>
-              <Button type="submit" variant="contained" color="primary">
-                Add Problem
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                disabled={isButtonDisabled || isSubmitting} // Disable button based on state
+                startIcon={isSubmitting ? <CircularProgress size={20} /> : null} // Show loading indicator
+              >
+                {isSubmitting ? (
+                  <>
+                    {" "}
+                    <Skeleton /> Add problem
+                  </>
+                ) : (
+                  "Add Problem"
+                )}
               </Button>
             </Grid>
           </Grid>
