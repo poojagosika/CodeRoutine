@@ -34,6 +34,7 @@ import { styled } from "@mui/system";
 import { createDiscuss, getDiscuss } from "../../Services/AuthService";
 import { useNavigate } from "react-router-dom";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const getCuteAvatar = (author) => {
   const styles = [avataaars, micah, bottts, adventurer, identicon, initials];
@@ -55,7 +56,7 @@ const PreviewArea = styled("div")(({ theme }) => ({
 const DiscussList = () => {
   const { userData } = ContextStore();
   const [Loading, setLoading] = useState(true);
-
+  const [postloading, setPostLoading] = useState(false);
   const [discussions, setDiscussions] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
@@ -75,6 +76,8 @@ const DiscussList = () => {
         setLoading(false);
       } catch (error) {
         console.error("Error fetching discussions:", error);
+      } finally {
+        setPostLoading(false);
       }
     };
 
@@ -102,6 +105,7 @@ const DiscussList = () => {
   const handleCreatePost = async (e) => {
     e.preventDefault();
     try {
+      setPostLoading(true);
       const response = await createDiscuss(newPostData);
       // Optionally, you can update discussions state to include the new post
       setDiscussions([...discussions, response.data.newTopic]);
@@ -261,12 +265,40 @@ const DiscussList = () => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog} color="secondary">
+          <Button
+            onClick={handleCloseDialog}
+            color="secondary"
+            variant="outlined"
+          >
             Cancel
           </Button>
-          <Button onClick={handleCreatePost} color="primary">
-            Post
-          </Button>
+          {postloading ? (
+            <Button
+              onClick={handleCreatePost}
+              color="primary"
+              variant="contained"
+              disabled
+            >
+              <CircularProgress size={15} style={{ marginRight: "8px" }} />
+              Post
+            </Button>
+          ) : (
+            <Button
+              onClick={handleCreatePost}
+              color="primary"
+              variant="contained"
+              disabled={
+                !(
+                  newPostData.title &&
+                  newPostData.content &&
+                  newPostData.tags &&
+                  newPostData.author
+                )
+              }
+            >
+              Post
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
     </Container>
