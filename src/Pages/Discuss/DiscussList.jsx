@@ -16,6 +16,7 @@ import {
   DialogActions,
   Grid,
   InputBase,
+  Skeleton,
 } from "@mui/material";
 import { createAvatar } from "@dicebear/core";
 import {
@@ -53,6 +54,8 @@ const PreviewArea = styled("div")(({ theme }) => ({
 
 const DiscussList = () => {
   const { userData } = ContextStore();
+  const [Loading, setLoading] = useState(true);
+
   const [discussions, setDiscussions] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
@@ -69,6 +72,7 @@ const DiscussList = () => {
       try {
         const response = await getDiscuss();
         setDiscussions(response.data.topics);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching discussions:", error);
       }
@@ -141,52 +145,63 @@ const DiscussList = () => {
           </Button>
         </Grid>
       </Box>
-      <List>
-        {discussions
-          .map((discussion) => (
-            <ListItem
-              key={discussion._id}
-              button
-              component="a"
-              onClick={() => navagate(`${discussion._id}`)}
-            >
-              <ListItemAvatar>
-                <Avatar
-                  alt={discussion.author}
-                  src={getCuteAvatar(discussion.author)}
+      {Loading ? (
+        <>
+          <Box style={{ margin: "30px" }}>
+            <Skeleton style={{ height: "80px" }} />
+            <Skeleton style={{ height: "70px" }} />
+            <Skeleton style={{ height: "60px" }} />
+          </Box>
+        </>
+      ) : (
+        <List>
+          {discussions
+            .map((discussion) => (
+              <ListItem
+                key={discussion._id}
+                button
+                component="a"
+                onClick={() => navagate(`${discussion._id}`)}
+              >
+                <ListItemAvatar>
+                  <Avatar
+                    alt={discussion.author}
+                    src={getCuteAvatar(discussion.author)}
+                  />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={discussion.title}
+                  secondary={
+                    <React.Fragment>
+                      <Typography
+                        component="span"
+                        variant="body2"
+                        color="textPrimary"
+                      >
+                        By: {discussion.author} Created At:{" "}
+                        <ReactTimeAgo
+                          date={new Date(discussion.createdAt).getTime()}
+                          locale="en-US"
+                        />
+                      </Typography>
+                    </React.Fragment>
+                  }
                 />
-              </ListItemAvatar>
-              <ListItemText
-                primary={discussion.title}
-                secondary={
-                  <React.Fragment>
-                    <Typography
-                      component="span"
-                      variant="body2"
-                      color="textPrimary"
-                    >
-                      By: {discussion.author} Created At:{" "}
-                      <ReactTimeAgo
-                        date={new Date(discussion.createdAt).getTime()}
-                        locale="en-US"
-                      />
-                    </Typography>
-                  </React.Fragment>
-                }
-              />
-              <Box textAlign="right">
-                <Typography
-                  variant="body2"
-                  color="textSecondary"
-                  display={"flex"}
-                >
-                  <ThumbUpIcon style={{ marginRight: 10 }} /> {discussion.likes}
-                </Typography>
-              </Box>
-            </ListItem>
-          ))
-          .reverse()}
-      </List>
+                <Box textAlign="right">
+                  <Typography
+                    variant="body2"
+                    color="textSecondary"
+                    display={"flex"}
+                  >
+                    <ThumbUpIcon style={{ marginRight: 10 }} />{" "}
+                    {discussion.likes}
+                  </Typography>
+                </Box>
+              </ListItem>
+            ))
+            .reverse()}
+        </List>
+      )}
 
       {/* Create Post Dialog */}
       <Dialog
