@@ -2,7 +2,6 @@ import Jwt from "jsonwebtoken";
 
 export const tokenVerify = async (req, res, next) => {
   const token = req.header("Authorization")?.replace("Bearer ", ""); // Note the space after "Bearer"
-  console.log(`Token: ${token}`);
 
   if (!token) {
     return res.status(401).json({ message: "Please try to login" });

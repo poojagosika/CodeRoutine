@@ -10,10 +10,10 @@ import { tokenVerify } from "../Middleware/tokenVerify.js";
 import { checkAuthor } from "../Middleware/checkAuthor.js";
 const discussRouter = express.Router();
 
-discussRouter.post("/", tokenVerify, checkAuthor, createDiscuss);
+discussRouter.post("/", tokenVerify, createDiscuss);
 discussRouter.get("/", getDiscuss);
 discussRouter.get("/:id", getDiscussById);
-discussRouter.put("/:id", tokenVerify, checkAuthor, updateDiscussById);
+discussRouter.put("/:id", tokenVerify, updateDiscussById);
 discussRouter.delete("/:id", tokenVerify, deleteDiscussById);
 
 export default discussRouter;

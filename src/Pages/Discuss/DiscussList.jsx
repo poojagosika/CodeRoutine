@@ -27,7 +27,6 @@ import {
   identicon,
   initials,
 } from "@dicebear/collection";
-import { ContextStore } from "../../Context/ContextStore";
 import ReactTimeAgo from "react-time-ago";
 import ReactQuill from "react-quill";
 import { styled } from "@mui/system";
@@ -38,7 +37,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 const getCuteAvatar = (author) => {
   const styles = [avataaars, micah, bottts, adventurer, identicon, initials];
-  const style = styles[author.length % styles.length];
+  const style = styles[author?.length % styles.length];
   const avatar = createAvatar(style, {
     seed: author,
     size: 128,
@@ -54,7 +53,6 @@ const PreviewArea = styled("div")(({ theme }) => ({
 }));
 
 const DiscussList = () => {
-  const { userData } = ContextStore();
   const [Loading, setLoading] = useState(true);
   const [postloading, setPostLoading] = useState(false);
   const [discussions, setDiscussions] = useState([]);
@@ -64,7 +62,6 @@ const DiscussList = () => {
     title: "",
     content: "",
     tags: "",
-    author: userData?.userName,
   });
   const navagate = useNavigate();
 
@@ -72,7 +69,7 @@ const DiscussList = () => {
     const fetchDiscussions = async () => {
       try {
         const response = await getDiscuss();
-        setDiscussions(response.data.topics);
+        setDiscussions(response?.data?.topics);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching discussions:", error);
@@ -169,12 +166,12 @@ const DiscussList = () => {
               >
                 <ListItemAvatar>
                   <Avatar
-                    alt={discussion.author}
-                    src={getCuteAvatar(discussion.author)}
+                    alt={discussion?.author?.userName}
+                    src={getCuteAvatar(discussion?.author?.userName)}
                   />
                 </ListItemAvatar>
                 <ListItemText
-                  primary={discussion.title}
+                  primary={discussion?.title}
                   secondary={
                     <React.Fragment>
                       <Typography
@@ -182,7 +179,7 @@ const DiscussList = () => {
                         variant="body2"
                         color="textPrimary"
                       >
-                        By: {discussion.author} Created At:{" "}
+                        By: {discussion.author?.userName} Created At:{" "}
                         <ReactTimeAgo
                           date={new Date(discussion.createdAt).getTime()}
                           locale="en-US"
@@ -198,14 +195,15 @@ const DiscussList = () => {
                     display={"flex"}
                   >
                     <ThumbUpIcon style={{ marginRight: 10 }} />{" "}
-                    {discussion.likes}
+                    {discussion?.likes}
                   </Typography>
                 </Box>
               </ListItem>
             ))
             .reverse()}
         </List>
-      )}
+      )
+      }
 
       {/* Create Post Dialog */}
       <Dialog
@@ -289,10 +287,9 @@ const DiscussList = () => {
               variant="contained"
               disabled={
                 !(
-                  newPostData.title &&
-                  newPostData.content &&
-                  newPostData.tags &&
-                  newPostData.author
+                  newPostData?.title &&
+                  newPostData?.content &&
+                  newPostData?.tags
                 )
               }
             >
@@ -301,7 +298,7 @@ const DiscussList = () => {
           )}
         </DialogActions>
       </Dialog>
-    </Container>
+    </Container >
   );
 };
 

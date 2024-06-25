@@ -112,7 +112,8 @@ const DiscussDetails = () => {
   };
   const handleUpdatePost = async () => {
     try {
-      const response = await updateDiscussByI(id, update);
+      console.log(update)
+      const response = await updateDiscussByI(id, { title: update.title, content: update.content, tags: update.tags });
       setTopic(response.data.topic);
       //messge display for updated
       setOpenDialog(false);
@@ -127,7 +128,7 @@ const DiscussDetails = () => {
       </Typography>
       <Box display="flex" alignItems="center">
         <Typography variant="subtitle1" gutterBottom>
-          By {topic.author}
+          By {topic?.author?.userName}
         </Typography>
 
         <Box ml={2} display="flex">
