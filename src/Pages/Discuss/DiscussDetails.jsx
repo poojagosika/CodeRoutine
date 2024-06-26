@@ -17,16 +17,7 @@ import {
   DialogActions,
   Dialog,
 } from "@mui/material";
-import { createAvatar } from "@dicebear/core";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import {
-  avataaars,
-  micah,
-  bottts,
-  adventurer,
-  identicon,
-  initials,
-} from "@dicebear/collection";
 import { ContextStore } from "../../Context/ContextStore";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
@@ -36,16 +27,8 @@ import {
   updateDiscussByI,
 } from "../../Services/AuthService";
 import ReactQuill from "react-quill";
+import getCuteAvatar from "../../Config/getCuteAvatar";
 
-const getCuteAvatar = (author) => {
-  const styles = [avataaars, micah, bottts, adventurer, identicon, initials];
-  const style = styles[author.length % styles.length];
-  const avatar = createAvatar(style, {
-    seed: author,
-    size: 128,
-  });
-  return avatar.toDataUri();
-};
 
 const DiscussDetails = () => {
   const { id } = useParams();

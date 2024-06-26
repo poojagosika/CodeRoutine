@@ -16,12 +16,12 @@ import Redeem from "./Pages/Store/Redeem";
 import Problem from "./Pages/problem/Problem";
 import Contest from "./Pages/Contest/Contest";
 import Explore from "./Pages/Explore/Explore";
-import DiscussList from "./Pages/Discuss/DiscussList";
 import DiscussDetails from "./Pages/Discuss/DiscussDetails";
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
 import ru from 'javascript-time-ago/locale/ru'
 import 'react-quill/dist/quill.snow.css';
+import Discuss from "./Pages/Discuss/Discuss";
 
 TimeAgo.addDefaultLocale(en)
 TimeAgo.addLocale(ru)
@@ -45,7 +45,7 @@ const App = () => {
           <Route path="/contest" element={<Contest />} />
           <Route path="/explore" element={<Explore />} />
           <Route path="/store/redeem" element={<Redeem />} />
-          <Route path="/discuss" element={<DiscussList />} />
+          <Route path="/discuss" element={<Discuss />} />
           <Route path="/discuss/:id" element={<DiscussDetails />} />
         </Routes>
       </BrowserRouter>
