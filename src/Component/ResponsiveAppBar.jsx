@@ -25,6 +25,15 @@ import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { ContextStore } from "../Context/ContextStore";
 import { toast } from "react-toastify";
+import { createAvatar } from "@dicebear/core";
+import {
+  avataaars,
+  micah,
+  bottts,
+  adventurer,
+  identicon,
+  initials,
+} from "@dicebear/collection";
 const pages = [
   { name: "Explore", path: "/explore", role: "user", login: false },
   { name: "Problems", path: "/problems", role: "user", login: false },
@@ -63,6 +72,16 @@ const settings = [
   },
   { name: "Sign Out", icon: <LogoutIcon /> },
 ];
+
+const getCuteAvatar = (author) => {
+  const styles = [avataaars, micah, bottts, adventurer, identicon, initials];
+  const style = styles[author?.length % styles.length];
+  const avatar = createAvatar(style, {
+    seed: author,
+    size: 128,
+  });
+  return avatar.toDataUri();
+};
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -331,8 +350,8 @@ function ResponsiveAppBar() {
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                     <Avatar
-                      alt="Remy Sharp"
-                      src="/static/images/avatar/2.jpg"
+                      alt={userData?.userName}
+                      src={getCuteAvatar(userData?.userName)}
                     />
                   </IconButton>
                 </Tooltip>
