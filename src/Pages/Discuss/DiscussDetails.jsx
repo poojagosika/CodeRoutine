@@ -112,8 +112,12 @@ const DiscussDetails = () => {
   };
   const handleUpdatePost = async () => {
     try {
-      console.log(update)
-      const response = await updateDiscussByI(id, { title: update.title, content: update.content, tags: update.tags });
+      console.log(update);
+      const response = await updateDiscussByI(id, {
+        title: update.title,
+        content: update.content,
+        tags: update.tags,
+      });
       setTopic(response.data.topic);
       //messge display for updated
       setOpenDialog(false);
@@ -126,44 +130,36 @@ const DiscussDetails = () => {
       <Typography variant="h4" gutterBottom>
         {topic.title}
       </Typography>
-      <Box display="flex" alignItems="center">
-        <Typography variant="subtitle1" gutterBottom>
-          By {topic?.author?.userName}
-        </Typography>
 
-        <Box ml={2} display="flex">
-          <Button
-            component={Link}
-            style={{
-              minWidth: "auto",
-              padding: 0,
-              color: "gray",
-              marginRight: 15,
-            }}
-          >
-            <ThumbUpIcon />
-          </Button>
-          <Button
-            component={Link}
-            onClick={() => {
-              setOpenDialog(true);
-            }}
-            style={{ minWidth: "auto", padding: 0, color: "green" }}
-          >
-            <EditIcon />
-          </Button>
-          <Button
-            onClick={handleDelete}
-            style={{
-              minWidth: "auto",
-              padding: 0,
-              marginLeft: 8,
-              color: "red",
-            }}
-          >
-            <DeleteOutlineIcon />
-          </Button>
-        </Box>
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="flex-start"
+        gap={1}
+      >
+        <Avatar
+          alt={topic?.author?.userName}
+          src={getCuteAvatar(topic?.author?.userName)}
+        />
+        <Typography variant="subtitle1">{topic?.author?.userName}</Typography>
+        <ThumbUpIcon
+          cursor="pointer"
+          style={{
+            color: "gray",
+          }}
+        />
+        <EditIcon
+          onClick={() => {
+            setOpenDialog(true);
+          }}
+          style={{ color: "green" }}
+        />
+        <DeleteOutlineIcon
+          onClick={handleDelete}
+          style={{
+            color: "red",
+          }}
+        />
       </Box>
 
       <Typography gutterBottom variant="h6">
