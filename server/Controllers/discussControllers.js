@@ -1,4 +1,4 @@
-import { Topic } from "../Model/discussModel.js";
+import { Topic, Comment, Reply } from "../Model/discussModel.js";
 import mongoose from "mongoose";
 
 export const createDiscuss = async (req, res) => {
@@ -35,7 +35,7 @@ export const getDiscuss = async (req, res) => {
     if (tags) query.tags = { $in: tags.split(",") };
 
     // Sorting
-    const sortOrder = order === "desc" ? 1 : -1;
+    const sortOrder = order === "desc" ? -1 : 1;
     const sortFields = ["createdAt", "title", "author"]; // Add more valid fields as needed
     if (!sortFields.includes(sortBy)) sortBy = "createdAt";
     const sort = { [sortBy]: sortOrder };
@@ -88,17 +88,19 @@ export const getDiscussById = async (req, res) => {
       .populate("author", "userName")
       .populate({
         path: "comments",
-        populate: {
-          path: "author",
-          select: "userName",
-        },
-      })
-      .populate({
-        path: "comments.replies",
-        populate: {
-          path: "author",
-          select: "userName",
-        },
+        populate: [
+          {
+            path: "author",
+            select: "userName",
+          },
+          {
+            path: "replies",
+            populate: {
+              path: "author",
+              select: "userName",
+            },
+          },
+        ],
       });
 
     if (!topic) {
@@ -177,6 +179,196 @@ export const deleteDiscussById = async (req, res) => {
     }
 
     res.json({ message: "Topic deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+export const addLikeOrRemoveLike = async (req, res) => {
+  try {
+    const { id: topicId } = req.params;
+    const userId = req.id; // Assuming req.id contains the authenticated user's ID
+
+    // Validate the topicId
+    if (!mongoose.Types.ObjectId.isValid(topicId)) {
+      return res.status(400).json({ message: "Invalid topic ID" });
+    }
+
+    // Find the topic
+    const topic = await Topic.findById(topicId);
+    if (!topic) {
+      return res.status(404).json({ message: "Topic not found" });
+    }
+
+    // Check if the user has already liked the topic
+    if (topic.likes.includes(userId)) {
+      await topic.removeLike(userId);
+      res.json({
+        message: "Topic unliked successfully",
+        likes: topic.likes.length,
+      });
+    } else {
+      // Add the user's ID to the likes array
+      await topic.addLike(userId);
+      res.json({
+        message: "Topic liked successfully",
+        likes: topic.likes.length,
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+export const addLikeOrRemoveLikeComment = async (req, res) => {
+  try {
+    const { id: commentId } = req.params;
+    const userId = req.id; // Assuming req.id contains the authenticated user's ID
+
+    // Validate the commentId
+    if (!mongoose.Types.ObjectId.isValid(commentId)) {
+      return res.status(400).json({ message: "Invalid comment ID" });
+    }
+
+    // Find the comment
+    const comment = await Comment.findById(commentId);
+    if (!comment) {
+      return res.status(404).json({ message: "Comment not found" });
+    }
+
+    // Check if the user has already liked the comment
+    if (comment.likes.includes(userId)) {
+      await comment.removeLike(userId);
+      res.json({
+        message: "Comment unliked successfully",
+        likes: comment.likes.length,
+      });
+    } else {
+      // Add the user's ID to the likes array
+      await comment.addLike(userId);
+      res.json({
+        message: "Comment liked successfully",
+        likes: comment.likes.length,
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+export const addLikeOrRemoveLikeReply = async (req, res) => {
+  try {
+    const { id: replyId } = req.params;
+    const userId = req.id; // Assuming req.id contains the authenticated user's ID
+
+    // Validate the replyId
+    if (!mongoose.Types.ObjectId.isValid(replyId)) {
+      return res.status(400).json({ message: "Invalid reply ID" });
+    }
+
+    // Find the reply
+    const reply = await Reply.findById(replyId);
+    if (!reply) {
+      return res.status(404).json({ message: "Reply not found" });
+    }
+
+    // Check if the user has already liked the reply
+    if (reply.likes.includes(userId)) {
+      await reply.removeLike(userId);
+      res.json({
+        message: "Reply unliked successfully",
+        likes: reply.likes.length,
+      });
+    } else {
+      // Add the user's ID to the likes array
+      await reply.addLike(userId);
+      res.json({
+        message: "Reply liked successfully",
+        likes: reply.likes.length,
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+export const addCommentToTopic = async (req, res) => {
+  try {
+    const { id: topicId } = req.params;
+    const { content } = req.body;
+    const userId = req.id;
+
+    // Validate the topicId
+    if (!mongoose.Types.ObjectId.isValid(topicId)) {
+      return res.status(400).json({ message: "Invalid topic ID" });
+    }
+
+    // Find the topic
+    const topic = await Topic.findById(topicId);
+    if (!topic) {
+      return res.status(404).json({ message: "Topic not found" });
+    }
+
+    // Create a new comment
+    const newComment = new Comment({
+      content,
+      author: userId,
+    });
+
+    // Save the comment
+    const savedComment = await newComment.save();
+
+    // Add the comment to the topic
+    topic.comments.push(savedComment._id);
+    await topic.save();
+
+    res.status(201).json({
+      message: "Comment added successfully",
+      comment: savedComment,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+export const addReplyToComment = async (req, res) => {
+  try {
+    const { id: commentId } = req.params;
+    const { content } = req.body;
+    const userId = req.id;
+
+    // Validate the commentId
+    if (!mongoose.Types.ObjectId.isValid(commentId)) {
+      return res.status(400).json({ message: "Invalid comment ID" });
+    }
+
+    // Find the comment
+    const comment = await Comment.findById(commentId);
+    if (!comment) {
+      return res.status(404).json({ message: "Comment not found" });
+    }
+
+    // Create a new reply
+    const newReply = new Reply({
+      content,
+      author: userId,
+    });
+
+    // Save the reply
+    const savedReply = await newReply.save();
+
+    // Add the reply to the comment
+    comment.replies.push(savedReply._id);
+    await comment.save();
+
+    res.status(201).json({
+      message: "Reply added successfully",
+      reply: savedReply,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error", error: error.message });

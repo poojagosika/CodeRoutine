@@ -101,6 +101,7 @@ const Discuss = () => {
             content: value,
         });
     };
+    console.log(discussions)
     return (
         <Container style={{ marginTop: 20 }}>
             <Box display="flex" justifyContent="right" gap={2} alignItems="center">
@@ -138,7 +139,7 @@ const Discuss = () => {
                             <DiscussList discussion={discussion} key={discussion._id}
                             />
                         ))
-                        .reverse()}
+                    }
                 </List>
             )
             }
