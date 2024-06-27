@@ -100,6 +100,7 @@ const Discuss = () => {
                 setDiscussions([newPost, ...(discussions || [])]);
                 setNewPostData({ title: "", content: "", tags: "" });
                 setOpenDialog(false); // Close dialog
+                setPostLoading(false)
             }
         } catch (error) {
             console.error("Error creating post:", error);
