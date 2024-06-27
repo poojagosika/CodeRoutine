@@ -10,6 +10,7 @@ import {
   TextField,
   Stack,
   Skeleton,
+  InputBase,
 } from "@mui/material";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import CommentIcon from "@mui/icons-material/ChatBubble";
@@ -201,16 +202,12 @@ const DiscussDetails = () => {
               {topic?.comments?.length}
             </Typography>
 
-            <Box mt={3}>
-              <Typography variant="h5" gutterBottom>
-                Add a Comment
-              </Typography>
-              <TextField
+            <Box mt={3} style={{ border: "1px solid black",textAlign: "right", padding: "10px"  }}>
+              <InputBase
                 fullWidth
+                placeholder="Type comment here..."
                 multiline
-                rows={4}
-                variant="outlined"
-                label="Your Comment"
+                rows={2}
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
               />
@@ -218,14 +215,13 @@ const DiscussDetails = () => {
                 variant="contained"
                 color="primary"
                 onClick={handleAddComment}
-                style={{ marginTop: 20 }}
               >
-                Add Comment
+                Post
               </Button>
             </Box>
 
             {topic?.comments?.length === 0 ? (
-              <Typography>No comments yet</Typography>
+              <Typography variant="body2">No comments yet</Typography>
             ) : (
               <List>
                 {topic?.comments
