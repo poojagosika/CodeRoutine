@@ -10,6 +10,7 @@ import {
   TextField,
 } from "@mui/material";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import CommentIcon   from "@mui/icons-material/ChatBubble";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import {
@@ -32,7 +33,7 @@ const DiscussDetails = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [isLiked, setIsLiked] = useState(null);
   const navigate = useNavigate();
-  const { userData } = ContextStore()
+  const { userData } = ContextStore();
   useEffect(() => {
     const fetchTopic = async () => {
       try {
@@ -66,17 +67,17 @@ const DiscussDetails = () => {
           ...response.data.comment,
           author: {
             _id: userData?._id,
-            userName: userData?.userName
-          }
-        }
+            userName: userData?.userName,
+          },
+        };
         // Create a new array with the new comment added
         const updatedComments = [...(topic?.comments || []), newCommentData];
         // Update the topic state with the new comments array
-        setTopic(prevTopic => ({
+        setTopic((prevTopic) => ({
           ...prevTopic,
-          comments: updatedComments
+          comments: updatedComments,
         }));
-      };
+      }
       setNewComment("");
     } catch (error) {
       console.error("Error adding comment:", error);
@@ -91,16 +92,15 @@ const DiscussDetails = () => {
       const userLikes = topic?.likes.includes(userId);
       if (response && response.data) {
         if (!userLikes) {
-          setTopic(prevTopic => ({
+          setTopic((prevTopic) => ({
             ...prevTopic,
-            likes: [...(topic?.likes || []), userId] // Update likes with the new data
+            likes: [...(topic?.likes || []), userId], // Update likes with the new data
           }));
           setIsLiked(true);
-        }
-        else {
-          setTopic(prevTopic => ({
+        } else {
+          setTopic((prevTopic) => ({
             ...prevTopic,
-            likes: prevTopic.likes.filter(like => like !== userId) // Remove userId from likes array
+            likes: prevTopic.likes.filter((like) => like !== userId), // Remove userId from likes array
           }));
           setIsLiked(false);
         }
@@ -162,15 +162,9 @@ const DiscussDetails = () => {
         <ThumbUpIcon
           cursor="pointer"
           onClick={handleLike}
-          style={{ color: "gray" }}
+          style={{ color: isLiked ? "#0247FE" : "gray" }}
         />
-        {isLiked && (
-          <ThumbUpIcon
-            style={{ color: "red" }}
-            cursor="pointer"
-            onClick={handleLike}
-          />
-        )}
+
         {topic?.likes?.length}
         <EditIcon onClick={handleOpenDialog} style={{ color: "green" }} />
         <DeleteOutlineIcon onClick={handleDelete} style={{ color: "red" }} />
@@ -181,8 +175,13 @@ const DiscussDetails = () => {
       </Typography>
 
       <Box mt={3}>
-        <Typography variant="h5" gutterBottom>
-          Logo Comments: {topic?.comments?.length}
+        <Typography
+          variant="body2"
+          display={"flex"}
+          gap={1}
+          alignItems={"center"}
+        >
+          <CommentIcon color="primary" /> Comments: {topic?.comments?.length}
         </Typography>
 
         <Box mt={3}>
@@ -214,10 +213,7 @@ const DiscussDetails = () => {
           <List>
             {topic?.comments
               ?.map((comment) => (
-                <Comment
-                  key={comment._id}
-                  comment={comment}
-                />
+                <Comment key={comment._id} comment={comment} />
               ))
               .reverse()}
           </List>
