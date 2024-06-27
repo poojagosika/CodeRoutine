@@ -21,6 +21,7 @@ import { createDiscuss, getDiscuss } from "../../Services/AuthService";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import DiscussList from "./DiscussList";
+import { ContextStore } from "../../Context/ContextStore";
 
 
 const PreviewArea = styled("div")(({ theme }) => ({
@@ -42,6 +43,7 @@ const Discuss = () => {
         content: "",
         tags: "",
     });
+    const { userData } = ContextStore();
 
     const fetchDiscussions = useCallback(async () => {
         try {
@@ -87,21 +89,29 @@ const Discuss = () => {
         try {
             setPostLoading(true);
             const response = await createDiscuss(newPostData);
-            // Optionally, you can update discussions state to include the new post
-            setDiscussions([...discussions, response.data.newTopic]);
-            setNewPostData({ title: "", content: "", tags: "" }); // Clear form data
-            setOpenDialog(false); // Close dialog
+            if (response && response.data) {
+                const newPost = {
+                    ...response.data.newTopic,
+                    author: {
+                        _id: userData?._id,
+                        userName: userData?.userName
+                    }
+                }
+                setDiscussions([newPost, ...(discussions || [])]);
+                setNewPostData({ title: "", content: "", tags: "" });
+                setOpenDialog(false); // Close dialog
+            }
         } catch (error) {
             console.error("Error creating post:", error);
         }
     };
+
     const handleContentChange = (value) => {
         setNewPostData({
             ...newPostData,
             content: value,
         });
     };
-    console.log(discussions)
     return (
         <Container style={{ marginTop: 20 }}>
             <Box display="flex" justifyContent="right" gap={2} alignItems="center">

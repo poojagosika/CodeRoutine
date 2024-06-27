@@ -44,6 +44,27 @@ export const updateDiscussByI = async (id, data) => {
   return await axios.put(`${API}/api/discuss/${id}`, data);
 };
 
-export const ddeleteDiscussById = async (id) => {
+export const deleteDiscussById = async (id) => {
   return await axios.delete(`${API}/api/discuss/${id}`);
 };
+
+export const addLikeOrRemoveLike = async (id) => {
+  return await axios.put(`${API}/api/discuss/topics/${id}/like`);
+};
+
+export const addLikeOrRemoveLikeComment = async (id) => {
+  return await axios.put(`${API}/api/discuss/comments/${id}/like`);
+};
+
+export const addLikeOrRemoveLikeReply = async (id) => {
+  return await axios.put(`${API}/api/discuss/replies/${id}/like`);
+};
+
+export const addCommentToTopic = async (id, data) => {
+  return await axios.post(`${API}/api/discuss/topics/${id}/comments`, data);
+};
+
+export const addReplyToComment = async (id, data) => {
+  return await axios.post(`${API}/api/discuss/comments/${id}/replies`, data);
+};
+

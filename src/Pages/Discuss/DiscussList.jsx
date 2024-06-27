@@ -51,7 +51,7 @@ const DiscussList = ({ discussion }) => {
           display={"flex"}
         >
           <ThumbUpIcon style={{ marginRight: 10 }} />{" "}
-          {discussion?.likes}
+          {discussion?.likes?.length}
         </Typography>
       </Box>
     </ListItem>
