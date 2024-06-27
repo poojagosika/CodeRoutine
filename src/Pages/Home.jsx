@@ -27,32 +27,36 @@ const cards = [
     id: 1,
     title: "REACT",
     image: reactImg,
-    description: "Begineer to Advance",
+    description: "Beginner to Advance",
   },
   {
     id: 2,
     title: "AWS",
     image: awsImg,
-    description: "Begineer to Advance",
+    description: "Beginner to Advance",
   },
   {
     id: 3,
     title: "IOS",
     image: iosImg,
-    description: "Begineer to Advance",
+    description: "Beginner to Advance",
   },
   {
     id: 4,
     title: "BOOTCAMP",
     image: bootcampImg,
-    description: "Begineer to Advance",
+    description: "Beginner to Advance",
   },
 ];
+
 const handleSearch = (event) => {
-  // Handle search logic here
   console.log(event.target.value);
 };
+
 function Home() {
+  const user = localStorage.getItem("user");
+  console.log(user);
+
   return (
     <>
       <CssBaseline />
@@ -79,18 +83,38 @@ function Home() {
               spacing={2}
               justifyContent="center"
             >
-              <Button variant="contained" color="primary">
+              {!user ? (
+                <Button variant="contained" color="primary">
+                  <Link
+                    to={"/signup"}
+                    component={CombinedLink}
+                    color="inherit"
+                    underline="none"
+                  >
+                    Sign Up
+                  </Link>
+                </Button>
+              ) : (
+                <Button variant="contained" color="primary">
+                  <Link
+                    to={"/explore"}
+                    component={CombinedLink}
+                    color="inherit"
+                    underline="none"
+                  >
+                    Explore
+                  </Link>
+                </Button>
+              )}
+              <Button variant="outlined" color="primary">
                 <Link
-                  to={"/signup"}
+                  to={"/problems"}
                   component={CombinedLink}
                   color="inherit"
                   underline="none"
                 >
-                  Sign Up
+                  Learn More
                 </Link>
-              </Button>
-              <Button variant="outlined" color="primary">
-                Learn More
               </Button>
             </Stack>
           </Container>
