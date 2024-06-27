@@ -8,9 +8,11 @@ import {
   List,
   Avatar,
   TextField,
+  Stack,
+  Skeleton,
 } from "@mui/material";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import CommentIcon   from "@mui/icons-material/ChatBubble";
+import CommentIcon from "@mui/icons-material/ChatBubble";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import {
@@ -111,7 +113,6 @@ const DiscussDetails = () => {
       console.error("Error liking/unliking topic:", error);
     }
   };
-  if (!topic) return <Typography>Loading...</Typography>;
 
   const handleOpenDialog = () => {
     setOpenDialog(true);
@@ -144,90 +145,108 @@ const DiscussDetails = () => {
 
   return (
     <Container style={{ marginTop: 30, padding: 5 }}>
-      <Typography variant="h4" gutterBottom>
-        {topic.title}
-      </Typography>
-
-      <Box
-        display="flex"
-        alignItems="center"
-        justifyContent="flex-start"
-        gap={1}
-      >
-        <Avatar
-          alt={topic?.author?.userName}
-          src={getCuteAvatar(topic?.author?.userName)}
-        />
-        <Typography variant="subtitle1">{topic?.author?.userName}</Typography>
-        <ThumbUpIcon
-          cursor="pointer"
-          onClick={handleLike}
-          style={{ color: isLiked ? "#0247FE" : "gray" }}
-        />
-
-        {topic?.likes?.length}
-        <EditIcon onClick={handleOpenDialog} style={{ color: "green" }} />
-        <DeleteOutlineIcon onClick={handleDelete} style={{ color: "red" }} />
-      </Box>
-
-      <Typography gutterBottom variant="h6">
-        <div dangerouslySetInnerHTML={{ __html: topic.content }} />
-      </Typography>
-
-      <Box mt={3}>
-        <Typography
-          variant="body2"
-          display={"flex"}
-          gap={1}
-          alignItems={"center"}
-        >
-          <CommentIcon color="primary" /> Comments: {topic?.comments?.length}
-        </Typography>
-
-        <Box mt={3}>
-          <Typography variant="h5" gutterBottom>
-            Add a Comment
+      {!topic ? (
+        <Stack spacing={1}>
+          <Skeleton variant="text" height={50} />
+          <Skeleton variant="circular" width={40} height={40} />
+          <Skeleton variant="text" height={40} />
+          <Skeleton variant="text" height={40} />
+          <Skeleton variant="rectangular" height={150} />
+        </Stack>
+      ) : (
+        <>
+          <Typography variant="h4" gutterBottom>
+            {topic.title}
           </Typography>
-          <TextField
-            fullWidth
-            multiline
-            rows={4}
-            variant="outlined"
-            label="Your Comment"
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleAddComment}
-            style={{ marginTop: 20 }}
+
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="flex-start"
+            gap={1}
           >
-            Add Comment
-          </Button>
-        </Box>
+            <Avatar
+              alt={topic?.author?.userName}
+              src={getCuteAvatar(topic?.author?.userName)}
+            />
+            <Typography variant="subtitle1">
+              {topic?.author?.userName}
+            </Typography>
+            <ThumbUpIcon
+              cursor="pointer"
+              onClick={handleLike}
+              style={{ color: isLiked ? "#0247FE" : "gray" }}
+            />
 
-        {topic?.comments?.length === 0 ? (
-          <Typography>No comments yet</Typography>
-        ) : (
-          <List>
-            {topic?.comments
-              ?.map((comment) => (
-                <Comment key={comment._id} comment={comment} />
-              ))
-              .reverse()}
-          </List>
-        )}
-      </Box>
+            {topic?.likes?.length}
+            <EditIcon onClick={handleOpenDialog} style={{ color: "green" }} />
+            <DeleteOutlineIcon
+              onClick={handleDelete}
+              style={{ color: "red" }}
+            />
+          </Box>
 
-      <DiscussEdit
-        openDialog={openDialog}
-        update={update}
-        setUpdate={setUpdate}
-        handleCloseDialog={handleCloseDialog}
-        handleContentChange={handleContentChange}
-        handleUpdatePost={handleUpdatePost}
-      />
+          <Typography gutterBottom variant="h6">
+            <div dangerouslySetInnerHTML={{ __html: topic.content }} />
+          </Typography>
+
+          <Box mt={3}>
+            <Typography
+              variant="body2"
+              display={"flex"}
+              gap={1}
+              alignItems={"center"}
+            >
+              <CommentIcon color="primary" /> Comments:{" "}
+              {topic?.comments?.length}
+            </Typography>
+
+            <Box mt={3}>
+              <Typography variant="h5" gutterBottom>
+                Add a Comment
+              </Typography>
+              <TextField
+                fullWidth
+                multiline
+                rows={4}
+                variant="outlined"
+                label="Your Comment"
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleAddComment}
+                style={{ marginTop: 20 }}
+              >
+                Add Comment
+              </Button>
+            </Box>
+
+            {topic?.comments?.length === 0 ? (
+              <Typography>No comments yet</Typography>
+            ) : (
+              <List>
+                {topic?.comments
+                  ?.map((comment) => (
+                    <Comment key={comment._id} comment={comment} />
+                  ))
+                  .reverse()}
+              </List>
+            )}
+          </Box>
+
+          <DiscussEdit
+            openDialog={openDialog}
+            update={update}
+            setUpdate={setUpdate}
+            handleCloseDialog={handleCloseDialog}
+            handleContentChange={handleContentChange}
+            handleUpdatePost={handleUpdatePost}
+          />
+        </>
+      )}
     </Container>
   );
 };
