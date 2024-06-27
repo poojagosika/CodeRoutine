@@ -8,7 +8,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import getCuteAvatar from "../../Config/getCuteAvatar";
 import ReactTimeAgo from "react-time-ago";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
@@ -18,11 +18,13 @@ import {
 } from "../../Services/AuthService";
 import { ContextStore } from "../../Context/ContextStore";
 import Reply from "./Reply";
+import ReplyIcon from "@mui/icons-material/Reply";
 
 const Comment = (props) => {
   const [comment, setComment] = React.useState(props?.comment);
-  const [replyContent, setReplyContent] = React.useState();
+  const [replyContent, setReplyContent] = React.useState("");
   const [isLiked, setIsLiked] = React.useState(null);
+  const [isReplying, setIsReplying] = React.useState(false);
   const { userData } = ContextStore();
   const userId = userData?._id;
 
@@ -52,6 +54,11 @@ const Comment = (props) => {
     }
   };
 
+  const handleReplyClick = () => {
+    setIsReplying(!isReplying);
+    setReplyContent(""); // Clear content on toggle
+  };
+
   const handleReplyToComment = async (commentId) => {
     try {
       const response = await addReplyToComment(commentId, {
@@ -74,10 +81,17 @@ const Comment = (props) => {
         }));
       }
       setReplyContent("");
+      setIsReplying(false);
     } catch (error) {
       console.error("Error replying to comment:", error);
     }
   };
+
+  const handleCancel = () => {
+    setIsReplying(false);
+    setReplyContent("");
+  };
+
   return (
     <ListItem alignItems="flex-start">
       <ListItemAvatar>
@@ -106,17 +120,53 @@ const Comment = (props) => {
                 onClick={() => handleLikeComment(comment?._id)}
                 style={{ color: isLiked ? "#0247FE" : "gray" }}
               />
-              {/* {isLiked}  if it is true there then change icone color */}
               {comment?.likes?.length}
+
+              <Button
+                onClick={handleReplyClick}
+                style={{ color: isReplying ? "#0247FE" : "gray" }}
+              >
+                <ReplyIcon />
+                Reply
+              </Button>
             </Typography>
-            <Button onClick={() => handleReplyToComment(comment?._id)}>
-              Reply
-            </Button>
-            <TextField
-              value={replyContent}
-              onChange={(e) => setReplyContent(e.target.value)}
-              placeholder="Write a reply..."
-            />
+
+            {isReplying && (
+              <React.Fragment>
+                <TextField
+                  value={replyContent}
+                  onChange={(e) => setReplyContent(e.target.value)}
+                  placeholder="Write a reply..."
+                  fullWidth
+                  multiline
+                  rows={2}
+                />
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end", // Align buttons to the right
+                    marginTop: "8px",
+                    gap: "8px", // Adjust spacing between buttons
+                  }}
+                >
+                  <Button
+                    onClick={handleCancel}
+                    variant="outlined"
+                    color="secondary"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={() => handleReplyToComment(comment?._id)}
+                    disabled={!replyContent.trim()}
+                    variant="contained"
+                    color="primary"
+                  >
+                    Post
+                  </Button>
+                </div>
+              </React.Fragment>
+            )}
           </React.Fragment>
         }
       />
