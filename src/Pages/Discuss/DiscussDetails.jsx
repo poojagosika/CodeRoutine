@@ -50,7 +50,13 @@ const DiscussDetails = () => {
 
     fetchTopic();
   }, [id]);
+  // console.log(topic);
 
+  useEffect(() => {
+    if (topic) {
+      setIsLiked(topic?.likes?.includes(userData._id));
+    }
+  }, [topic, userData]);
   const handleDelete = async () => {
     try {
       await deleteDiscussById(id);

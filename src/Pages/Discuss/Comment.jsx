@@ -8,7 +8,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import getCuteAvatar from "../../Config/getCuteAvatar";
 import ReactTimeAgo from "react-time-ago";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
@@ -53,6 +53,13 @@ const Comment = (props) => {
       console.error("Error liking comment:", error);
     }
   };
+
+  //console.log(comment);
+  useEffect(() => {
+    if (comment) {
+      setIsLiked(comment?.likes?.includes(userData._id));
+    }
+  }, [comment, userData]);
 
   const handleReplyClick = () => {
     setIsReplying(!isReplying);

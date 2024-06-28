@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { ContextStore } from "../../Context/ContextStore";
 import {
   Avatar,
@@ -44,6 +44,11 @@ const Reply = (props) => {
     }
   };
 
+  useEffect(() => {
+    if (reply) {
+      setIsLiked(reply?.likes?.includes(userData._id));
+    }
+  }, [reply, userData]);
   return (
     <ListItem
       key={reply._id}
