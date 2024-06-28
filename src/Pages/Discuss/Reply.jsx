@@ -5,6 +5,7 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
+  Skeleton,
   Typography,
 } from "@mui/material";
 import getCuteAvatar from "../../Config/getCuteAvatar";
@@ -55,37 +56,55 @@ const Reply = (props) => {
       alignItems="flex-start"
       style={{ paddingLeft: 80 }}
     >
-      <ListItemAvatar>
-        <Avatar
-          alt={reply?.author?.userName}
-          src={getCuteAvatar(reply?.author?.userName)}
-        />
-      </ListItemAvatar>
-      <ListItemText
-        primary={reply?.author?.userName}
-        secondary={
-          <React.Fragment>
-            <Typography component="span" variant="body2" color="textPrimary">
-              {reply.content}
-            </Typography>
-            <br />
-            <ReactTimeAgo
-              date={new Date(reply?.createdAt).getTime()}
-              locale="en-US"
+      {reply ? (
+        <React.Fragment>
+          <ListItemAvatar>
+            <Avatar
+              alt={reply?.author?.userName}
+              src={getCuteAvatar(reply?.author?.userName)}
             />
-            <br />
-            <Typography display={"flex"} alignItems={"center"} gap={1}>
-              <ThumbUpIcon
-                cursor="pointer"
-                onClick={() => handleLikeReply(reply._id)}
-                style={{ color: isLiked ? "#0247FE" : "gray" }}
-              />
-              {/* {isLiked}  if it is true there then change icone color */}
-              {reply?.likes?.length > 0 && reply?.likes?.length}
-            </Typography>
-          </React.Fragment>
-        }
-      />
+          </ListItemAvatar>
+          <ListItemText
+            primary={reply?.author?.userName}
+            secondary={
+              <React.Fragment>
+                <Typography
+                  component="span"
+                  variant="body2"
+                  color="textPrimary"
+                >
+                  {reply.content}
+                </Typography>
+                <br />
+                <ReactTimeAgo
+                  date={new Date(reply?.createdAt).getTime()}
+                  locale="en-US"
+                />
+                <br />
+                <Typography display={"flex"} alignItems={"center"} gap={1}>
+                  <ThumbUpIcon
+                    cursor="pointer"
+                    onClick={() => handleLikeReply(reply._id)}
+                    style={{ color: isLiked ? "#0247FE" : "gray" }}
+                  />
+                  {/* {isLiked}  if it is true there then change icone color */}
+                  {reply?.likes?.length > 0 && reply?.likes?.length}
+                </Typography>
+              </React.Fragment>
+            }
+          />
+        </React.Fragment>
+      ) : (
+        <ListItem>
+          <ListItemAvatar>
+            <Skeleton variant="circular" width={40} height={40} />
+          </ListItemAvatar>
+          <ListItemText
+            primary={<Skeleton variant="text" />}
+            secondary={<Skeleton variant="text" />}
+          />
+        </ListItem>
+      )}
     </ListItem>
   );
 };

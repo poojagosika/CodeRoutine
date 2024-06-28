@@ -7,8 +7,9 @@ import {
   ListItemText,
   TextField,
   Typography,
+  Skeleton,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import getCuteAvatar from "../../Config/getCuteAvatar";
 import ReactTimeAgo from "react-time-ago";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
@@ -60,7 +61,6 @@ const Comment = (props) => {
       setIsLiked(comment?.likes?.includes(userData._id));
     }
   }, [comment, userData]);
-
   const handleReplyClick = () => {
     setIsReplying(!isReplying);
     setReplyContent(""); // Clear content on toggle
@@ -101,88 +101,107 @@ const Comment = (props) => {
 
   return (
     <ListItem alignItems="flex-start">
-      <ListItemAvatar>
-        <Avatar
-          alt={comment?.author?.userName}
-          src={getCuteAvatar(comment?.author?.userName)}
-        />
-      </ListItemAvatar>
-      <ListItemText
-        primary={comment?.author?.userName}
-        secondary={
-          <React.Fragment>
-            <Typography component="span" variant="body2" color="textPrimary">
-              {comment.content}
-            </Typography>
-            <br />
-            <ReactTimeAgo
-              date={new Date(comment?.createdAt).getTime()}
-              locale="en-US"
+      {comment ? (
+        <React.Fragment>
+          <ListItemAvatar>
+            <Avatar
+              alt={comment?.author?.userName}
+              src={getCuteAvatar(comment?.author?.userName)}
             />
-            <br />
-
-            <Typography display={"flex"} alignItems={"center"} gap={1}>
-              <ThumbUpIcon
-                cursor="pointer"
-                onClick={() => handleLikeComment(comment?._id)}
-                style={{ color: isLiked ? "#0247FE" : "gray" }}
-              />
-              {comment?.likes?.length > 0 && comment?.likes?.length}
-
-              <Button
-                onClick={handleReplyClick}
-                style={{ color: isReplying ? "#0247FE" : "gray" }}
-              >
-                <ReplyIcon />
-                Reply
-              </Button>
-            </Typography>
-
-            {isReplying && (
+          </ListItemAvatar>
+          <ListItemText
+            primary={comment?.author?.userName}
+            secondary={
               <React.Fragment>
-                <TextField
-                  value={replyContent}
-                  onChange={(e) => setReplyContent(e.target.value)}
-                  placeholder="Write a reply..."
-                  fullWidth
-                  multiline
-                  rows={2}
-                />
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "flex-end", // Align buttons to the right
-                    marginTop: "8px",
-                    gap: "8px", // Adjust spacing between buttons
-                  }}
+                <Typography
+                  component="span"
+                  variant="body2"
+                  color="textPrimary"
                 >
+                  {comment.content}
+                </Typography>
+                <br />
+                <ReactTimeAgo
+                  date={new Date(comment?.createdAt).getTime()}
+                  locale="en-US"
+                />
+                <br />
+
+                <Typography display={"flex"} alignItems={"center"} gap={1}>
+                  <ThumbUpIcon
+                    cursor="pointer"
+                    onClick={() => handleLikeComment(comment?._id)}
+                    style={{ color: isLiked ? "#0247FE" : "gray" }}
+                  />
+                  {comment?.likes?.length > 0 && comment?.likes?.length}
+
                   <Button
-                    onClick={handleCancel}
-                    variant="outlined"
-                    color="secondary"
+                    onClick={handleReplyClick}
+                    style={{ color: isReplying ? "#0247FE" : "gray" }}
                   >
-                    Cancel
+                    <ReplyIcon />
+                    Reply
                   </Button>
-                  <Button
-                    onClick={() => handleReplyToComment(comment?._id)}
-                    disabled={!replyContent.trim()}
-                    variant="contained"
-                    color="primary"
-                  >
-                    Post
-                  </Button>
-                </div>
+                </Typography>
+
+                {isReplying && (
+                  <React.Fragment>
+                    <TextField
+                      value={replyContent}
+                      onChange={(e) => setReplyContent(e.target.value)}
+                      placeholder="Write a reply..."
+                      fullWidth
+                      multiline
+                      rows={2}
+                    />
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "flex-end", // Align buttons to the right
+                        marginTop: "8px",
+                        gap: "8px", // Adjust spacing between buttons
+                      }}
+                    >
+                      <Button
+                        onClick={handleCancel}
+                        variant="outlined"
+                        color="secondary"
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        onClick={() => handleReplyToComment(comment?._id)}
+                        disabled={!replyContent.trim()}
+                        variant="contained"
+                        color="primary"
+                      >
+                        Post
+                      </Button>
+                    </div>
+                  </React.Fragment>
+                )}
               </React.Fragment>
-            )}
-          </React.Fragment>
-        }
-      />
-      {comment.replies.length > 0 && (
-        <List>
-          {comment.replies
-            .map((reply) => <Reply key={reply._id} reply={reply} />)
-            .reverse()}
-        </List>
+            }
+          />
+          {comment.replies.length > 0 && (
+            <List>
+              {comment.replies
+                .map((reply) => <Reply key={reply._id} reply={reply} />)
+                .reverse()}
+            </List>
+          )}
+        </React.Fragment>
+      ) : (
+        <ListItem>
+          <ListItemAvatar>
+            <Skeleton variant="circular" width={40} height={40} />
+          </ListItemAvatar>
+          <ListItemText>
+            <Skeleton variant="text" width="20%" />
+            <Skeleton variant="text" width="20%" />
+            <Skeleton variant="text" width="20%" />
+          </ListItemText>
+        </ListItem>
       )}
     </ListItem>
   );
