@@ -9,7 +9,7 @@ import {
   Typography,
   Skeleton,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import getCuteAvatar from "../../Config/getCuteAvatar";
 import ReactTimeAgo from "react-time-ago";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
@@ -55,6 +55,12 @@ const Comment = (props) => {
     }
   };
 
+  //console.log(comment);
+  useEffect(() => {
+    if (comment) {
+      setIsLiked(comment?.likes?.includes(userData._id));
+    }
+  }, [comment, userData]);
   const handleReplyClick = () => {
     setIsReplying(!isReplying);
     setReplyContent(""); // Clear content on toggle
@@ -127,7 +133,7 @@ const Comment = (props) => {
                     onClick={() => handleLikeComment(comment?._id)}
                     style={{ color: isLiked ? "#0247FE" : "gray" }}
                   />
-                  {comment?.likes?.length}
+                  {comment?.likes?.length > 0 && comment?.likes?.length}
 
                   <Button
                     onClick={handleReplyClick}
