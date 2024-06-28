@@ -76,7 +76,7 @@ const Reply = (props) => {
                 style={{ color: isLiked ? "#0247FE" : "gray" }}
               />
               {/* {isLiked}  if it is true there then change icone color */}
-              {reply?.likes?.length}
+              {reply?.likes?.length > 0 && reply?.likes?.length}
             </Typography>
           </React.Fragment>
         }
