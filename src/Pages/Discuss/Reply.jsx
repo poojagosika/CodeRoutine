@@ -46,7 +46,7 @@ const Reply = (props) => {
 
   useEffect(() => {
     if (reply) {
-      setIsLiked(reply?.likes?.includes(userData._id));
+      setIsLiked(reply?.likes?.includes(userData?._id));
     }
   }, [reply, userData]);
   return (
