@@ -178,8 +178,8 @@ const DiscussDetails = () => {
               onClick={handleLike}
               style={{ color: isLiked ? "#0247FE" : "gray" }}
             />
+            {topic?.likes?.length > 0 && topic?.likes?.length}
 
-            {topic?.likes?.length}
             <EditIcon onClick={handleOpenDialog} style={{ color: "green" }} />
             <DeleteOutlineIcon
               onClick={handleDelete}
@@ -201,20 +201,26 @@ const DiscussDetails = () => {
               <CommentIcon color="primary" /> Comments:{" "}
               {topic?.comments?.length}
             </Typography>
-
-            <Box mt={3} style={{ border: "1px solid black",textAlign: "right", padding: "10px"  }}>
-              <InputBase
+            <Box
+              display="flex"
+              flexDirection="column"
+              alignItems="flex-end"
+              mt={2}
+              mb={2}
+            >
+              <TextField
+                value={newComment}
                 fullWidth
+                onChange={(e) => setNewComment(e.target.value)}
                 placeholder="Type comment here..."
                 multiline
                 rows={2}
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
               />
               <Button
+                onClick={handleAddComment}
                 variant="contained"
                 color="primary"
-                onClick={handleAddComment}
+                style={{ marginTop: 10 }}
               >
                 Post
               </Button>

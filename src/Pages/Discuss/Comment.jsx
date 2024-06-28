@@ -120,7 +120,7 @@ const Comment = (props) => {
                 onClick={() => handleLikeComment(comment?._id)}
                 style={{ color: isLiked ? "#0247FE" : "gray" }}
               />
-              {comment?.likes?.length}
+              {comment?.likes?.length > 0 && comment?.likes?.length}
 
               <Button
                 onClick={handleReplyClick}
