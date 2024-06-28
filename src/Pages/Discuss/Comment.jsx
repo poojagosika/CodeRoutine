@@ -58,7 +58,7 @@ const Comment = (props) => {
   //console.log(comment);
   useEffect(() => {
     if (comment) {
-      setIsLiked(comment?.likes?.includes(userData._id));
+      setIsLiked(comment?.likes?.includes(userData?._id));
     }
   }, [comment, userData]);
   const handleReplyClick = () => {

@@ -54,7 +54,7 @@ const DiscussDetails = () => {
 
   useEffect(() => {
     if (topic) {
-      setIsLiked(topic?.likes?.includes(userData._id));
+      setIsLiked(topic?.likes?.includes(userData?._id));
     }
   }, [topic, userData]);
   const handleDelete = async () => {
@@ -185,12 +185,18 @@ const DiscussDetails = () => {
               style={{ color: isLiked ? "#0247FE" : "gray" }}
             />
             {topic?.likes?.length > 0 && topic?.likes?.length}
-
-            <EditIcon onClick={handleOpenDialog} style={{ color: "green" }} />
-            <DeleteOutlineIcon
-              onClick={handleDelete}
-              style={{ color: "red" }}
-            />
+            {userData?._id === topic?.author?._id && (
+              <>
+                <EditIcon
+                  onClick={handleOpenDialog}
+                  style={{ color: "green" }}
+                />
+                <DeleteOutlineIcon
+                  onClick={handleDelete}
+                  style={{ color: "red" }}
+                />
+              </>
+            )}
           </Box>
 
           <Typography gutterBottom variant="h6">
