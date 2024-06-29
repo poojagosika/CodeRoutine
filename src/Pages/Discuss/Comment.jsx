@@ -100,9 +100,9 @@ const Comment = (props) => {
   };
 
   return (
-    <ListItem alignItems="flex-start">
+    <List display="flex">
       {comment ? (
-        <React.Fragment>
+        <ListItem alignItems="flex-start" justifyContent="flex-start">
           <ListItemAvatar>
             <Avatar
               alt={comment?.author?.userName}
@@ -183,27 +183,26 @@ const Comment = (props) => {
               </React.Fragment>
             }
           />
-          {comment.replies.length > 0 && (
-            <List>
-              {comment.replies
-                .map((reply) => <Reply key={reply._id} reply={reply} />)
-                .reverse()}
-            </List>
-          )}
-        </React.Fragment>
+        </ListItem>
       ) : (
         <ListItem>
           <ListItemAvatar>
             <Skeleton variant="circular" width={40} height={40} />
           </ListItemAvatar>
-          <ListItemText>
-            <Skeleton variant="text" width="20%" />
-            <Skeleton variant="text" width="20%" />
-            <Skeleton variant="text" width="20%" />
-          </ListItemText>
+          <ListItemText
+            primary={<Skeleton variant="text" width="20%"/>}
+            secondary={<Skeleton variant="text" width="20%"/>}
+          />
         </ListItem>
       )}
-    </ListItem>
+      {comment.replies.length > 0 && (
+        <List>
+          {comment.replies
+            .map((reply) => <Reply key={reply._id} reply={reply} />)
+            .reverse()}
+        </List>
+      )}
+    </List>
   );
 };
 

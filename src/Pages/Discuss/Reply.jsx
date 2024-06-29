@@ -100,8 +100,8 @@ const Reply = (props) => {
             <Skeleton variant="circular" width={40} height={40} />
           </ListItemAvatar>
           <ListItemText
-            primary={<Skeleton variant="text" />}
-            secondary={<Skeleton variant="text" />}
+            primary={<Skeleton variant="text" width="20%"/>}
+            secondary={<Skeleton variant="text" width="20%"/>}
           />
         </ListItem>
       )}
