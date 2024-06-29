@@ -2,10 +2,19 @@ import axios from "axios";
 
 const API = import.meta.env.VITE_API_URL;
 axios.defaults.withCredentials = true;
-const token = localStorage.getItem("token");
-if (token) {
-  axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-}
+// Axios request interceptor to add token to headers
+axios.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 export const RegisterUser = async (data) => {
   return await axios.post(`${API}/api/users/register`, data);
 };

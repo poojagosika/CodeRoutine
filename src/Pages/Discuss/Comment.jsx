@@ -2,18 +2,16 @@ import {
   Avatar,
   Button,
   List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
   TextField,
   Typography,
-  Skeleton,
   Box,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import getCuteAvatar from "../../Config/getCuteAvatar";
 import ReactTimeAgo from "react-time-ago";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import CloseIcon from "@mui/icons-material/Close";
+
 import {
   addLikeOrRemoveLikeComment,
   addReplyToComment,
@@ -23,6 +21,7 @@ import Reply from "./Reply";
 import ReplyIcon from "@mui/icons-material/Reply";
 import ChatIcon from "@mui/icons-material/Chat";
 import IsLogin from "../../Component/IsLogin";
+import CommentLoading from "./Loading/CommentLoading";
 
 const Comment = (props) => {
   const [comment, setComment] = React.useState(props?.comment);
@@ -108,6 +107,7 @@ const Comment = (props) => {
       }
       setReplyContent("");
       setIsReplying(false);
+      setShowReplies(true);
     } catch (error) {
       console.error("Error replying to comment:", error);
     }
@@ -122,121 +122,143 @@ const Comment = (props) => {
     setShowReplies(!showReplies);
   };
   return (
-    <List display="flex">
+    <>
       {comment ? (
-        <ListItem alignItems="flex-start">
-          <ListItemAvatar>
-            <Avatar
-              alt={comment?.author?.userName}
-              src={getCuteAvatar(comment?.author?.userName)}
-            />
-          </ListItemAvatar>
-          <ListItemText
-            primary={comment?.author?.userName}
-            secondary={
-              <React.Fragment>
-                <Typography
-                  component="span"
-                  variant="body2"
-                  color="textPrimary"
-                >
-                  {comment.content}
-                </Typography>
-                <br />
+        <Box display="flex" gap={1} mt={1} mb={1} >
+          <Avatar
+            alt={comment?.author?.userName}
+            src={getCuteAvatar(comment?.author?.userName)}
+            aria-label="author"
+            sx={{
+              width: 30,
+              height: 30,
+              borderRadius: "50%",
+              cursor: "pointer",
+              "&:hover": {
+                backgroundColor: "rgba(0,0,0,0.1)",
+              },
+            }}
+          />
+          <Box display="flex" flexDirection="column" sx={{ width: "100%" }}>
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="flex-start"
+              gap={1}
+            >
+              <Typography variant="body2" color="text.secondary" component="span">
+                {comment?.author?.userName}
+              </Typography >
+              <Typography variant="body2" color="text.secondary" component="span">
                 <ReactTimeAgo
                   date={new Date(comment?.createdAt).getTime()}
                   locale="en-US"
                 />
-                <br />
+              </Typography >
 
+            </Box>
+            <Typography variant="body2" component="span" color={"text.primary"} >
+              {comment.content}
+            </Typography>
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="flex-start"
+              gap={1}>
+              <ThumbUpIcon
+                cursor="pointer"
+                onClick={() => handleLikeComment(comment?._id)}
+                fontSize="small"
+                sx={{
+                  color: isLiked ? "#0247FE" : "gray",
+                  "&:hover": {
+                    color: isLiked ? "gray" : "#0247FE",
+                  },
+                }}
+                color="action"
+                aria-label="like"
+              />
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                component="span"
+              >
+                {comment?.likes?.length > 0 && comment?.likes?.length}
+              </Typography>
+              <Button onClick={handleReplyClick}
+                sx={{
+                  color: isReplying ? "#0247FE" : "gray",
+                  cursor: "pointer",
+                  "&:hover": {
+                    color: isReplying ? "gray" : "#0247FE",
+                  },
+                }}
+              >
+                <ReplyIcon fontSize="small" />
                 <Typography
-                  display={"flex"}
-                  alignItems={"center"}
-                  gap={1}
-                  component={"span"}
-                  variant={"body2"}
+                  variant="body2"
+                  component="span"
                 >
-                  <ThumbUpIcon
-                    cursor="pointer"
-                    onClick={() => handleLikeComment(comment?._id)}
-                    style={{ color: isLiked ? "#0247FE" : "gray" }}
-                  />
-                  {comment?.likes?.length > 0 && comment?.likes?.length}
-
-                  <Button
-                    onClick={handleReplyClick}
-                    style={{ color: isReplying ? "#0247FE" : "gray" }}
-                  >
-                    <ReplyIcon />
-                    Reply
-                  </Button>
-                  {comment.replies.length > 0 && (
-                    <Button
-                      onClick={handleReplies}
-                      style={{ color: showReplies ? "#0247FE" : "gray" }}
-                    >
-                      <ChatIcon />
-                      {showReplies
-                        ? `Hide ${comment.replies.length} ${
-                            comment.replies.length > 1 ? "replies" : "reply"
-                          }`
-                        : `Show ${comment.replies.length} ${
-                            comment.replies.length > 1 ? "replies" : "reply"
-                          }`}
-                    </Button>
-                  )}
+                  Reply
                 </Typography>
-
-                {isReplying && (
-                  <React.Fragment>
-                    <TextField
-                      value={replyContent}
-                      onChange={(e) => setReplyContent(e.target.value)}
-                      placeholder="Write a reply..."
-                      fullWidth
-                      multiline
-                      rows={2}
-                    />
-                    <Box
-                      style={{
-                        display: "flex",
-                        justifyContent: "flex-end", // Align buttons to the right
-                        marginTop: "8px",
-                        gap: "8px", // Adjust spacing between buttons
-                      }}
-                    >
-                      <Button
-                        onClick={handleCancel}
-                        variant="outlined"
-                        color="secondary"
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        onClick={() => handleReplyToComment(comment?._id)}
-                        disabled={!replyContent.trim()}
-                        variant="contained"
-                        color="primary"
-                      >
-                        Post
-                      </Button>
-                    </Box>
-                  </React.Fragment>
-                )}
-              </React.Fragment>
-            }
-          />
-        </ListItem>
+              </Button>
+              {comment.replies.length > 0 && (
+                <Button
+                  onClick={handleReplies}
+                  sx={{
+                    color: showReplies ? "#0247FE" : "gray",
+                    cursor: "pointer",
+                    "&:hover": {
+                      color: showReplies ? "gray" : "#0247FE",
+                    },
+                  }}
+                >
+                  <ChatIcon fontSize="small" />
+                  {showReplies
+                    ? `Hide ${comment?.replies?.length} ${comment?.replies?.length > 1 ? "Replies" : "Reply"
+                    }`
+                    : `Show ${comment?.replies?.length} ${comment?.replies?.length > 1 ? "Replies" : "Reply"
+                    }`}
+                </Button>
+              )}
+            </Box>
+            {isReplying && (
+              <Box mt={1}>
+                <TextField
+                  value={replyContent}
+                  onChange={(e) => setReplyContent(e.target.value)}
+                  placeholder="Reply to this comment..."
+                  fullWidth
+                  multiline
+                  rows={2}
+                />
+                <Box mt={1} display="flex" justifyContent="flex-end" gap={1}>
+                  <Button
+                    onClick={handleCancel}
+                    variant="outlined"
+                    color="secondary"
+                    size="small"
+                    startIcon={<CloseIcon fontSize="small" />}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={() => handleReplyToComment(comment?._id)}
+                    disabled={!replyContent.trim()}
+                    variant="contained"
+                    color="primary"
+                    size="small"
+                    startIcon={<ReplyIcon fontSize="small" />}
+                  >
+                    Post
+                  </Button>
+                </Box>
+              </Box>
+            )}
+          </Box >
+        </Box>
       ) : (
-        <ListItem>
-          <ListItemAvatar>
-            <Skeleton variant="circular" width={40} height={40} />
-          </ListItemAvatar>
-          <ListItemText
-            primary={<Skeleton variant="text" width="20%" />}
-            secondary={<Skeleton variant="text" width="20%" />}
-          />
-        </ListItem>
+        <CommentLoading />
       )}
       {showReplies && (
         <List>
@@ -250,7 +272,7 @@ const Comment = (props) => {
         loginDialogOpen={loginDialogOpen}
         message={isMessageDialog}
       />
-    </List>
+    </>
   );
 };
 

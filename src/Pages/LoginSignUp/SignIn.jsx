@@ -45,9 +45,7 @@ export default function SignIn() {
       setUserData(res.data.existingProfile);
       setToken(res.data.token);
       toast.success(res?.data?.message);
-      localStorage.setItem("token", res?.data?.token);
       navigate("/");
-      console.log(res);
     } catch (err) {
       toast.error(err?.response?.data?.message);
       // setError(err.response.data?.message);

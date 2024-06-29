@@ -17,6 +17,7 @@ import iosImg from "../assets/home/iosimg.webp";
 import bootcampImg from "../assets/home/bootcamp.webp";
 import { IconButton, InputAdornment, TextField } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import { ContextStore } from "../Context/ContextStore";
 
 const CombinedLink = React.forwardRef(function CombinedLink(props, ref) {
   return <RouterLink ref={ref} {...props} />;
@@ -54,9 +55,7 @@ const handleSearch = (event) => {
 };
 
 function Home() {
-  const user = localStorage.getItem("user");
-  console.log(user);
-
+  const { userData } = ContextStore();
   return (
     <>
       <CssBaseline />
@@ -83,7 +82,7 @@ function Home() {
               spacing={2}
               justifyContent="center"
             >
-              {!user ? (
+              {!userData ? (
                 <Button variant="contained" color="primary">
                   <Link
                     to={"/signup"}

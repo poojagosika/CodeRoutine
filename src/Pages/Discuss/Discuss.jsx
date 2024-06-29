@@ -190,25 +190,7 @@ const Discuss = () => {
                     <ReactQuill
                         value={newPostData.content}
                         onChange={handleContentChange}
-                        modules={{
-                            toolbar: [
-                                [{ header: "1" }, { header: "2" }, { font: [] }],
-                                [{ list: "ordered" }, { list: "bullet" }],
-                                ["bold", "italic", "underline"],
-                                ["link", "image"],
-                            ],
-                        }}
-                        formats={[
-                            "header",
-                            "font",
-                            "list",
-                            "bullet",
-                            "bold",
-                            "italic",
-                            "underline",
-                            "link",
-                            "image",
-                        ]}
+                        theme="snow"
                         style={{ height: "200px", marginBottom: "20px" }}
                     />
                 </DialogContent>

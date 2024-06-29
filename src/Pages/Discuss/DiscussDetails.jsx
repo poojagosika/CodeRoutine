@@ -5,11 +5,8 @@ import {
   Typography,
   Button,
   Box,
-  List,
   Avatar,
   TextField,
-  Stack,
-  Skeleton,
 } from "@mui/material";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import CommentIcon from "@mui/icons-material/ChatBubble";
@@ -27,6 +24,7 @@ import DiscussEdit from "./DiscussEdit";
 import { ContextStore } from "../../Context/ContextStore";
 import Comment from "./Comment";
 import IsLogin from "../../Component/IsLogin";
+import TopicLoadig from "./Loading/TopicLoadig";
 
 const DiscussDetails = () => {
   const { id } = useParams();
@@ -167,21 +165,14 @@ const DiscussDetails = () => {
   };
 
   return (
-    <Container style={{ marginTop: 30, padding: 5 }}>
+    <Container maxWidth="lg" sx={{ mt: 5 }} >
       {!topic ? (
-        <Stack spacing={1}>
-          <Skeleton variant="text" height={50} />
-          <Skeleton variant="circular" width={40} height={40} />
-          <Skeleton variant="text" height={40} />
-          <Skeleton variant="text" height={40} />
-          <Skeleton variant="rectangular" height={150} />
-        </Stack>
+        <TopicLoadig />
       ) : (
         <>
-          <Typography variant="h4" gutterBottom>
+          <Typography variant="h5" mb={2}>
             {topic.title}
           </Typography>
-
           <Box
             display="flex"
             alignItems="center"
@@ -191,50 +182,99 @@ const DiscussDetails = () => {
             <Avatar
               alt={topic?.author?.userName}
               src={getCuteAvatar(topic?.author?.userName)}
+              onClick={() => navigate(`/profile/${topic?.author?.userName}`)}
+              aria-label="author"
+              sx={{
+                width: 30,
+                height: 30,
+                borderRadius: "50%",
+                cursor: "pointer",
+                "&:hover": {
+                  backgroundColor: "rgba(0,0,0,0.1)",
+                },
+              }}
             />
-            <Typography variant="subtitle1">
+            <Typography variant="body2" color="gray">
               {topic?.author?.userName}
             </Typography>
             <ThumbUpIcon
               cursor="pointer"
               onClick={handleLike}
-              style={{ color: isLiked ? "#0247FE" : "gray" }}
+              fontSize="small"
+              sx={{
+                color: isLiked ? "#0247FE" : "gray",
+                "&:hover": {
+                  color: isLiked ? "gray" : "#0247FE",
+                },
+              }}
+              color="action"
+              aria-label="like"
             />
-            {topic?.likes?.length > 0 && topic?.likes?.length}
+            <Typography variant="body2" color="gray">
+              {topic?.likes?.length > 0 && topic?.likes?.length}
+            </Typography>
             {userData?._id === topic?.author?._id && (
               <>
                 <EditIcon
                   onClick={handleOpenDialog}
-                  style={{ color: "green" }}
+                  fontSize="small"
+                  aria-label="edit"
+                  cursor="pointer"
+                  sx={{
+                    color: "green",
+                    "&:hover": {
+                      color: "blue",
+                    },
+                  }}
+                  color="action"
                 />
                 <DeleteOutlineIcon
                   onClick={handleDelete}
-                  style={{ color: "red" }}
+                  fontSize="small"
+                  aria-label="delete"
+                  cursor="pointer"
+                  sx={{
+                    color: "red",
+                    "&:hover": {
+                      color: "orange",
+                    },
+                  }}
+                  color="action"
                 />
               </>
             )}
           </Box>
 
-          <Typography gutterBottom variant="h6">
+          <Typography variant="body2" color="gray" mt={2}>
             <div dangerouslySetInnerHTML={{ __html: topic.content }} />
           </Typography>
 
-          <Box mt={3}>
-            <Typography
-              variant="body2"
-              display={"flex"}
-              gap={1}
-              alignItems={"center"}
-            >
-              <CommentIcon color="primary" /> Comments:{" "}
-              {topic?.comments?.length}
-            </Typography>
+          <Box mt={2} gap={1}>
             <Box
               display="flex"
-              flexDirection="column"
+              alignItems="center"
+              justifyContent="flex-start"
+              gap={1}
+            >
+              <CommentIcon fontSize="small" color="action"
+                aria-label="comment"
+                cursor="pointer"
+                sx={{
+                  color: "blue",
+                }}
+              />
+              <Typography
+                variant="body2"
+                color="gray">
+                Comments: {topic?.comments?.length}
+              </Typography>
+            </Box>
+            <Box
+              display="flex"
               alignItems="flex-end"
-              mt={2}
-              mb={2}
+              flexDirection="column"
+              gap={1}
+              mt={1}
             >
               <TextField
                 value={newComment}
@@ -243,29 +283,36 @@ const DiscussDetails = () => {
                 placeholder="Type comment here..."
                 multiline
                 rows={2}
+                variant="outlined"
+                aria-label="comment"
               />
               <Button
                 onClick={handleAddComment}
                 variant="contained"
                 color="primary"
-                style={{ marginTop: 10 }}
+                size="small"
+                aria-label="add comment"
+                sx={{
+                  color: "white",
+                }}
+                disabled={!newComment.trim()}
               >
                 Post
               </Button>
             </Box>
-
-            {topic?.comments?.length === 0 ? (
-              <Typography variant="body2">No comments yet</Typography>
-            ) : (
-              <List>
-                {topic?.comments
-                  ?.map((comment) => (
-                    <Comment key={comment._id} comment={comment} />
-                  ))
-                  .reverse()}
-              </List>
-            )}
           </Box>
+
+          {topic?.comments?.length === 0 ? (
+            <Typography variant="body2" color="gray">No comments yet ! 😢</Typography>
+          ) : (
+            <Box>
+              {topic?.comments
+                ?.map((comment) => (
+                  <Comment key={comment._id} comment={comment} />
+                ))
+                .reverse()}
+            </Box>
+          )}
 
           <DiscussEdit
             openDialog={openDialog}
