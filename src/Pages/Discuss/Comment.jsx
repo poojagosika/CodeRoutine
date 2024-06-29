@@ -10,7 +10,7 @@ import {
   Skeleton,
   Box,
 } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import getCuteAvatar from "../../Config/getCuteAvatar";
 import ReactTimeAgo from "react-time-ago";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
@@ -22,6 +22,7 @@ import { ContextStore } from "../../Context/ContextStore";
 import Reply from "./Reply";
 import ReplyIcon from "@mui/icons-material/Reply";
 import ChatIcon from "@mui/icons-material/Chat";
+import IsLogin from "../../Component/IsLogin";
 
 const Comment = (props) => {
   const [comment, setComment] = React.useState(props?.comment);
@@ -29,10 +30,19 @@ const Comment = (props) => {
   const [isLiked, setIsLiked] = React.useState(null);
   const [isReplying, setIsReplying] = React.useState(false);
   const [showReplies, setShowReplies] = React.useState(false);
+  const [loginDialogOpen, setLoginDialogOpen] = useState(false); // New state
+  const [isMessageDialog, setisMessageDialog] = useState(null);
+
   const { userData } = ContextStore();
   const userId = userData?._id;
 
   const handleLikeComment = async (commentId) => {
+    if (!userData) {
+      setLoginDialogOpen(true);
+      setisMessageDialog("If you want to like,then please Login");
+      return;
+    }
+
     try {
       const response = await addLikeOrRemoveLikeComment(commentId);
       const userLikes = comment?.likes.includes(userId);
@@ -65,6 +75,12 @@ const Comment = (props) => {
     }
   }, [comment, userData]);
   const handleReplyClick = () => {
+    if (!userData) {
+      setLoginDialogOpen(true);
+      setisMessageDialog("If you want to reply,then please Login");
+      return;
+    }
+
     setIsReplying(!isReplying);
     setReplyContent(""); // Clear content on toggle
   };
@@ -229,6 +245,11 @@ const Comment = (props) => {
             .reverse()}
         </List>
       )}
+      <IsLogin
+        setLoginDialogOpen={setLoginDialogOpen}
+        loginDialogOpen={loginDialogOpen}
+        message={isMessageDialog}
+      />
     </List>
   );
 };

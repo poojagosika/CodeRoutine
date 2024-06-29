@@ -10,7 +10,6 @@ import {
   TextField,
   Stack,
   Skeleton,
-  InputBase,
 } from "@mui/material";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import CommentIcon from "@mui/icons-material/ChatBubble";
@@ -27,6 +26,7 @@ import getCuteAvatar from "../../Config/getCuteAvatar";
 import DiscussEdit from "./DiscussEdit";
 import { ContextStore } from "../../Context/ContextStore";
 import Comment from "./Comment";
+import IsLogin from "../../Component/IsLogin";
 
 const DiscussDetails = () => {
   const { id } = useParams();
@@ -34,9 +34,13 @@ const DiscussDetails = () => {
   const [update, setUpdate] = useState({});
   const [newComment, setNewComment] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
+  const [loginDialogOpen, setLoginDialogOpen] = useState(false); // New state
   const [isLiked, setIsLiked] = useState(null);
+  const [likeorComment, setisLikeorComment] = useState(null);
+
   const navigate = useNavigate();
   const { userData } = ContextStore();
+
   useEffect(() => {
     const fetchTopic = async () => {
       try {
@@ -50,13 +54,13 @@ const DiscussDetails = () => {
 
     fetchTopic();
   }, [id]);
-  // console.log(topic);
 
   useEffect(() => {
     if (topic) {
       setIsLiked(topic?.likes?.includes(userData?._id));
     }
   }, [topic, userData]);
+
   const handleDelete = async () => {
     try {
       await deleteDiscussById(id);
@@ -68,6 +72,13 @@ const DiscussDetails = () => {
 
   const handleAddComment = async () => {
     try {
+      if (!userData) {
+        // Check if user is logged in
+        setisLikeorComment("If you want write comment,then please Login");
+        setLoginDialogOpen(true); // Open login dialog
+        return; // Exit function to prevent further execution
+      }
+
       const response = await addCommentToTopic(id, {
         content: newComment,
       });
@@ -79,9 +90,7 @@ const DiscussDetails = () => {
             userName: userData?.userName,
           },
         };
-        // Create a new array with the new comment added
         const updatedComments = [...(topic?.comments || []), newCommentData];
-        // Update the topic state with the new comments array
         setTopic((prevTopic) => ({
           ...prevTopic,
           comments: updatedComments,
@@ -90,26 +99,33 @@ const DiscussDetails = () => {
       setNewComment("");
     } catch (error) {
       console.error("Error adding comment:", error);
+      // Handle error scenarios here
     }
   };
 
   const handleLike = async () => {
+    if (!userData) {
+      // Check if user is logged in
+      setisLikeorComment("If you want to like,then please Login");
+      setLoginDialogOpen(true); // Open login dialog
+      return;
+    }
+
     const userId = userData?._id;
     try {
       const response = await addLikeOrRemoveLike(id);
-      // Ensure the response contains the updated likes data
       const userLikes = topic?.likes.includes(userId);
       if (response && response.data) {
         if (!userLikes) {
           setTopic((prevTopic) => ({
             ...prevTopic,
-            likes: [...(topic?.likes || []), userId], // Update likes with the new data
+            likes: [...(topic?.likes || []), userId],
           }));
           setIsLiked(true);
         } else {
           setTopic((prevTopic) => ({
             ...prevTopic,
-            likes: prevTopic.likes.filter((like) => like !== userId), // Remove userId from likes array
+            likes: prevTopic.likes.filter((like) => like !== userId),
           }));
           setIsLiked(false);
         }
@@ -258,6 +274,12 @@ const DiscussDetails = () => {
             handleCloseDialog={handleCloseDialog}
             handleContentChange={handleContentChange}
             handleUpdatePost={handleUpdatePost}
+          />
+
+          <IsLogin
+            setLoginDialogOpen={setLoginDialogOpen}
+            loginDialogOpen={loginDialogOpen}
+            message={likeorComment}
           />
         </>
       )}

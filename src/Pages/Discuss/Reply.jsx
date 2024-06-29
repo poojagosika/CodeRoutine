@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { ContextStore } from "../../Context/ContextStore";
 import {
   Avatar,
@@ -12,14 +12,21 @@ import getCuteAvatar from "../../Config/getCuteAvatar";
 import ReactTimeAgo from "react-time-ago";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import { addLikeOrRemoveLikeReply } from "../../Services/AuthService";
+import IsLogin from "../../Component/IsLogin";
 
 const Reply = (props) => {
   const [reply, setReply] = React.useState(props?.reply);
   const [isLiked, setIsLiked] = React.useState(null);
+  const [loginDialogOpen, setLoginDialogOpen] = useState(false); // New state
+
   const { userData } = ContextStore();
   const userId = userData?._id;
 
   const handleLikeReply = async (replyId) => {
+    if (!userData) {
+      setLoginDialogOpen(true);
+      return;
+    }
     try {
       const response = await addLikeOrRemoveLikeReply(replyId);
       const userLikes = reply?.likes.includes(userId);
@@ -111,6 +118,11 @@ const Reply = (props) => {
           />
         </ListItem>
       )}
+      <IsLogin
+        setLoginDialogOpen={setLoginDialogOpen}
+        loginDialogOpen={loginDialogOpen}
+        message={" If you want to like, then please login."}
+      />
     </ListItem>
   );
 };
