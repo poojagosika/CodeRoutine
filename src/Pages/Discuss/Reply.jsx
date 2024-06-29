@@ -69,8 +69,8 @@ const Reply = (props) => {
             secondary={
               <React.Fragment>
                 <Typography
-                  component="span"
-                  variant="body2"
+                  component={"span"}
+                  variant={"body2"} 
                   color="textPrimary"
                 >
                   {reply.content}
@@ -81,7 +81,13 @@ const Reply = (props) => {
                   locale="en-US"
                 />
                 <br />
-                <Typography display={"flex"} alignItems={"center"} gap={1}>
+                <Typography
+                  display={"flex"}
+                  alignItems={"center"}
+                  gap={1}
+                  component={"span"}
+                  variant={"body2"}
+                >
                   <ThumbUpIcon
                     cursor="pointer"
                     onClick={() => handleLikeReply(reply._id)}
@@ -100,8 +106,8 @@ const Reply = (props) => {
             <Skeleton variant="circular" width={40} height={40} />
           </ListItemAvatar>
           <ListItemText
-            primary={<Skeleton variant="text" width="20%"/>}
-            secondary={<Skeleton variant="text" width="20%"/>}
+            primary={<Skeleton variant="text" width="20%" />}
+            secondary={<Skeleton variant="text" width="20%" />}
           />
         </ListItem>
       )}
