@@ -8,6 +8,7 @@ import {
   TextField,
   Typography,
   Skeleton,
+  Box,
 } from "@mui/material";
 import React, { useEffect } from "react";
 import getCuteAvatar from "../../Config/getCuteAvatar";
@@ -20,12 +21,14 @@ import {
 import { ContextStore } from "../../Context/ContextStore";
 import Reply from "./Reply";
 import ReplyIcon from "@mui/icons-material/Reply";
+import ChatIcon from "@mui/icons-material/Chat";
 
 const Comment = (props) => {
   const [comment, setComment] = React.useState(props?.comment);
   const [replyContent, setReplyContent] = React.useState("");
   const [isLiked, setIsLiked] = React.useState(null);
   const [isReplying, setIsReplying] = React.useState(false);
+  const [showReplies, setShowReplies] = React.useState(false);
   const { userData } = ContextStore();
   const userId = userData?._id;
 
@@ -99,10 +102,13 @@ const Comment = (props) => {
     setReplyContent("");
   };
 
+  const handleReplies = () => {
+    setShowReplies(!showReplies);
+  };
   return (
     <List display="flex">
       {comment ? (
-        <ListItem alignItems="flex-start" justifyContent="flex-start">
+        <ListItem alignItems="flex-start">
           <ListItemAvatar>
             <Avatar
               alt={comment?.author?.userName}
@@ -127,7 +133,13 @@ const Comment = (props) => {
                 />
                 <br />
 
-                <Typography display={"flex"} alignItems={"center"} gap={1}>
+                <Typography
+                  display={"flex"}
+                  alignItems={"center"}
+                  gap={1}
+                  component={"span"}
+                  variant={"body2"}
+                >
                   <ThumbUpIcon
                     cursor="pointer"
                     onClick={() => handleLikeComment(comment?._id)}
@@ -142,6 +154,21 @@ const Comment = (props) => {
                     <ReplyIcon />
                     Reply
                   </Button>
+                  {comment.replies.length > 0 && (
+                    <Button
+                      onClick={handleReplies}
+                      style={{ color: showReplies ? "#0247FE" : "gray" }}
+                    >
+                      <ChatIcon />
+                      {showReplies
+                        ? `Hide ${comment.replies.length} ${
+                            comment.replies.length > 1 ? "replies" : "reply"
+                          }`
+                        : `Show ${comment.replies.length} ${
+                            comment.replies.length > 1 ? "replies" : "reply"
+                          }`}
+                    </Button>
+                  )}
                 </Typography>
 
                 {isReplying && (
@@ -154,7 +181,7 @@ const Comment = (props) => {
                       multiline
                       rows={2}
                     />
-                    <div
+                    <Box
                       style={{
                         display: "flex",
                         justifyContent: "flex-end", // Align buttons to the right
@@ -177,7 +204,7 @@ const Comment = (props) => {
                       >
                         Post
                       </Button>
-                    </div>
+                    </Box>
                   </React.Fragment>
                 )}
               </React.Fragment>
@@ -190,12 +217,12 @@ const Comment = (props) => {
             <Skeleton variant="circular" width={40} height={40} />
           </ListItemAvatar>
           <ListItemText
-            primary={<Skeleton variant="text" width="20%"/>}
-            secondary={<Skeleton variant="text" width="20%"/>}
+            primary={<Skeleton variant="text" width="20%" />}
+            secondary={<Skeleton variant="text" width="20%" />}
           />
         </ListItem>
       )}
-      {comment.replies.length > 0 && (
+      {showReplies && (
         <List>
           {comment.replies
             .map((reply) => <Reply key={reply._id} reply={reply} />)
