@@ -9,7 +9,7 @@ import {
   Typography,
   Skeleton,
 } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import getCuteAvatar from "../../Config/getCuteAvatar";
 import ReactTimeAgo from "react-time-ago";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
@@ -20,16 +20,29 @@ import {
 import { ContextStore } from "../../Context/ContextStore";
 import Reply from "./Reply";
 import ReplyIcon from "@mui/icons-material/Reply";
+import IsLogin from "../../Component/IsLogin";
 
 const Comment = (props) => {
-  const [comment, setComment] = React.useState(props?.comment);
-  const [replyContent, setReplyContent] = React.useState("");
-  const [isLiked, setIsLiked] = React.useState(null);
-  const [isReplying, setIsReplying] = React.useState(false);
+  const [comment, setComment] = useState(props?.comment);
+  const [replyContent, setReplyContent] = useState("");
+  const [isLiked, setIsLiked] = useState(null);
+  const [isReplying, setIsReplying] = useState(false);
+  const [loginDialogOpen, setLoginDialogOpen] = useState(false); // New state
+  const [likeorComment, setisLikeorComment] = useState(null);
+
   const { userData } = ContextStore();
+
   const userId = userData?._id;
 
   const handleLikeComment = async (commentId) => {
+    if (!userData) {
+      setisLikeorComment("If you want to like,then please Login");
+
+      setLoginDialogOpen(true);
+
+      return;
+    }
+
     try {
       const response = await addLikeOrRemoveLikeComment(commentId);
       const userLikes = comment?.likes.includes(userId);
@@ -55,12 +68,12 @@ const Comment = (props) => {
     }
   };
 
-  //console.log(comment);
   useEffect(() => {
     if (comment) {
       setIsLiked(comment?.likes?.includes(userData?._id));
     }
   }, [comment, userData]);
+
   const handleReplyClick = () => {
     setIsReplying(!isReplying);
     setReplyContent(""); // Clear content on toggle
@@ -68,6 +81,13 @@ const Comment = (props) => {
 
   const handleReplyToComment = async (commentId) => {
     try {
+      if (!userData) {
+        // Check if user is logged in
+        setLoginDialogOpen(true); // Open login dialog
+        setisLikeorComment("if you want to reply,then please Login");
+        return; // Exit function to prevent further execution
+      }
+
       const response = await addReplyToComment(commentId, {
         content: replyContent,
       });
@@ -100,109 +120,117 @@ const Comment = (props) => {
   };
 
   return (
-    <List display="flex">
-      {comment ? (
-        <ListItem alignItems="flex-start" justifyContent="flex-start">
-          <ListItemAvatar>
-            <Avatar
-              alt={comment?.author?.userName}
-              src={getCuteAvatar(comment?.author?.userName)}
-            />
-          </ListItemAvatar>
-          <ListItemText
-            primary={comment?.author?.userName}
-            secondary={
-              <React.Fragment>
-                <Typography
-                  component="span"
-                  variant="body2"
-                  color="textPrimary"
-                >
-                  {comment.content}
-                </Typography>
-                <br />
-                <ReactTimeAgo
-                  date={new Date(comment?.createdAt).getTime()}
-                  locale="en-US"
-                />
-                <br />
-
-                <Typography display={"flex"} alignItems={"center"} gap={1}>
-                  <ThumbUpIcon
-                    cursor="pointer"
-                    onClick={() => handleLikeComment(comment?._id)}
-                    style={{ color: isLiked ? "#0247FE" : "gray" }}
-                  />
-                  {comment?.likes?.length > 0 && comment?.likes?.length}
-
-                  <Button
-                    onClick={handleReplyClick}
-                    style={{ color: isReplying ? "#0247FE" : "gray" }}
+    <>
+      <List display="flex">
+        {comment ? (
+          <ListItem alignItems="flex-start" justifyContent="flex-start">
+            <ListItemAvatar>
+              <Avatar
+                alt={comment?.author?.userName}
+                src={getCuteAvatar(comment?.author?.userName)}
+              />
+            </ListItemAvatar>
+            <ListItemText
+              primary={comment?.author?.userName}
+              secondary={
+                <React.Fragment>
+                  <Typography
+                    component="span"
+                    variant="body2"
+                    color="textPrimary"
                   >
-                    <ReplyIcon />
-                    Reply
-                  </Button>
-                </Typography>
+                    {comment.content}
+                  </Typography>
+                  <br />
+                  <ReactTimeAgo
+                    date={new Date(comment?.createdAt).getTime()}
+                    locale="en-US"
+                  />
+                  <br />
 
-                {isReplying && (
-                  <React.Fragment>
-                    <TextField
-                      value={replyContent}
-                      onChange={(e) => setReplyContent(e.target.value)}
-                      placeholder="Write a reply..."
-                      fullWidth
-                      multiline
-                      rows={2}
+                  <Typography display={"flex"} alignItems={"center"} gap={1}>
+                    <ThumbUpIcon
+                      cursor="pointer"
+                      onClick={() => handleLikeComment(comment?._id)}
+                      style={{ color: isLiked ? "#0247FE" : "gray" }}
                     />
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "flex-end", // Align buttons to the right
-                        marginTop: "8px",
-                        gap: "8px", // Adjust spacing between buttons
-                      }}
+                    {comment?.likes?.length > 0 && comment?.likes?.length}
+
+                    <Button
+                      onClick={handleReplyClick}
+                      style={{ color: isReplying ? "#0247FE" : "gray" }}
                     >
-                      <Button
-                        onClick={handleCancel}
-                        variant="outlined"
-                        color="secondary"
+                      <ReplyIcon />
+                      Reply
+                    </Button>
+                  </Typography>
+
+                  {isReplying && (
+                    <React.Fragment>
+                      <TextField
+                        value={replyContent}
+                        onChange={(e) => setReplyContent(e.target.value)}
+                        placeholder="Write a reply..."
+                        fullWidth
+                        multiline
+                        rows={2}
+                      />
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "flex-end", // Align buttons to the right
+                          marginTop: "8px",
+                          gap: "8px", // Adjust spacing between buttons
+                        }}
                       >
-                        Cancel
-                      </Button>
-                      <Button
-                        onClick={() => handleReplyToComment(comment?._id)}
-                        disabled={!replyContent.trim()}
-                        variant="contained"
-                        color="primary"
-                      >
-                        Post
-                      </Button>
-                    </div>
-                  </React.Fragment>
-                )}
-              </React.Fragment>
-            }
-          />
-        </ListItem>
-      ) : (
-        <ListItem>
-          <ListItemAvatar>
-            <Skeleton variant="circular" width={40} height={40} />
-          </ListItemAvatar>
-          <ListItemText
-            primary={<Skeleton variant="text" width="20%"/>}
-            secondary={<Skeleton variant="text" width="20%"/>}
-          />
-        </ListItem>
-      )}
-      {comment.replies.length > 0 && (
-        <List>
-          {comment.replies
-            .map((reply) => <Reply key={reply._id} reply={reply} />)
-            .reverse()}
-        </List>
-      )}
-    </List>
+                        <Button
+                          onClick={handleCancel}
+                          variant="outlined"
+                          color="secondary"
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          onClick={() => handleReplyToComment(comment?._id)}
+                          disabled={!replyContent.trim()}
+                          variant="contained"
+                          color="primary"
+                        >
+                          Post
+                        </Button>
+                      </div>
+                    </React.Fragment>
+                  )}
+                </React.Fragment>
+              }
+            />
+          </ListItem>
+        ) : (
+          <ListItem>
+            <ListItemAvatar>
+              <Skeleton variant="circular" width={40} height={40} />
+            </ListItemAvatar>
+            <ListItemText
+              primary={<Skeleton variant="text" width="20%" />}
+              secondary={<Skeleton variant="text" width="20%" />}
+            />
+          </ListItem>
+        )}
+        {comment.replies.length > 0 && (
+          <List>
+            {comment.replies
+              .map((reply) => <Reply key={reply._id} reply={reply} />)
+              .reverse()}
+          </List>
+        )}
+      </List>
+
+      <IsLogin
+        setLoginDialogOpen={setLoginDialogOpen}
+        loginDialogOpen={loginDialogOpen}
+        message={likeorComment}
+      />
+    </>
   );
 };
 
