@@ -22,7 +22,8 @@ import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import DiscussList from "./DiscussList";
 import { ContextStore } from "../../Context/ContextStore";
-
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import DiscussLoading from "./Loading/DiscussLoading";
 
 const PreviewArea = styled("div")(({ theme }) => ({
     border: "1px solid #ccc",
@@ -114,35 +115,30 @@ const Discuss = () => {
         });
     };
     return (
-        <Container style={{ marginTop: 20 }}>
+        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }} >
             <Box display="flex" justifyContent="right" gap={2} alignItems="center">
-                <Grid display="flex" justifyContent="right" gap={1} alignItems="center">
-                    <InputBase
-                        placeholder="Search posts..."
-                        inputProps={{ "aria-label": "Search posts..." }}
-                        value={searchTerm}
-                        onChange={handleSearchChange}
-                        style={{
-                            border: "1px solid grey",
-                            borderRadius: "4px",
-                            width: "250px",
-                            padding: 1,
-                            paddingLeft: "6px",
-                        }}
-                    />
-                    <Button variant="contained" color="primary" onClick={handleOpenDialog}>
-                        New +
-                    </Button>
-                </Grid>
+                <InputBase
+                    placeholder="Search..."
+                    style={{ width: 300 }}
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    inputProps={{ "aria-label": "search" }}
+                    sx={{
+                        border: "1px solid #ced4da",
+                        borderRadius: "4px",
+                        padding: "2px 12px",
+                    }}
+                    size="small"
+                />
+                <Button variant="contained" color="primary" onClick={handleOpenDialog}
+                    startIcon={<OpenInNewIcon />}
+                    size="small"
+                >
+                    New
+                </Button>
             </Box>
             {Loading ? (
-                <>
-                    <Box style={{ margin: "30px" }}>
-                        <Skeleton style={{ height: "80px" }} />
-                        <Skeleton style={{ height: "70px" }} />
-                        <Skeleton style={{ height: "60px" }} />
-                    </Box>
-                </>
+                <DiscussLoading />
             ) : (
                 <List>
                     {discussions
@@ -152,8 +148,7 @@ const Discuss = () => {
                         ))
                     }
                 </List>
-            )
-            }
+            )}
 
             {/* Create Post Dialog */}
             <Dialog
