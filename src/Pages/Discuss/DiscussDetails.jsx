@@ -7,6 +7,7 @@ import {
   Box,
   Avatar,
   TextField,
+  List,
 } from "@mui/material";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import CommentIcon from "@mui/icons-material/ChatBubble";
@@ -194,7 +195,14 @@ const DiscussDetails = () => {
                 },
               }}
             />
-            <Typography variant="body2" color="gray">
+            <Typography variant="body2" color="gray" onClick={() => navigate(`/profile/${topic?.author?.userName}`)}
+              sx={{
+                cursor: "pointer",
+                "&:hover": {
+                  color: "primary.main",
+                },
+              }}
+            >
               {topic?.author?.userName}
             </Typography>
             <ThumbUpIcon
@@ -305,13 +313,13 @@ const DiscussDetails = () => {
           {topic?.comments?.length === 0 ? (
             <Typography variant="body2" color="gray">No comments yet ! 😢</Typography>
           ) : (
-            <Box>
+            <List>
               {topic?.comments
                 ?.map((comment) => (
                   <Comment key={comment._id} comment={comment} />
                 ))
                 .reverse()}
-            </Box>
+            </List>
           )}
 
           <DiscussEdit

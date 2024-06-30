@@ -61,26 +61,37 @@ const Reply = (props) => {
 
   return (
     <ListItem
-      key={reply._id}
+      display="flex" gap={2}
+      justifyContent="flex-start"
       alignItems="flex-start"
-      style={{ paddingLeft: 80 }}
+      sx={{
+        pl: 8,
+        borderBottom: "1px solid #e0e0e0",
+        "&:hover": {
+          backgroundColor: "#f5f5f5",
+        },
+      }}
+      component="a"
+      divider
     >
       {reply ? (
-        <Box display="flex" gap={1} mt={1} mb={1} width="100%">
-          <Avatar
-            alt={reply?.author?.userName}
-            src={getCuteAvatar(reply?.author?.userName)}
-            sx={{
-              width: 30,
-              height: 30,
-              borderRadius: "50%",
-              cursor: "pointer",
-              "&:hover": {
-                backgroundColor: "rgba(0,0,0,0.1)",
-              },
-            }}
-          />
-          <Box display="flex" flexDirection="column" sx={{ width: "100%" }}>
+        <Box display="flex" gap={1} width="100%">
+          <ListItemAvatar>
+            <Avatar
+              alt={reply?.author?.userName}
+              src={getCuteAvatar(reply?.author?.userName)}
+              sx={{
+                width: 30,
+                height: 30,
+                borderRadius: "50%",
+                cursor: "pointer",
+                "&:hover": {
+                  backgroundColor: "rgba(0,0,0,0.1)",
+                },
+              }}
+            />
+          </ListItemAvatar>
+          <ListItemText display="flex" flexDirection="column" sx={{ width: "100%" }}>
             <Box
               display="flex"
               alignItems="center"
@@ -140,7 +151,7 @@ const Reply = (props) => {
                 {reply?.likes?.length > 0 && reply?.likes?.length}
               </Typography>
             </Box>
-          </Box>
+          </ListItemText>
         </Box>
       ) : (
         <ListItem>
