@@ -18,14 +18,50 @@ import { toast } from "react-toastify";
 import { LoginUser } from "../../Services/AuthService";
 
 import codeRoutineLogo from "../../assets/logo.png";
-import { Avatar } from "@mui/material";
+import { Avatar, Skeleton } from "@mui/material";
 import { ContextStore } from "../../Context/ContextStore";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const defaultTheme = createTheme();
 
 const CombinedLink = React.forwardRef(function CombinedLink(props, ref) {
   return <RouterLink ref={ref} {...props} />;
 });
+
+const SkeletonLoader = () => (
+  <Box sx={{ marginTop: 12 }}>
+    <Box
+      sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+    >
+      <Skeleton
+        variant="rectangular"
+        width={56}
+        height={56}
+        sx={{ borderRadius: "50%", backgroundColor: "grey" }}
+      />
+      <Box sx={{ mt: 1, width: "100%" }}>
+        <Skeleton variant="text" height={80} />
+        <Skeleton variant="text" height={80} />
+      </Box>
+    </Box>
+    <Box sx={{ mt: 1 }}>
+      <Skeleton variant="text" height={56} />
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center",
+          mt: 2,
+        }}
+      >
+        <Skeleton variant="circular" width={40} height={40} sx={{ mr: 1 }} />
+        <Skeleton variant="circular" width={40} height={40} sx={{ mr: 1 }} />
+        <Skeleton variant="circular" width={40} height={40} sx={{ mr: 1 }} />
+        <Skeleton variant="circular" width={40} height={40} />
+      </Box>
+    </Box>
+  </Box>
+);
 
 export default function SignIn() {
   const navigate = useNavigate();
@@ -34,11 +70,11 @@ export default function SignIn() {
     email: "",
     password: "",
   });
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // setIsLoading(true);
       const res = await LoginUser(data);
       localStorage.setItem("token", res?.data?.token);
       localStorage.setItem("user", JSON.stringify(res?.data?.existingProfile));
@@ -46,6 +82,7 @@ export default function SignIn() {
       setToken(res.data.token);
       toast.success(res?.data?.message);
       navigate("/");
+      setIsLoading(true);
     } catch (err) {
       toast.error(err?.response?.data?.message);
       // setError(err.response.data?.message);
@@ -58,86 +95,108 @@ export default function SignIn() {
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 12,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <Avatar
-            alt="codeRoutineLogo"
-            src={codeRoutineLogo}
-            sx={{ width: 56, height: 56 }}
-            variant="square"
-            style={{ backgroundColor: "grey" }}
-          />
+        {isLoading ? (
+          <SkeletonLoader />
+        ) : (
           <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 1 }}
+            sx={{
+              marginTop: 12,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
           >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              type="email"
-              id={"email"}
-              label="Email Address"
-              name={"email"}
-              autoComplete="email"
-              onChange={(e) => setData({ ...data, email: e.target.value })}
+            <Avatar
+              alt="codeRoutineLogo"
+              src={codeRoutineLogo}
+              sx={{ width: 56, height: 56 }}
+              variant="square"
+              style={{ backgroundColor: "grey" }}
             />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name={"password"}
-              label="Password"
-              type="password"
-              id={"password"}
-              onChange={(e) => setData({ ...data, password: e.target.value })}
-              autoComplete="current-password"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              style={{ backgroundColor: "#424242", padding: "8px" }}
-              sx={{ mt: 3, mb: 2 }}
+            <Box
+              component="form"
+              onSubmit={handleSubmit}
+              noValidate
+              sx={{ mt: 1 }}
             >
-              Sign In
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                type="email"
+                id={"email"}
+                label="Email Address"
+                name={"email"}
+                autoComplete="email"
+                onChange={(e) => setData({ ...data, email: e.target.value })}
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name={"password"}
+                label="Password"
+                type="password"
+                id={"password"}
+                onChange={(e) => setData({ ...data, password: e.target.value })}
+                autoComplete="current-password"
+              />
+              {isLoading ? (
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  style={{
+                    backgroundColor: "#424242",
+                    padding: "8px",
+                    color: "white",
+                  }}
+                  sx={{ mt: 3, mb: 2 }}
+                >
+                  <CircularProgress size={15} style={{ marginRight: "8px" }} />
+                  Sign In
+                </Button>
+              ) : (
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  style={{ backgroundColor: "#424242", padding: "8px",color: "white" }}
+                  sx={{ mt: 3, mb: 2 }}
+                  disabled={!(data.email && data.password)}
+                >
+                  Sign In
+                </Button>
+              )}
+              <Grid container>
+                <Grid item xs>
+                  <Link href="#" variant="body2">
+                    Forgot password?
+                  </Link>
+                </Grid>
+                <Grid item>
+                  <Link component={CombinedLink} to={"/signup"} variant="body2">
+                    {"Don't have an account? Sign Up"}
+                  </Link>
+                </Grid>
               </Grid>
-              <Grid item>
-                <Link component={CombinedLink} to={"/signup"} variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
+            </Box>
+            <Typography
+              mt={4}
+              sx={{ fontSize: 14 }}
+              color="text.secondary"
+              gutterBottom
+            >
+              or you can sign in with
+            </Typography>
+            <Stack direction="row" spacing={3} color="grey" mt={2}>
+              <GoogleIcon />
+              <GitHubIcon />
+              <LinkedInIcon />
+              <FacebookIcon />
+            </Stack>
           </Box>
-          <Typography
-            mt={4}
-            sx={{ fontSize: 14 }}
-            color="text.secondary"
-            gutterBottom
-          >
-            or you can sign in with
-          </Typography>
-          <Stack direction="row" spacing={3} color="grey" mt={2}>
-            <GoogleIcon />
-            <GitHubIcon />
-            <LinkedInIcon />
-            <FacebookIcon />
-          </Stack>
-        </Box>
+        )}
       </Container>
     </ThemeProvider>
   );
