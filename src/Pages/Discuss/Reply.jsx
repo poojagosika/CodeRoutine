@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import { ContextStore } from "../../Context/ContextStore";
 import {
   Avatar,
+  Box,
+  Typography,
   ListItem,
   ListItemAvatar,
-  ListItemText,
   Skeleton,
-  Typography,
+  ListItemText,
 } from "@mui/material";
 import getCuteAvatar from "../../Config/getCuteAvatar";
 import ReactTimeAgo from "react-time-ago";
@@ -15,9 +16,9 @@ import { addLikeOrRemoveLikeReply } from "../../Services/AuthService";
 import IsLogin from "../../Component/IsLogin";
 
 const Reply = (props) => {
-  const [reply, setReply] = React.useState(props?.reply);
-  const [isLiked, setIsLiked] = React.useState(null);
-  const [loginDialogOpen, setLoginDialogOpen] = useState(false); // New state
+  const [reply, setReply] = useState(props?.reply);
+  const [isLiked, setIsLiked] = useState(null);
+  const [loginDialogOpen, setLoginDialogOpen] = useState(false);
 
   const { userData } = ContextStore();
   const userId = userData?._id;
@@ -32,15 +33,15 @@ const Reply = (props) => {
       const userLikes = reply?.likes.includes(userId);
       if (response && response.data) {
         if (!userLikes) {
-          setReply((prevTopic) => ({
-            ...prevTopic,
-            likes: [...(reply?.likes || []), userId], // Update likes with the new data
+          setReply((prevReply) => ({
+            ...prevReply,
+            likes: [...(reply?.likes || []), userId],
           }));
           setIsLiked(true);
         } else {
-          setReply((prevTopic) => ({
-            ...prevTopic,
-            likes: prevTopic.likes.filter((like) => like !== userId), // Remove userId from likes array
+          setReply((prevReply) => ({
+            ...prevReply,
+            likes: prevReply.likes.filter((like) => like !== userId),
           }));
           setIsLiked(false);
         }
@@ -57,6 +58,7 @@ const Reply = (props) => {
       setIsLiked(reply?.likes?.includes(userData?._id));
     }
   }, [reply, userData]);
+
   return (
     <ListItem
       key={reply._id}
@@ -64,49 +66,82 @@ const Reply = (props) => {
       style={{ paddingLeft: 80 }}
     >
       {reply ? (
-        <React.Fragment>
-          <ListItemAvatar>
-            <Avatar
-              alt={reply?.author?.userName}
-              src={getCuteAvatar(reply?.author?.userName)}
-            />
-          </ListItemAvatar>
-          <ListItemText
-            primary={reply?.author?.userName}
-            secondary={
-              <React.Fragment>
-                <Typography
-                  component={"span"}
-                  variant={"body2"} 
-                  color="textPrimary"
-                >
-                  {reply.content}
-                </Typography>
-                <br />
+        <Box display="flex" gap={1} mt={1} mb={1} width="100%">
+          <Avatar
+            alt={reply?.author?.userName}
+            src={getCuteAvatar(reply?.author?.userName)}
+            sx={{
+              width: 30,
+              height: 30,
+              borderRadius: "50%",
+              cursor: "pointer",
+              "&:hover": {
+                backgroundColor: "rgba(0,0,0,0.1)",
+              },
+            }}
+          />
+          <Box display="flex" flexDirection="column" sx={{ width: "100%" }}>
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="flex-start"
+              gap={1}
+            >
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                component="span"
+              >
+                {reply?.author?.userName}
+              </Typography>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                component="span"
+              >
                 <ReactTimeAgo
                   date={new Date(reply?.createdAt).getTime()}
                   locale="en-US"
                 />
-                <br />
-                <Typography
-                  display={"flex"}
-                  alignItems={"center"}
-                  gap={1}
-                  component={"span"}
-                  variant={"body2"}
-                >
-                  <ThumbUpIcon
-                    cursor="pointer"
-                    onClick={() => handleLikeReply(reply._id)}
-                    style={{ color: isLiked ? "#0247FE" : "gray" }}
-                  />
-                  {/* {isLiked}  if it is true there then change icone color */}
-                  {reply?.likes?.length > 0 && reply?.likes?.length}
-                </Typography>
-              </React.Fragment>
-            }
-          />
-        </React.Fragment>
+              </Typography>
+            </Box>
+            <Typography
+              variant="body2"
+              component="span"
+              color={"text.primary"}
+              mb={1}
+            >
+              {reply.content}
+            </Typography>
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="flex-start"
+              gap={1}
+            >
+              <ThumbUpIcon
+                cursor="pointer"
+                onClick={() => handleLikeReply(reply._id)}
+                fontSize="small"
+                sx={{
+                  color: isLiked ? "#0247FE" : "gray",
+                  "&:hover": {
+                    color: isLiked ? "gray" : "#0247FE",
+                  },
+                }}
+                color="action"
+                aria-label="like"
+              />
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                component="span"
+              >
+                {reply?.likes?.length > 0 && reply?.likes?.length}
+              </Typography>
+            </Box>
+          </Box>
+        </Box>
       ) : (
         <ListItem>
           <ListItemAvatar>
