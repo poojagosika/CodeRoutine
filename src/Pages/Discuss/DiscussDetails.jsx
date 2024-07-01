@@ -253,7 +253,7 @@ const DiscussDetails = () => {
             )}
           </Box>
 
-          <Typography variant="body2" color="gray" mt={2}>
+          <Typography variant="body2" color="gray" mt={2} component={"div"}>
             <div dangerouslySetInnerHTML={{ __html: topic.content }} />
           </Typography>
 

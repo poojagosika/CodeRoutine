@@ -102,35 +102,38 @@ const DiscussList = (props) => {
           </Typography>
         }
         secondary={
-          <Box sx={{ display: "flex", gap: 1, alignItems: "center" }} >
-            <Typography
-              variant="body2"
-              color="textSecondary"
-              display={"inline"}
-              sx={{
-                marginRight: 1,
-                cursor: "pointer",
-                "&:hover": {
-                  textDecoration: "underline",
-                },
-              }}
-              onClick={() =>
-                navagate(`profile/${discussion?.author?.userName}`)
-              }
-              component="span">
-              {discussion?.author?.userName}
-            </Typography>
-            <Typography
-              variant="body2"
-              color="textSecondary"
-              display={"inline"}>
-              Created at:{" "}
-              <ReactTimeAgo
-                date={new Date(discussion?.createdAt).getTime()}
-                locale="en-US"
-              />
-            </Typography>
-          </Box>
+          <Typography
+            component="div"  // Changed from default <p> to <div>
+          >
+            <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                sx={{
+                  marginRight: 1,
+                  cursor: "pointer",
+                  "&:hover": {
+                    textDecoration: "underline",
+                  },
+                }}
+                onClick={() => navagate(`profile/${discussion?.author?.userName}`)}
+                component="span"
+              >
+                {discussion?.author?.userName}
+              </Typography>
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                component="span"
+              >
+                Created at:{" "}
+                <ReactTimeAgo
+                  date={new Date(discussion?.createdAt).getTime()}
+                  locale="en-US"
+                />
+              </Typography>
+            </Box>
+          </Typography>
         }
       />
       <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
@@ -147,7 +150,7 @@ const DiscussList = (props) => {
             },
           }}
         />
-        <Typography variant="body2" color="gray" style={{ cursor: "pointer" }}>
+        <Typography variant="body2" color="gray" style={{ cursor: "pointer" }} component="span">
           {discussion?.likes?.length > 0 && discussion?.likes?.length}
         </Typography>
       </Box>
