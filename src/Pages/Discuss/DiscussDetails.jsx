@@ -18,7 +18,6 @@ import {
   deleteDiscussById,
   getDiscussById,
   addLikeOrRemoveLike,
-  updateDiscussByI,
 } from "../../Services/AuthService";
 import getCuteAvatar from "../../Config/getCuteAvatar";
 import DiscussEdit from "./DiscussEdit";
@@ -149,20 +148,6 @@ const DiscussDetails = () => {
       ...update,
       content: value,
     });
-  };
-
-  const handleUpdatePost = async () => {
-    try {
-      const response = await updateDiscussByI(id, {
-        title: update.title,
-        content: update.content,
-        tags: update.tags,
-      });
-      setTopic(response.data.topic);
-      setOpenDialog(false);
-    } catch (error) {
-      console.error("Error updating post:", error);
-    }
   };
 
   return (
@@ -328,7 +313,6 @@ const DiscussDetails = () => {
             setUpdate={setUpdate}
             handleCloseDialog={handleCloseDialog}
             handleContentChange={handleContentChange}
-            handleUpdatePost={handleUpdatePost}
           />
 
           <IsLogin
