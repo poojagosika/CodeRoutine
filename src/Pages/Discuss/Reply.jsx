@@ -8,20 +8,35 @@ import {
   ListItemAvatar,
   Skeleton,
   ListItemText,
+  Menu,
+  MenuItem,
+  Button,
 } from "@mui/material";
 import getCuteAvatar from "../../Config/getCuteAvatar";
 import ReactTimeAgo from "react-time-ago";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import { addLikeOrRemoveLikeReply } from "../../Services/AuthService";
 import IsLogin from "../../Component/IsLogin";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 const Reply = (props) => {
   const [reply, setReply] = useState(props?.reply);
   const [isLiked, setIsLiked] = useState(null);
   const [loginDialogOpen, setLoginDialogOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const { userData } = ContextStore();
   const userId = userData?._id;
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const handleLikeReply = async (replyId) => {
     if (!userData) {
@@ -61,7 +76,8 @@ const Reply = (props) => {
 
   return (
     <ListItem
-      display="flex" gap={2}
+      display="flex"
+      gap={2}
       justifyContent="flex-start"
       alignItems="flex-start"
       sx={{
@@ -91,7 +107,11 @@ const Reply = (props) => {
               }}
             />
           </ListItemAvatar>
-          <ListItemText display="flex" flexDirection="column" sx={{ width: "100%" }}>
+          <ListItemText
+            display="flex"
+            flexDirection="column"
+            sx={{ width: "100%" }}
+          >
             <Box
               display="flex"
               alignItems="center"
@@ -115,6 +135,40 @@ const Reply = (props) => {
                   locale="en-US"
                 />
               </Typography>
+              <Button>
+                <MoreVertIcon
+                  onClick={handleClick}
+                  style={{ cursor: "pointer" }}
+                  fontSize="small"
+                  sx={{
+                    color: "blue",
+                  }}
+                />
+
+                <Menu
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  <MenuItem
+                    onClick={handleClose}
+                    style={{ cursor: "pointer", gap: 5 }}
+                  >
+                    <EditIcon style={{ color: "green" }} fontSize="small" />
+                    Edit
+                  </MenuItem>
+                  <MenuItem
+                    onClick={handleClose}
+                    style={{ cursor: "pointer", gap: 5 }}
+                  >
+                    <DeleteOutlineIcon
+                      style={{ color: "red" }}
+                      fontSize="small"
+                    />
+                    Delete
+                  </MenuItem>
+                </Menu>
+              </Button>
             </Box>
             <Typography
               variant="body2"
