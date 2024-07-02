@@ -313,6 +313,8 @@ const DiscussDetails = () => {
             setUpdate={setUpdate}
             handleCloseDialog={handleCloseDialog}
             handleContentChange={handleContentChange}
+            setTopic={setTopic}
+            setOpenDialog={setOpenDialog}
           />
 
           <IsLogin
