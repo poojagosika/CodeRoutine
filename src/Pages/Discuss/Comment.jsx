@@ -23,6 +23,8 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import {
   addLikeOrRemoveLikeComment,
   addReplyToComment,
+  deleteComment,
+  editComment,
 } from "../../Services/AuthService";
 import { ContextStore } from "../../Context/ContextStore";
 import Reply from "./Reply";
@@ -38,10 +40,12 @@ const Comment = (props) => {
   const [replyContent, setReplyContent] = React.useState("");
   const [isLiked, setIsLiked] = React.useState(null);
   const [isReplying, setIsReplying] = React.useState(false);
+  const [isEdit, setIsEdit] = React.useState(false);
   const [showReplies, setShowReplies] = React.useState(false);
   const [loginDialogOpen, setLoginDialogOpen] = useState(false); // New state
   const [isMessageDialog, setisMessageDialog] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [content, setContent] = React.useState(props?.comment?.content);
 
   const { userData } = ContextStore();
   const userId = userData?._id;
@@ -53,6 +57,11 @@ const Comment = (props) => {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+  const handleCloseEdit = () => {
+    setIsEdit(true);
+    setAnchorEl(null);
+    setIsReplying(false);
   };
 
   const handleLikeComment = async (commentId) => {
@@ -99,7 +108,7 @@ const Comment = (props) => {
       setisMessageDialog("If you want to reply,then please Login");
       return;
     }
-
+    setIsEdit(false)
     setIsReplying(!isReplying);
     setReplyContent(""); // Clear content on toggle
   };
@@ -130,6 +139,45 @@ const Comment = (props) => {
       setShowReplies(true);
     } catch (error) {
       console.error("Error replying to comment:", error);
+    }
+  };
+
+  const handleEdit = async () => {
+    try {
+      const response = await editComment(comment?._id, {
+        content: content,
+      });
+      if (response && response.data) {
+        setComment((prevTopic) => ({
+          ...prevTopic,
+          content: content,
+        }));
+        setIsEdit(false);
+      }
+      else {
+        console.error("Invalid response data:", response);
+      }
+    } catch (error) {
+      console.error("Error editing comment:", error);
+    }
+  };
+
+  const handleDeleteComment = async () => {
+    try {
+      const response = await deleteComment(props.topicId, props.comment._id);
+      if (response && response.status === 200) {
+        props.setTopic((prevTopic) => ({
+          ...prevTopic,
+          comments: prevTopic.comments.filter(
+            (comment) => comment._id !== props.comment._id
+          ),
+        }));
+        setAnchorEl(null);
+      } else {
+        console.error("Invalid response data:", response);
+      }
+    } catch (error) {
+      console.error("Error deleting comment:", error);
     }
   };
 
@@ -212,40 +260,38 @@ const Comment = (props) => {
                     locale="en-US"
                   />
                 </Typography>
-                <Button>
-                  <MoreVertIcon
-                    onClick={handleClick}
-                    style={{ cursor: "pointer" }}
-                    fontSize="small"
-                    sx={{
-                      color: "blue",
+                <MoreVertIcon
+                  onClick={handleClick}
+                  style={{ cursor: 'pointer' }}
+                  fontSize="small"
+                  sx={{ color: 'blue' }}
+                />
+                <Menu
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  <MenuItem
+                    onClick={() => {
+                      handleClose();
+                      handleCloseEdit();
                     }}
-                  />
-
-                  <Menu
-                    anchorEl={anchorEl}
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
+                    style={{ cursor: 'pointer', gap: 5 }}
                   >
-                    <MenuItem
-                      onClick={handleClose}
-                      style={{ cursor: "pointer", gap: 5 }}
-                    >
-                      <EditIcon style={{ color: "green" }} fontSize="small" />
-                      Edit
-                    </MenuItem>
-                    <MenuItem
-                      onClick={handleClose}
-                      style={{ cursor: "pointer", gap: 5 }}
-                    >
-                      <DeleteOutlineIcon
-                        style={{ color: "red" }}
-                        fontSize="small"
-                      />
-                      Delete
-                    </MenuItem>
-                  </Menu>
-                </Button>
+                    <EditIcon style={{ color: 'green' }} fontSize="small" />
+                    Edit
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      handleClose();
+                      handleDeleteComment();
+                    }}
+                    style={{ cursor: 'pointer', gap: 5 }}
+                  >
+                    <DeleteOutlineIcon style={{ color: 'red' }} fontSize="small" />
+                    Delete
+                  </MenuItem>
+                </Menu>
               </Box>
             }
             secondary={
@@ -294,7 +340,10 @@ const Comment = (props) => {
                     }}
                     startIcon={<ReplyIcon fontSize="small" />}
                   >
-                    <Typography variant="body2" component="span">
+                    <Typography
+                      variant="body2"
+                      component="span"
+                    >
                       Reply
                     </Typography>
                   </Button>
@@ -317,15 +366,52 @@ const Comment = (props) => {
                       }
                     >
                       {showReplies
-                        ? `Hide ${comment?.replies?.length} ${
-                            comment?.replies?.length > 1 ? "Replies" : "Reply"
-                          }`
-                        : `Show ${comment?.replies?.length} ${
-                            comment?.replies?.length > 1 ? "Replies" : "Reply"
-                          }`}
+                        ? `Hide ${comment?.replies?.length} ${comment?.replies?.length > 1 ? "Replies" : "Reply"
+                        }`
+                        : `Show ${comment?.replies?.length} ${comment?.replies?.length > 1 ? "Replies" : "Reply"
+                        }`}
                     </Button>
                   )}
                 </Box>
+                {isEdit && (
+                  <Box mt={1}>
+                    <TextField
+                      value={content}
+                      onChange={(e) => setContent(e.target.value)}
+                      placeholder="Reply to this comment..."
+                      fullWidth
+                      multiline
+                      rows={2}
+                    />
+                    <Box
+                      mt={1}
+                      display="flex"
+                      justifyContent="flex-end"
+                      gap={1}
+                    >
+                      <Button
+                        onClick={() => setIsEdit(false)}
+                        variant="outlined"
+                        color="secondary"
+                        size="small"
+                        startIcon={<CloseIcon fontSize="small" />}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        onClick={() => handleEdit(comment?._id)}
+                        disabled={comment?.content === content}
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        startIcon={<ReplyIcon fontSize="small" />}
+                      >
+                        Edit
+                      </Button>
+                    </Box>
+                  </Box>
+                )}
+
                 {isReplying && (
                   <Box mt={1}>
                     <TextField

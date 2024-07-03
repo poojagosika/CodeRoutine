@@ -301,7 +301,12 @@ const DiscussDetails = () => {
             <List>
               {topic?.comments
                 ?.map((comment) => (
-                  <Comment key={comment._id} comment={comment} />
+                  <Comment
+                    key={comment._id}
+                    comment={comment}
+                    topicId={topic?._id}
+                    setTopic={setTopic}
+                  />
                 ))
                 .reverse()}
             </List>
