@@ -131,9 +131,9 @@ const Comment = (props) => {
     <>
       {comment ? (
         <ListItem display="flex" gap={2}
-          justifyContent="flex-start"
-          alignItems="flex-start"
-          sx={{
+        alignItems="flex-start"
+        sx={{
+            justifyContent:"flex-start",
             borderBottom: "1px solid #e0e0e0",
             "&:hover": {
               backgroundColor: "#f5f5f5",
@@ -159,11 +159,11 @@ const Comment = (props) => {
               onClick={() => navigate(`/profile/${comment?.author?.userName}`)}
             />
           </ListItemAvatar>
-          <ListItemText display="flex" flexDirection="column" sx={{ width: "100%" }}
+          <ListItemText display="flex" sx={{ width: "100%", flexDirection:"column" }}
             primary={<Box
               display="flex"
               alignItems="center"
-              justifyContent="flex-start"
+              sx={{justifyContent:"flex-start"}}
               gap={1}
             >
               <Typography variant="body2" color="text.secondary" component="span"
@@ -188,13 +188,13 @@ const Comment = (props) => {
             secondary={
 
               <>
-                <Typography variant="body2" component="span" color={"text.primary"} >
+                <Typography variant="body2" component="div" color={"text.primary"} >
                   {comment.content}
                 </Typography>
                 <Box
                   display="flex"
                   alignItems="center"
-                  justifyContent="flex-start"
+                  sx={{justifyContent:"flex-start"}}
                   gap={1}>
                   <ThumbUpIcon
                     cursor="pointer"
