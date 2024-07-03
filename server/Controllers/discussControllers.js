@@ -221,6 +221,47 @@ export const addLikeOrRemoveLike = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
+export const addCommentToTopic = async (req, res) => {
+  try {
+    const { id: topicId } = req.params;
+    const { content } = req.body;
+    const userId = req.id;
+
+    // Validate the topicId
+    if (!mongoose.Types.ObjectId.isValid(topicId)) {
+      return res.status(400).json({ message: "Invalid topic ID" });
+    }
+
+    // Find the topic
+    const topic = await Topic.findById(topicId);
+    if (!topic) {
+      return res.status(404).json({ message: "Topic not found" });
+    }
+
+    // Create a new comment
+    const newComment = new Comment({
+      content,
+      author: userId,
+    });
+
+    // Save the comment
+    const savedComment = await newComment.save();
+
+    // Add the comment to the topic
+    topic.comments.push(savedComment._id);
+    await topic.save();
+
+    res.status(201).json({
+      message: "Comment added successfully",
+      comment: savedComment,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
 export const addLikeOrRemoveLikeComment = async (req, res) => {
   try {
     const { id: commentId } = req.params;
@@ -252,6 +293,143 @@ export const addLikeOrRemoveLikeComment = async (req, res) => {
         likes: comment.likes.length,
       });
     }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+export const editComment = async (req, res) => {
+  try {
+    const { id: commentId } = req.params;
+    const { content } = req.body;
+    const userId = req.id;
+
+    // Validate the commentId
+    if (!mongoose.Types.ObjectId.isValid(commentId)) {
+      return res.status(400).json({ message: "Invalid comment ID" });
+    }
+
+    // Validate content
+    if (!content || content.trim() === "") {
+      return res.status(400).json({ message: "Content cannot be empty" });
+    }
+
+    // Find the comment
+    const comment = await Comment.findById(commentId);
+    if (!comment) {
+      return res.status(404).json({ message: "Comment not found" });
+    }
+
+    // Check if the user is the author of the comment
+    if (comment.author.toString() !== userId) {
+      return res
+        .status(401)
+        .json({ message: "You are not authorized to perform this action" });
+    }
+
+    // Update the comment
+    comment.content = content;
+    await comment.save();
+
+    // Respond with the updated comment
+    res.status(200).json({
+      message: "Comment updated successfully",
+      comment,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+export const deleteComment = async (req, res) => {
+  try {
+    const { topicId, commentId } = req.params;
+    const userId = req.id;
+
+    // Validate the TopicId
+    if (!mongoose.Types.ObjectId.isValid(topicId)) {
+      return res.status(400).json({ message: "Invalid Topic ID" });
+    }
+
+    // Validate the commentId
+    if (!mongoose.Types.ObjectId.isValid(commentId)) {
+      return res.status(400).json({ message: "Invalid Comment ID" });
+    }
+
+    // Find the Topic
+    const topic = await Topic.findById(topicId);
+    if (!topic) {
+      return res.status(404).json({ message: "Topic not found" });
+    }
+
+    // Find the comment
+    const comment = await Comment.findById(commentId);
+    if (!comment) {
+      return res.status(404).json({ message: "Comment not found" });
+    }
+
+    // Check if the user is the author of the comment
+    if (comment.author.toString() !== userId) {
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to perform this action" });
+    }
+
+    // Remove the comment reference from related entities
+    await Promise.all([
+      // Remove the comment from the parent topic's comments array
+      Topic.updateOne({ _id: topicId }, { $pull: { comments: commentId } }),
+      // Remove replies to this comment if any
+      ...comment.replies.map((replyId) => Reply.findByIdAndDelete(replyId)),
+    ]);
+
+    // Delete the comment
+    await Comment.findByIdAndDelete(commentId);
+
+    // Respond with a success message
+    res.status(200).json({ message: "Comment deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+export const addReplyToComment = async (req, res) => {
+  try {
+    const { id: commentId } = req.params;
+    const { content } = req.body;
+    const userId = req.id;
+
+    // Validate the commentId
+    if (!mongoose.Types.ObjectId.isValid(commentId)) {
+      return res.status(400).json({ message: "Invalid comment ID" });
+    }
+
+    // Find the comment
+    const comment = await Comment.findById(commentId);
+    if (!comment) {
+      return res.status(404).json({ message: "Comment not found" });
+    }
+
+    // Create a new reply
+    const newReply = new Reply({
+      content,
+      author: userId,
+    });
+
+    // Save the reply
+    const savedReply = await newReply.save();
+
+    // Add the reply to the comment
+    comment.replies.push(savedReply._id);
+    await comment.save();
+
+    res.status(201).json({
+      message: "Reply added successfully",
+      reply: savedReply,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error", error: error.message });
@@ -295,39 +473,43 @@ export const addLikeOrRemoveLikeReply = async (req, res) => {
   }
 };
 
-export const addCommentToTopic = async (req, res) => {
+export const editReply = async (req, res) => {
   try {
-    const { id: topicId } = req.params;
+    const { id: replyId } = req.params;
     const { content } = req.body;
     const userId = req.id;
 
-    // Validate the topicId
-    if (!mongoose.Types.ObjectId.isValid(topicId)) {
-      return res.status(400).json({ message: "Invalid topic ID" });
+    // Validate the replyId
+    if (!mongoose.Types.ObjectId.isValid(replyId)) {
+      return res.status(400).json({ message: "Invalid reply ID" });
     }
 
-    // Find the topic
-    const topic = await Topic.findById(topicId);
-    if (!topic) {
-      return res.status(404).json({ message: "Topic not found" });
+    // Validate content
+    if (!content || content.trim() === "") {
+      return res.status(400).json({ message: "Content cannot be empty" });
     }
 
-    // Create a new comment
-    const newComment = new Comment({
-      content,
-      author: userId,
-    });
+    // Find the reply
+    const reply = await Reply.findById(replyId);
+    if (!reply) {
+      return res.status(404).json({ message: "Reply not found" });
+    }
 
-    // Save the comment
-    const savedComment = await newComment.save();
+    // Check if the user is the author of the reply
+    if (reply.author.toString() !== userId) {
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to perform this action" });
+    }
 
-    // Add the comment to the topic
-    topic.comments.push(savedComment._id);
-    await topic.save();
+    // Update the reply
+    reply.content = content;
+    await reply.save();
 
-    res.status(201).json({
-      message: "Comment added successfully",
-      comment: savedComment,
+    // Respond with the updated reply
+    res.status(200).json({
+      message: "Reply updated successfully",
+      reply,
     });
   } catch (error) {
     console.error(error);
@@ -335,10 +517,9 @@ export const addCommentToTopic = async (req, res) => {
   }
 };
 
-export const addReplyToComment = async (req, res) => {
+export const deleteReply = async (req, res) => {
   try {
-    const { id: commentId } = req.params;
-    const { content } = req.body;
+    const { commentId, replyId } = req.params;
     const userId = req.id;
 
     // Validate the commentId
@@ -346,28 +527,38 @@ export const addReplyToComment = async (req, res) => {
       return res.status(400).json({ message: "Invalid comment ID" });
     }
 
-    // Find the comment
-    const comment = await Comment.findById(commentId);
-    if (!comment) {
-      return res.status(404).json({ message: "Comment not found" });
+    // Validate the replyId
+    if (!mongoose.Types.ObjectId.isValid(replyId)) {
+      return res.status(400).json({ message: "Invalid reply ID" });
     }
 
-    // Create a new reply
-    const newReply = new Reply({
-      content,
-      author: userId,
-    });
+    // Find the reply
+    const reply = await Reply.findById(replyId);
+    if (!reply) {
+      return res.status(404).json({ message: "Reply not found" });
+    }
 
-    // Save the reply
-    const savedReply = await newReply.save();
+    // Check if the user is the author of the reply
+    if (reply.author.toString() !== userId) {
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to perform this action" });
+    }
 
-    // Add the reply to the comment
-    comment.replies.push(savedReply._id);
-    await comment.save();
+    // Remove the comment reference from related entities
+    await Promise.all([
+      // Remove the comment from the parent topic's comments array
+      Comment.updateOne({ _id: commentId }, { $pull: { replies: replyId } }),
+      // Remove replies to this comment if any
+      ...reply.replies.map((replyId) => Reply.findByIdAndDelete(replyId)),
+    ]);
 
-    res.status(201).json({
-      message: "Reply added successfully",
-      reply: savedReply,
+    // Delete the comment
+    await Reply.findByIdAndDelete(replyId);
+
+    // Respond with a success message
+    res.status(200).json({
+      message: "Reply deleted successfully",
     });
   } catch (error) {
     console.error(error);

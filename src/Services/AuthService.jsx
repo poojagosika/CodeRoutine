@@ -61,19 +61,33 @@ export const addLikeOrRemoveLike = async (id) => {
   return await axios.put(`${API}/api/discuss/topics/${id}/like`);
 };
 
-export const addLikeOrRemoveLikeComment = async (id) => {
-  return await axios.put(`${API}/api/discuss/comments/${id}/like`);
-};
-
-export const addLikeOrRemoveLikeReply = async (id) => {
-  return await axios.put(`${API}/api/discuss/replies/${id}/like`);
-};
-
+// commnets
 export const addCommentToTopic = async (id, data) => {
   return await axios.post(`${API}/api/discuss/topics/${id}/comments`, data);
 };
 
-export const addReplyToComment = async (id, data) => {
-  return await axios.post(`${API}/api/discuss/comments/${id}/replies`, data);
+export const addLikeOrRemoveLikeComment = async (id) => {
+  return await axios.put(`${API}/api/discuss/comments/${id}/like`);
+};
+export const editComment = async (topicId, commentId) => {
+  return await axios.put(`${API}/api/discuss/comments/${topicId}/${commentId}/edit`);
 };
 
+export const deleteComment = async (topicId, commentId) => {
+  return await axios.delete(`${API}/api/discuss/comments/${topicId}/${commentId}/delete`);
+};
+
+
+// replies
+export const addReplyToComment = async (id, data) => {
+  return await axios.post(`${API}/api/discuss/comments/${id}/replies`, data);
+}
+export const addLikeOrRemoveLikeReply = async (id) => {
+  return await axios.put(`${API}/api/discuss/replies/${id}/like`);
+};
+export const editReply = async (commentId, replyId) => {
+  return await axios.put(`${API}/api/discuss/replies/${commentId}/${replyId}/edit`);
+};
+export const deleteReply = async (commentId, replyId) => {
+  return await axios.delete(`${API}/api/discuss/replies/${commentId}/${replyId}/delete`);
+};
