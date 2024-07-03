@@ -48,7 +48,7 @@ const interviewSubmenuItems = [
 const settings = [
   {
     name: "Profile",
-    path: "/settings/profile",
+    path: "/profile",
     icon: <AccountCircleIcon />,
   },
   { name: "Orders", path: "/settings/orders", icon: <ListAltIcon /> },
@@ -366,7 +366,7 @@ function ResponsiveAppBar() {
                     }
                   >
                     <Typography textAlign="center">
-                      <Button component={Link} to={setting.path}>
+                      <Button component={Link} to={setting.name === "Profile" ?  `${setting.path}/${userData.userName}` : setting.path}>
                         {setting?.icon && (
                           <span style={{ marginRight: "8px" }}>
                             {setting.icon}
