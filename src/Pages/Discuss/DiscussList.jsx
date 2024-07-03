@@ -71,7 +71,7 @@ const DiscussList = (props) => {
         <Avatar
           alt={discussion?.author?.userName}
           src={getCuteAvatar(discussion?.author?.userName)}
-          onClick={() => navagate(`profile/${discussion?.author?.userName}`)}
+          onClick={() => navagate(`/profile/${discussion?.author?.userName}`)}
           aria-label="author"
           sx={{
             width: 30,
@@ -116,7 +116,7 @@ const DiscussList = (props) => {
                     textDecoration: "underline",
                   },
                 }}
-                onClick={() => navagate(`profile/${discussion?.author?.userName}`)}
+                onClick={() => navagate(`/profile/${discussion?.author?.userName}`)}
                 component="span"
               >
                 {discussion?.author?.userName}
