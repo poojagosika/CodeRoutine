@@ -8,12 +8,17 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import getCuteAvatar from "../../Config/getCuteAvatar";
 import ReactTimeAgo from "react-time-ago";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import CloseIcon from "@mui/icons-material/Close";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 import {
   addLikeOrRemoveLikeComment,
@@ -22,8 +27,8 @@ import {
 import { ContextStore } from "../../Context/ContextStore";
 import Reply from "./Reply";
 import ReplyIcon from "@mui/icons-material/Reply";
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import IsLogin from "../../Component/IsLogin";
 import CommentLoading from "./Loading/CommentLoading";
 import { useNavigate } from "react-router-dom";
@@ -36,10 +41,19 @@ const Comment = (props) => {
   const [showReplies, setShowReplies] = React.useState(false);
   const [loginDialogOpen, setLoginDialogOpen] = useState(false); // New state
   const [isMessageDialog, setisMessageDialog] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const { userData } = ContextStore();
   const userId = userData?._id;
   const navigate = useNavigate();
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const handleLikeComment = async (commentId) => {
     if (!userData) {
@@ -166,27 +180,69 @@ const Comment = (props) => {
               sx={{justifyContent:"flex-start"}}
               gap={1}
             >
-              <Typography variant="body2" color="text.secondary" component="span"
-                onClick={() => navigate(`/profile/${comment?.author?.userName}`)}
-                sx={{
-                  cursor: "pointer",
-                  "&:hover": {
-                    color: "primary.main",
-                  },
-                }}
-              >
-                {comment?.author?.userName}
-              </Typography >
-              <Typography variant="body2" color="text.secondary" component="span">
-                <ReactTimeAgo
-                  date={new Date(comment?.createdAt).getTime()}
-                  locale="en-US"
-                />
-              </Typography >
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  component="span"
+                  onClick={() =>
+                    navigate(`/profile/${comment?.author?.userName}`)
+                  }
+                  sx={{
+                    cursor: "pointer",
+                    "&:hover": {
+                      color: "primary.main",
+                    },
+                  }}
+                >
+                  {comment?.author?.userName}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  component="span"
+                >
+                  <ReactTimeAgo
+                    date={new Date(comment?.createdAt).getTime()}
+                    locale="en-US"
+                  />
+                </Typography>
+                <Button>
+                  <MoreVertIcon
+                    onClick={handleClick}
+                    style={{ cursor: "pointer" }}
+                    fontSize="small"
+                    sx={{
+                      color: "blue",
+                    }}
+                  />
 
-            </Box>}
+                  <Menu
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                  >
+                    <MenuItem
+                      onClick={handleClose}
+                      style={{ cursor: "pointer", gap: 5 }}
+                    >
+                      <EditIcon style={{ color: "green" }} fontSize="small" />
+                      Edit
+                    </MenuItem>
+                    <MenuItem
+                      onClick={handleClose}
+                      style={{ cursor: "pointer", gap: 5 }}
+                    >
+                      <DeleteOutlineIcon
+                        style={{ color: "red" }}
+                        fontSize="small"
+                      />
+                      Delete
+                    </MenuItem>
+                  </Menu>
+                </Button>
+              </Box>
+            }
             secondary={
-
               <>
                 <Typography variant="body2" component="div" color={"text.primary"} >
                   {comment.content}
@@ -216,7 +272,8 @@ const Comment = (props) => {
                   >
                     {comment?.likes?.length > 0 && comment?.likes?.length}
                   </Typography>
-                  <Button onClick={handleReplyClick}
+                  <Button
+                    onClick={handleReplyClick}
                     sx={{
                       color: isReplying ? "#0247FE" : "gray",
                       cursor: "pointer",
@@ -226,10 +283,7 @@ const Comment = (props) => {
                     }}
                     startIcon={<ReplyIcon fontSize="small" />}
                   >
-                    <Typography
-                      variant="body2"
-                      component="span"
-                    >
+                    <Typography variant="body2" component="span">
                       Reply
                     </Typography>
                   </Button>
@@ -243,13 +297,21 @@ const Comment = (props) => {
                           color: showReplies ? "gray" : "#0247FE",
                         },
                       }}
-                      startIcon={showReplies ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                      startIcon={
+                        showReplies ? (
+                          <KeyboardArrowUpIcon />
+                        ) : (
+                          <KeyboardArrowDownIcon />
+                        )
+                      }
                     >
                       {showReplies
-                        ? `Hide ${comment?.replies?.length} ${comment?.replies?.length > 1 ? "Replies" : "Reply"
-                        }`
-                        : `Show ${comment?.replies?.length} ${comment?.replies?.length > 1 ? "Replies" : "Reply"
-                        }`}
+                        ? `Hide ${comment?.replies?.length} ${
+                            comment?.replies?.length > 1 ? "Replies" : "Reply"
+                          }`
+                        : `Show ${comment?.replies?.length} ${
+                            comment?.replies?.length > 1 ? "Replies" : "Reply"
+                          }`}
                     </Button>
                   )}
                 </Box>
@@ -263,7 +325,12 @@ const Comment = (props) => {
                       multiline
                       rows={2}
                     />
-                    <Box mt={1} display="flex" justifyContent="flex-end" gap={1}>
+                    <Box
+                      mt={1}
+                      display="flex"
+                      justifyContent="flex-end"
+                      gap={1}
+                    >
                       <Button
                         onClick={handleCancel}
                         variant="outlined"
@@ -289,19 +356,17 @@ const Comment = (props) => {
               </>
             }
           />
-        </ListItem >
+        </ListItem>
       ) : (
         <CommentLoading />
       )}
-      {
-        showReplies && (
-          <List>
-            {comment.replies
-              .map((reply) => <Reply key={reply._id} reply={reply} />)
-              .reverse()}
-          </List>
-        )
-      }
+      {showReplies && (
+        <List>
+          {comment.replies
+            .map((reply) => <Reply key={reply._id} reply={reply} />)
+            .reverse()}
+        </List>
+      )}
       <IsLogin
         setLoginDialogOpen={setLoginDialogOpen}
         loginDialogOpen={loginDialogOpen}
