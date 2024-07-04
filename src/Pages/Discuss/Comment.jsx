@@ -460,7 +460,14 @@ const Comment = (props) => {
       {showReplies && (
         <List>
           {comment.replies
-            .map((reply) => <Reply key={reply._id} reply={reply} />)
+            .map((reply) => (
+              <Reply
+                key={reply._id}
+                reply={reply}
+                commentId={comment?._id}
+                setComment={setComment}
+              />
+            ))
             .reverse()}
         </List>
       )}

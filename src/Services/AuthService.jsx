@@ -85,8 +85,8 @@ export const addReplyToComment = async (id, data) => {
 export const addLikeOrRemoveLikeReply = async (id) => {
   return await axios.put(`${API}/api/discuss/replies/${id}/like`);
 };
-export const editReply = async (id) => {
-  return await axios.put(`${API}/api/discuss/replies/${id}/edit`);
+export const editReply = async (id, data) => {
+  return await axios.put(`${API}/api/discuss/replies/${id}/edit`, data);
 };
 export const deleteReply = async (commentId, replyId) => {
   return await axios.delete(`${API}/api/discuss/replies/${commentId}/${replyId}/delete`);
