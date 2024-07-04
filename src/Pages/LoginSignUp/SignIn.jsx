@@ -77,8 +77,8 @@ export default function SignIn() {
     try {
       const res = await LoginUser(data);
       localStorage.setItem("token", res?.data?.token);
-      localStorage.setItem("user", JSON.stringify(res?.data?.existingProfile));
-      setUserData(res.data.existingProfile);
+      localStorage.setItem("user", JSON.stringify(res?.data?.user));
+      setUserData(res.data.user);
       setToken(res.data.token);
       toast.success(res?.data?.message);
       navigate("/");
@@ -161,7 +161,7 @@ export default function SignIn() {
                   type="submit"
                   fullWidth
                   variant="contained"
-                  style={{ backgroundColor: "#424242", padding: "8px",color: "white" }}
+                  style={{ backgroundColor: "#424242", padding: "8px", color: "white" }}
                   sx={{ mt: 3, mb: 2 }}
                   disabled={!(data.email && data.password)}
                 >

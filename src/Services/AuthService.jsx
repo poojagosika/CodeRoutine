@@ -15,6 +15,8 @@ axios.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
+// user Profile
 export const RegisterUser = async (data) => {
   return await axios.post(`${API}/api/users/register`, data);
 };
@@ -23,6 +25,16 @@ export const LoginUser = async (data) => {
   return await axios.post(`${API}/api/users/login`, data);
 };
 
+export const getUserByUserName = async (userName) => {
+  return await axios.get(`${API}/api/users/${userName}`);
+};
+export const userUpdateProfile = async (data) => {
+  return await axios.put(`${API}/api/users/updateProfile`, data);
+};
+
+
+
+// problem
 export const addProblem = async (data) => {
   return await axios.post(`${API}/api/problem`, data);
 };
