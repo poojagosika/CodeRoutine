@@ -19,6 +19,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import SendIcon from "@mui/icons-material/Send";
 
 import {
   addLikeOrRemoveLikeComment,
@@ -108,7 +109,7 @@ const Comment = (props) => {
       setisMessageDialog("If you want to reply,then please Login");
       return;
     }
-    setIsEdit(false)
+    setIsEdit(false);
     setIsReplying(!isReplying);
     setReplyContent(""); // Clear content on toggle
   };
@@ -153,8 +154,7 @@ const Comment = (props) => {
           content: content,
         }));
         setIsEdit(false);
-      }
-      else {
+      } else {
         console.error("Invalid response data:", response);
       }
     } catch (error) {
@@ -262,9 +262,9 @@ const Comment = (props) => {
                 </Typography>
                 <MoreVertIcon
                   onClick={handleClick}
-                  style={{ cursor: 'pointer' }}
+                  style={{ cursor: "pointer" }}
                   fontSize="small"
-                  sx={{ color: 'blue' }}
+                  sx={{ color: "blue" }}
                 />
                 <Menu
                   anchorEl={anchorEl}
@@ -276,9 +276,18 @@ const Comment = (props) => {
                       handleClose();
                       handleCloseEdit();
                     }}
-                    style={{ cursor: 'pointer', gap: 5 }}
+                    style={{ cursor: "pointer", gap: 5 }}
                   >
-                    <EditIcon style={{ color: 'green' }} fontSize="small" />
+                    <EditIcon
+                      sx={{
+                        color: "green",
+                        "&:hover": {
+                          color: "blue",
+                        },
+                      }}
+                      color="action"
+                      fontSize="small"
+                    />
                     Edit
                   </MenuItem>
                   <MenuItem
@@ -286,9 +295,18 @@ const Comment = (props) => {
                       handleClose();
                       handleDeleteComment();
                     }}
-                    style={{ cursor: 'pointer', gap: 5 }}
+                    style={{ cursor: "pointer", gap: 5 }}
                   >
-                    <DeleteOutlineIcon style={{ color: 'red' }} fontSize="small" />
+                    <DeleteOutlineIcon
+                      sx={{
+                        color: "red",
+                        "&:hover": {
+                          color: "orange",
+                        },
+                      }}
+                      color="action"
+                      fontSize="small"
+                    />
                     Delete
                   </MenuItem>
                 </Menu>
@@ -340,10 +358,7 @@ const Comment = (props) => {
                     }}
                     startIcon={<ReplyIcon fontSize="small" />}
                   >
-                    <Typography
-                      variant="body2"
-                      component="span"
-                    >
+                    <Typography variant="body2" component="span">
                       Reply
                     </Typography>
                   </Button>
@@ -366,10 +381,12 @@ const Comment = (props) => {
                       }
                     >
                       {showReplies
-                        ? `Hide ${comment?.replies?.length} ${comment?.replies?.length > 1 ? "Replies" : "Reply"
-                        }`
-                        : `Show ${comment?.replies?.length} ${comment?.replies?.length > 1 ? "Replies" : "Reply"
-                        }`}
+                        ? `Hide ${comment?.replies?.length} ${
+                            comment?.replies?.length > 1 ? "Replies" : "Reply"
+                          }`
+                        : `Show ${comment?.replies?.length} ${
+                            comment?.replies?.length > 1 ? "Replies" : "Reply"
+                          }`}
                     </Button>
                   )}
                 </Box>
@@ -404,9 +421,9 @@ const Comment = (props) => {
                         variant="contained"
                         color="primary"
                         size="small"
-                        startIcon={<ReplyIcon fontSize="small" />}
+                        startIcon={<SendIcon fontSize="small" />}
                       >
-                        Edit
+                        Save
                       </Button>
                     </Box>
                   </Box>
@@ -443,7 +460,7 @@ const Comment = (props) => {
                         variant="contained"
                         color="primary"
                         size="small"
-                        startIcon={<ReplyIcon fontSize="small" />}
+                        startIcon={<SendIcon fontSize="small" />}
                       >
                         Post
                       </Button>

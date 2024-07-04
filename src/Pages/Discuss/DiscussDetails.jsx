@@ -13,6 +13,8 @@ import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import CommentIcon from "@mui/icons-material/ChatBubble";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import SendIcon from "@mui/icons-material/Send";
+
 import {
   addCommentToTopic,
   deleteDiscussById,
@@ -151,7 +153,7 @@ const DiscussDetails = () => {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 5 }} >
+    <Container maxWidth="lg" sx={{ mt: 5 }}>
       {!topic ? (
         <TopicLoadig />
       ) : (
@@ -180,7 +182,10 @@ const DiscussDetails = () => {
                 },
               }}
             />
-            <Typography variant="body2" color="gray" onClick={() => navigate(`/profile/${topic?.author?.userName}`)}
+            <Typography
+              variant="body2"
+              color="gray"
+              onClick={() => navigate(`/profile/${topic?.author?.userName}`)}
               sx={{
                 cursor: "pointer",
                 "&:hover": {
@@ -249,16 +254,16 @@ const DiscussDetails = () => {
               justifyContent="flex-start"
               gap={1}
             >
-              <CommentIcon fontSize="small" color="action"
+              <CommentIcon
+                fontSize="small"
+                color="action"
                 aria-label="comment"
                 cursor="pointer"
                 sx={{
                   color: "blue",
                 }}
               />
-              <Typography
-                variant="body2"
-                color="gray">
+              <Typography variant="body2" color="gray">
                 Comments: {topic?.comments?.length}
               </Typography>
             </Box>
@@ -289,6 +294,7 @@ const DiscussDetails = () => {
                   color: "white",
                 }}
                 disabled={!newComment.trim()}
+                startIcon={<SendIcon fontSize="small" />}
               >
                 Post
               </Button>
@@ -296,7 +302,9 @@ const DiscussDetails = () => {
           </Box>
 
           {topic?.comments?.length === 0 ? (
-            <Typography variant="body2" color="gray">No comments yet ! 😢</Typography>
+            <Typography variant="body2" color="gray">
+              No comments yet ! 😢
+            </Typography>
           ) : (
             <List>
               {topic?.comments

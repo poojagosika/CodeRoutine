@@ -11,12 +11,17 @@ import {
   Menu,
   MenuItem,
   Button,
-  TextField
+  TextField,
 } from "@mui/material";
 import getCuteAvatar from "../../Config/getCuteAvatar";
 import ReactTimeAgo from "react-time-ago";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import { addLikeOrRemoveLikeReply, deleteReply, editReply } from "../../Services/AuthService";
+import SendIcon from "@mui/icons-material/Send";
+import {
+  addLikeOrRemoveLikeReply,
+  deleteReply,
+  editReply,
+} from "../../Services/AuthService";
 import IsLogin from "../../Component/IsLogin";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
@@ -75,7 +80,7 @@ const Reply = (props) => {
 
   const handleEdit = async () => {
     try {
-      console.log(reply._id, content)
+      console.log(reply._id, content);
       const response = await editReply(reply._id, { content });
       if (response && response.data) {
         setReply((prevReply) => ({
@@ -163,11 +168,22 @@ const Reply = (props) => {
               justifyContent="flex-start"
               gap={1}
             >
-              <Typography variant="body2" color="text.secondary" component="span">
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                component="span"
+              >
                 {reply.author.userName}
               </Typography>
-              <Typography variant="body2" color="text.secondary" component="span">
-                <ReactTimeAgo date={new Date(reply.createdAt).getTime()} locale="en-US" />
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                component="span"
+              >
+                <ReactTimeAgo
+                  date={new Date(reply.createdAt).getTime()}
+                  locale="en-US"
+                />
               </Typography>
 
               <MoreVertIcon
@@ -188,7 +204,16 @@ const Reply = (props) => {
                   }}
                   style={{ cursor: "pointer", gap: 5 }}
                 >
-                  <EditIcon style={{ color: "green" }} fontSize="small" />
+                  <EditIcon
+                    sx={{
+                      color: "green",
+                      "&:hover": {
+                        color: "blue",
+                      },
+                    }}
+                    color="action"
+                    fontSize="small"
+                  />
                   Edit
                 </MenuItem>
                 <MenuItem
@@ -198,17 +223,36 @@ const Reply = (props) => {
                   }}
                   style={{ cursor: "pointer", gap: 5 }}
                 >
-                  <DeleteOutlineIcon style={{ color: "red" }} fontSize="small" />
+                  <DeleteOutlineIcon
+                    sx={{
+                      color: "red",
+                      "&:hover": {
+                        color: "orange",
+                      },
+                    }}
+                    color="action"
+                    fontSize="small"
+                  />
                   Delete
                 </MenuItem>
               </Menu>
             </Box>
 
-            <Typography variant="body2" component="span" color={"text.primary"} mb={1}>
+            <Typography
+              variant="body2"
+              component="span"
+              color={"text.primary"}
+              mb={1}
+            >
               {reply.content}
             </Typography>
 
-            <Box display="flex" alignItems="center" justifyContent="flex-start" gap={1}>
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="flex-start"
+              gap={1}
+            >
               <ThumbUpIcon
                 cursor="pointer"
                 onClick={() => handleLikeReply(reply._id)}
@@ -222,7 +266,11 @@ const Reply = (props) => {
                 color="action"
                 aria-label="like"
               />
-              <Typography variant="body2" color="text.secondary" component="span">
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                component="span"
+              >
                 {reply.likes.length > 0 && reply.likes.length}
               </Typography>
             </Box>
@@ -252,7 +300,7 @@ const Reply = (props) => {
                     variant="contained"
                     color="primary"
                     size="small"
-                    startIcon={<ReplyIcon fontSize="small" />}
+                    startIcon={<SendIcon fontSize="small" />}
                   >
                     Save
                   </Button>
