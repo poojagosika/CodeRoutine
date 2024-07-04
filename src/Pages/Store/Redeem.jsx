@@ -154,8 +154,8 @@ export default function Redeem() {
           justifyContent: "center",
         }}
       >
-        {data.map((storeData) => (
-          <Card sx={{ m: 5, boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px" }}>
+        {data.map((storeData, index) => (
+          <Card key={index} sx={{ m: 5, boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px" }}>
             <CardMedia
               component="img"
               height="300px"

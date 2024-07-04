@@ -1,37 +1,34 @@
 import * as React from "react";
-import Card from "@mui/material/Card";
-import Typography from "@mui/material/Typography";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
 import {
   Avatar,
+  Box,
+  Card,
   CardActionArea,
+  CardContent,
+  CardMedia,
   CssBaseline,
   Grid,
+  Typography,
   List,
   ListItem,
-  ListItemText,
   ListItemAvatar,
-  TableContainer,
   Table,
+  TableBody,
+  TableCell,
+  TableContainer,
   TableHead,
   TableRow,
-  TableCell,
-  Button,
-  TableBody,
   Paper,
   Stack,
   Pagination,
-  colors,
+  Button,
 } from "@mui/material";
-import Box from "@mui/material/Box";
 import Trophy from "../../assets/Contest/trophy.png";
 import BlueImage from "../../assets/Contest/blueImage.png";
 import GreenImage from "../../assets/Contest/greenImage.png";
 import WeeklyContest291 from "../../assets/Contest/FeaturedContest/WeeklyContest291.png";
 import BiweeklyContest from "../../assets/Contest/FeaturedContest/biweekly-contest.jpg";
 import Contest200 from "../../assets/Contest/FeaturedContest/contest.jpg";
-import ImageIcon from "@mui/icons-material/Image";
 import { data } from "./Config.js";
 import { leader } from "./LeaderBoard.js";
 import {
@@ -57,10 +54,9 @@ const getCuteAvatar = (author) => {
 export default function Contest() {
   return (
     <Grid
+      container
+      direction="column"
       sx={{
-        display: "flex",
-        flexDirection: "column",
-        flexWrap: "wrap",
         backgroundColor: "#1a1a1a",
         color: "white",
       }}
@@ -69,13 +65,10 @@ export default function Contest() {
       <Box
         sx={{
           color: "white",
-          background: "rgb(74,74,74)",
-          backgroundColor:
-            "radial-gradient(circle, rgba(74,74,74,1) 0%, rgba(5,5,5,1) 100%)",
+          background: "radial-gradient(circle, rgba(74,74,74,1) 0%, rgba(5,5,5,1) 100%)",
           height: "65vh",
           display: "flex",
           flexDirection: "column",
-          flexWrap: "wrap",
           alignItems: "center",
           textAlign: "center",
         }}
@@ -92,128 +85,71 @@ export default function Contest() {
         </Typography>
       </Box>
       <Grid
+        container
         gap={5}
+        justifyContent="center"
         sx={{
-          display: "flex",
-          flexWrap: "wrap",
-          alignItems: "center",
-          marginTop: "-80px",
-          justifyContent: "center",
+          mt: -10,
         }}
       >
-        <Card sx={{ maxWidth: 345, borderRadius: "10px" }}>
-          <CardActionArea>
-            <CardMedia
-              component="img"
-              height="180"
-              width={200}
-              image={BlueImage}
-              alt="Weekly Contest 403"
-            />
-            <CardContent style={{ backgroundColor: "#282828", color: "white" }}>
-              <Typography gutterBottom variant="h6">
-                Weekly Contest 403
-              </Typography>
-              <Typography variant="body2" color="#eff1f6bf">
-                Sunday 8:00 AM IST
-              </Typography>
-            </CardContent>
-          </CardActionArea>
-        </Card>
-
-        <Card sx={{ maxWidth: 345, borderRadius: "10px" }}>
-          <CardActionArea style={{ width: "400px" }}>
-            <CardMedia
-              component="img"
-              height="180"
-              image={GreenImage}
-              alt="Weekly Contest 403"
-            />
-            <CardContent style={{ backgroundColor: "#282828", color: "white" }}>
-              <Typography gutterBottom variant="h6">
-                Weekly Contest 403
-              </Typography>
-              <Typography variant="body2" color="#eff1f6bf">
-                Sunday 8:00 AM IST
-              </Typography>
-            </CardContent>
-          </CardActionArea>
-        </Card>
+        {[BlueImage, GreenImage].map((image, index) => (
+          <Card key={index} sx={{ maxWidth: 345, borderRadius: "10px" }}>
+            <CardActionArea>
+              <CardMedia
+                component="img"
+                height="180"
+                image={image}
+                alt={`Weekly Contest ${index + 403}`}
+              />
+              <CardContent sx={{ backgroundColor: "#282828", color: "white" }}>
+                <Typography gutterBottom variant="h6">
+                  Weekly Contest {index + 403}
+                </Typography>
+                <Typography variant="body2" color="#eff1f6bf">
+                  Sunday 8:00 AM IST
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+          </Card>
+        ))}
       </Grid>
-      <Grid style={{ margin: "50px 200px" }}>
+      <Grid sx={{ m: "50px 200px" }}>
         <Typography variant="h5" mb={2}>
           Featured Contests
         </Typography>
-        <div
-          style={{
+        <Box
+          sx={{
             display: "flex",
             justifyContent: "space-between",
-            marginBottom: "70px",
+            mb: 7,
             flexWrap: "wrap",
             color: "white",
           }}
         >
-          <Grid sx={{ maxWidth: 345 }}>
-            <CardMedia
-              component="img"
-              height="180"
-              image={WeeklyContest291}
-              alt="Weekly Contest 403"
-              style={{ borderRadius: "10px" }}
-            />
-            <Typography style={{ color: "white", marginTop: "10px" }}>
-              <Typography gutterBottom variant="h6">
-                Weekly Contest 403
-              </Typography>
-              <Typography variant="body2" color="#eff1f6bf">
-                Sunday 8:00 AM IST
-              </Typography>
-            </Typography>
-          </Grid>
-          <Grid sx={{ maxWidth: 345 }}>
-            <CardMedia
-              component="img"
-              height="180"
-              image={BiweeklyContest}
-              alt="Weekly Contest 403"
-              style={{ borderRadius: "10px" }}
-            />
-            <Typography style={{ color: "white", marginTop: "10px" }}>
-              <Typography gutterBottom variant="h6">
-                Weekly Contest 403
-              </Typography>
-              <Typography variant="body2" color="#eff1f6bf">
-                Sunday 8:00 AM IST
-              </Typography>
-            </Typography>
-          </Grid>
-          <Grid sx={{ maxWidth: 345 }}>
-            <CardMedia
-              component="img"
-              height="180"
-              image={Contest200}
-              alt="Weekly Contest 403"
-              style={{ borderRadius: "10px" }}
-            />
-            <Typography style={{ color: "white", marginTop: "10px" }}>
-              <Typography gutterBottom variant="h6">
-                Weekly Contest 403
-              </Typography>
-              <Typography variant="body2" color="#eff1f6bf">
-                Sunday 8:00 AM IST
-              </Typography>
-            </Typography>
-          </Grid>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-          }}
-        >
+          {[WeeklyContest291, BiweeklyContest, Contest200].map((image, index) => (
+            <Box key={index} sx={{ maxWidth: 345 }}>
+              <CardMedia
+                component="img"
+                height="180"
+                image={image}
+                alt={`Weekly Contest ${index + 291}`}
+                sx={{ borderRadius: "10px" }}
+              />
+              <Box sx={{ color: "white", mt: 1 }}>
+                <Typography gutterBottom variant="h6">
+                  Weekly Contest {index + 291}
+                </Typography>
+                <Typography variant="body2" color="#eff1f6bf">
+                  Sunday 8:00 AM IST
+                </Typography>
+              </Box>
+            </Box>
+          ))}
+        </Box>
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <TableContainer
             component={Paper}
-            style={{
+            sx={{
               maxWidth: 700,
               backgroundColor: "#282828",
               borderRadius: "10px",
@@ -239,7 +175,7 @@ export default function Contest() {
               </TableHead>
               <TableBody>
                 {data.map((contest) => (
-                  <TableRow key={contest.id} style={{ borderBottom: "none" }}>
+                  <TableRow key={contest.id} sx={{ borderBottom: "none" }}>
                     <TableCell>
                       <img
                         src={contest.img}
@@ -249,7 +185,7 @@ export default function Contest() {
                         style={{ borderRadius: "5%" }}
                       />
                     </TableCell>
-                    <TableCell style={{ color: "white" }}>
+                    <TableCell sx={{ color: "white" }}>
                       {contest.name}
                     </TableCell>
                     <TableCell align="right">
@@ -261,12 +197,11 @@ export default function Contest() {
                 ))}
               </TableBody>
             </Table>
-            <Stack spacing={2} align="right" m={2}>
+            <Stack spacing={2} sx={{ m: 2 }} align="right">
               <Pagination
                 count={10}
                 variant="outlined"
                 shape="rounded"
-                justifyContent="flex-end"
                 sx={{
                   "& .MuiPaginationItem-root": {
                     color: "#fff",
@@ -289,33 +224,28 @@ export default function Contest() {
           >
             <Typography mx={2}>Global Ranking</Typography>
             {leader.map((data) => (
-              <ListItem style={{ marginTop: "24px" }}>
+              <ListItem key={data.id} sx={{ mt: 3 }}>
                 <Typography mx={3}>
                   <i>{data.id}</i>
                 </Typography>
                 <ListItemAvatar>
                   <Avatar src={getCuteAvatar(data.name)} />
                 </ListItemAvatar>
-                <Grid>
+                <Box>
                   <Typography>{data.name}</Typography>
-                  <Typography
-                    sx={{ display: "flex", color: "#eff2f699" }}
-                    gap={2}
-                  >
+                  <Typography sx={{ display: "flex", color: "#eff2f699" }} gap={2}>
                     <Typography>
-                      Rating:{" "}
-                      <span style={{ color: "white" }}>{data.Rating}</span>
+                      Rating: <span style={{ color: "white" }}>{data.Rating}</span>
                     </Typography>
                     <Typography>
-                      Attended:{" "}
-                      <span style={{ color: "white" }}>{data.Attended}</span>
+                      Attended: <span style={{ color: "white" }}>{data.Attended}</span>
                     </Typography>
                   </Typography>
-                </Grid>
+                </Box>
               </ListItem>
             ))}
           </List>
-        </div>
+        </Box>
       </Grid>
     </Grid>
   );

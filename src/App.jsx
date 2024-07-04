@@ -1,17 +1,16 @@
 import React from "react";
-import Problems from "./Pages/ProblemSet/Problems";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import ResponsiveAppBar from "./Component/ResponsiveAppBar";
+import NavBar from "./Component/AppBar/NavBar";
 import SignIn from "./Pages/LoginSignUp/SignIn";
 import SignUp from "./Pages/LoginSignUp/SignUp";
 import { Store } from "./Context/ContextStore";
-import Home from "./Pages/Home";
+import Home from "./Pages/Home/Home";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Playgrounds from "./Component/profile/Playgrounds";
 import Orders from "./Component/profile/Orders";
 import Profile from "./Component/profile/Profile";
-import AddProblem from "./Pages/ProblemSet/AddProblem";
+import AddProblem from "./Pages/AddProblem/AddProblem";
 import Redeem from "./Pages/Store/Redeem";
 import Problem from "./Pages/problem/Problem";
 import Contest from "./Pages/Contest/Contest";
@@ -22,6 +21,7 @@ import en from 'javascript-time-ago/locale/en'
 import ru from 'javascript-time-ago/locale/ru'
 import 'react-quill/dist/quill.snow.css';
 import Discuss from "./Pages/Discuss/Discuss";
+import Problems from "./Pages/ProblemList/Problems";
 
 TimeAgo.addDefaultLocale(en)
 TimeAgo.addLocale(ru)
@@ -30,7 +30,7 @@ const App = () => {
   return (
     <Store>
       <BrowserRouter>
-        <ResponsiveAppBar />
+        <NavBar />
         <ToastContainer position="top-right" theme="light" />
         <Routes>
           <Route path="/" element={<Home />} />
