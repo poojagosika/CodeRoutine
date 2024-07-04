@@ -1,93 +1,197 @@
-import * as React from "react";
-import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
-import { Avatar, Button, Grid, TextField, Typography } from "@mui/material";
+import React from "react";
+import {
+  Container,
+  Grid,
+  Typography,
+  TextField,
+  Avatar,
+  IconButton,
+  Link,
+  Box,
+} from "@mui/material";
+import PersonIcon from "@mui/icons-material/Person";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import TwitterIcon from "@mui/icons-material/Twitter";
 
-export default function Profile() {
+const user = {
+  firstName: "John",
+  lastName: "Doe",
+  collegeName: "XYZ University",
+  companyName: "ABC Corp",
+  website: "https://johndoe.com",
+  socialAddresses: {
+    linkedin: "https://linkedin.com/in/johndoe",
+    github: "https://github.com/johndoe",
+    twitter: "https://twitter.com/johndoe",
+  },
+  languages: ["Python", "JavaScript", "Java"],
+  skills: {
+    advanced: ["Data Structures", "Algorithms"],
+    intermediate: ["System Design", "Databases"],
+    fundamental: ["OOP", "Version Control"],
+  },
+};
+
+const Profile = () => {
   return (
-    <Container maxWidth="md" style={{ marginTop: "100px" }}>
-      <Box
-        sx={{
-          border: "1px solid black",
-          borderRadius: "10px",
-          padding: "20px",
-          display: "flex",
-          justifyContent: "space-evenly",
-          flexWrap: "wrap",
-        }}
-        gap={5}
-      >
-        <Box>
-          <Avatar style={{ width: "100px", height: "100px" }} />
-        </Box>
-        <Grid>
-          <Box gap={5}>
-            <Typography sx={{ mb: 1 }}>Name</Typography>
-            <Box
-              sx={{ display: "flex", gap: 4, mb: 2, flexWrap: "wrap" }}
-              elevation={3}
-            >
-              <TextField
-                id="outlined-basic"
-                variant="outlined"
-                value="Pooja"
-                size="small"
-                sx={{ width: 300 }}
-              />
-              <TextField
-                id="outlined-basic"
-                value="G"
-                variant="outlined"
-                size="small"
-                sx={{ width: 300 }}
-              />
-            </Box>
-          </Box>
-          <Box gap={4}>
-            <Typography sx={{ mb: 1 }}>Role</Typography>
-            <Box sx={{ display: "flex", gap: 4, mb: 2, flexWrap: "wrap" }}>
-              <TextField
-                id="outlined-basic"
-                value="Full Stack Web Developer"
-                variant="outlined"
-                size="small"
-                sx={{ width: 300 }}
-              />
-              <TextField
-                id="outlined-basic"
-                value="abc@gmail.com"
-                variant="outlined"
-                size="small"
-                sx={{ width: 300 }}
-              />
-            </Box>
-          </Box>
-          <Box gap={4}>
-            <Typography sx={{ mb: 1 }}>College</Typography>
-            <Box sx={{ display: "flex", gap: 4, mb: 2 }}>
-              <TextField
-                id="outlined-basic"
-                value="Abcd engineering college"
-                variant="outlined"
-                fullWidth
-                size="small"
-              />
-            </Box>
-          </Box>
-          <Box style={{ textAlign: "right" }}>
-            <Button
+    <Box mt={4} p={3}>
+      <Container maxWidth="md" boxShadow={3} border={1} borderRadius={8}>
+        <Typography variant="h4" mb={3}>My Profile</Typography>
+        <Grid container spacing={3} alignItems="center">
+          {/* Left Side: Avatar */}
+          <Grid item>
+            <Avatar
+              alt={`${user.firstName} ${user.lastName}`}
+              src="/path-to-image.jpg"
+              sx={{ width: 120, height: 120 }}
+            />
+          </Grid>
+          {/* Right Side: User Information */}
+          <Grid item xs={12} sm container>
+            <Grid item xs container direction="column" spacing={2}>
+              {/* First Name and Last Name */}
+              <Grid item container spacing={2}>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label="First Name"
+                    defaultValue={user.firstName}
+                    variant="outlined"
+                    size="small"
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label="Last Name"
+                    defaultValue={user.lastName}
+                    variant="outlined"
+                    size="small"
+                  />
+                </Grid>
+              </Grid>
+              {/* College Name and Company Name */}
+              <Grid item container spacing={2}>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label="College Name"
+                    defaultValue={user.collegeName}
+                    variant="outlined"
+                    size="small"
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label="Company Name"
+                    defaultValue={user.companyName}
+                    variant="outlined"
+                    size="small"
+                  />
+                </Grid>
+              </Grid>
+              {/* Social Icons */}
+              <Grid item container spacing={2}>
+                <Grid item>
+                  <Link
+                    href={user.socialAddresses.linkedin}
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    <IconButton>
+                      <LinkedInIcon />
+                    </IconButton>
+                  </Link>
+                </Grid>
+                <Grid item>
+                  <Link
+                    href={user.socialAddresses.github}
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    <IconButton>
+                      <GitHubIcon />
+                    </IconButton>
+                  </Link>
+                </Grid>
+                <Grid item>
+                  <Link
+                    href={user.socialAddresses.twitter}
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    <IconButton>
+                      <TwitterIcon />
+                    </IconButton>
+                  </Link>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+          {/* Additional Information */}
+          <Grid item xs={12}>
+            <Typography variant="h5" gutterBottom>
+              Additional Information
+            </Typography>
+            <Box mt={2} />
+
+            {/* Other Fields */}
+            <TextField
+              fullWidth
+              label="Website"
+              defaultValue={user.website}
               variant="outlined"
-              color="secondary"
-              style={{ marginRight: "8px" }}
-            >
-              Close
-            </Button>
-            <Button variant="contained" color="primary">
-              Edit
-            </Button>
-          </Box>
+              spacing={2}
+              size="small"
+            />
+            <Box mt={2} />
+            <TextField
+              fullWidth
+              label="Languages"
+              defaultValue={user.languages.join(", ")}
+              variant="outlined"
+              size="small"
+            />
+          </Grid>
+
+          <Grid item xs={12}>
+            <Typography variant="h5" gutterBottom>
+              Skills
+            </Typography>
+            <Box mt={2} />
+
+            {/* Other Fields */}
+            <TextField
+              fullWidth
+              label="Advanced"
+              defaultValue={user.skills.advanced.join(", ")}
+              variant="outlined"
+              spacing={2}
+              size="small"
+            />
+            <Box mt={2} />
+            <TextField
+              fullWidth
+              label="Intermediate"
+              defaultValue={user.skills.intermediate.join(", ")}
+              variant="outlined"
+              size="small"
+            />
+            <Box mt={2} />
+            <TextField
+              fullWidth
+              label="Fundamental"
+              defaultValue={user.skills.fundamental.join(", ")}
+              variant="outlined"
+              size="small"
+            />
+          </Grid>
         </Grid>
-      </Box>
-    </Container>
+      </Container>
+    </Box>
   );
-}
+};
+
+export default Profile;
