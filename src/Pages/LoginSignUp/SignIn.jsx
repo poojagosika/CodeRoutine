@@ -85,9 +85,6 @@ export default function SignIn() {
       setIsLoading(true);
     } catch (err) {
       toast.error(err?.response?.data?.message);
-      // setError(err.response.data?.message);
-    } finally {
-      // setIsLoading(false);
     }
   };
 
