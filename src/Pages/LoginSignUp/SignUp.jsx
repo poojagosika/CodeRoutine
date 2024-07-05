@@ -79,9 +79,7 @@ export default function SignUp() {
       navigate("/login");
       setIsLoading(true);
     } catch (err) {
-      // setError(err.response.data?.message);
-    } finally {
-      // setIsLoading(false);
+      toast.error(err.response.data?.message);
     }
   };
   return (
