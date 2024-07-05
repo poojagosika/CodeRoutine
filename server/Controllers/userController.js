@@ -131,19 +131,7 @@ export const getUserByUserName = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Selectively choose fields to return
-    const userData = {
-      firstName: existingUser.profile.firstName,
-      lastName: existingUser.profile.lastName,
-      collegeName: existingUser.profile.collegeName,
-      companyName: existingUser.profile.companyName,
-      website: existingUser.profile.website,
-      socialAddresses: existingUser.profile.socialAddresses,
-      languages: existingUser.profile.languages,
-      skills: existingUser.profile.skills,
-      problemsSolved: existingUser.profile.problemsSolved,
-      status: existingUser.profile.status,
-    };
+    const { password, ...userData } = existingUser._doc;
 
     return res.status(200).json({ user: userData });
   } catch (error) {
