@@ -103,14 +103,6 @@ function Home() {
           </Grid>
         </Container>
       </main>
-      <Box sx={{ backgroundColor: "#98999a", p: 6 }} component="footer">
-        <Typography variant="h6" align="center" gutterBottom>
-          CodeRoutine
-        </Typography>
-        <Typography variant="subtitle1" align="center" component="p">
-          Our mission is to help you improve yourself and land your dream job
-        </Typography>
-      </Box>
       <CopyRight />
     </>
   );
