@@ -9,7 +9,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Playgrounds from "./Component/profile/Playgrounds";
 import Orders from "./Component/profile/Orders";
-import Profile from "./Component/profile/Profile";
+import Profile from "./Pages/Profile/Profile";
 import AddProblem from "./Pages/AddProblem/AddProblem";
 import Redeem from "./Pages/Store/Redeem";
 import Problem from "./Pages/problem/Problem";
