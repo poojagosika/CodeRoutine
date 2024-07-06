@@ -11,6 +11,8 @@ import {
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import TwitterIcon from "@mui/icons-material/Twitter";
+import LanguageIcon from '@mui/icons-material/Language';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { getUserByUserName, userUpdateProfile } from "../../Services/AuthService";
 import { useNavigate, useParams } from "react-router-dom";
 import getCuteAvatar from "../../Config/getCuteAvatar";
@@ -28,6 +30,7 @@ const Profile = () => {
   });
   const [userProfile, setUserProfile] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
+  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
   const { id: userName } = useParams();
   const navigate = useNavigate();
 
@@ -46,16 +49,20 @@ const Profile = () => {
     fetchData();
   }, [userName]);
 
-  const handleChange = (e) => {
-    const { id, value } = e.target;
+  const handleChange = (e, platform) => {
+    const { value } = e.target;
     setUserProfile((prevProfile) => ({
       ...prevProfile,
       profile: {
         ...prevProfile.profile,
-        [id]: value,
+        socialAddresses: {
+          ...prevProfile.profile.socialAddresses,
+          [platform]: value,
+        },
       },
     }));
   };
+  
 
   const handleSkillChange = (e, level, index) => {
     const newSkills = { ...userProfile.profile.skills };
@@ -71,14 +78,17 @@ const Profile = () => {
 
   const handleEditClick = (type) => {
     setIsEditing((prev) => ({ ...prev, [type]: true }));
+    setIsDialogOpen(true);
   };
 
   const handleCancelClick = (type) => {
     setIsEditing((prev) => ({ ...prev, [type]: false }));
+    setIsDialogOpen(false);
   };
 
   const handleSaveClick = async (type) => {
     try {
+      setIsDialogOpen(false);
       const updatedProfile = { ...userProfile.profile };
       if (updatedProfile.newPassword) {
         updatedProfile.password = updatedProfile.newPassword;
@@ -144,7 +154,7 @@ const Profile = () => {
           <Box sx={{ padding: "20px" }}>
             <Grid container spacing={2}>
               <PersonalInformation profile={userProfile?.profile} />
-              <SocialLinks userProfile={userProfile?.profile} isEditing={isEditing} />
+              <SocialLinks userProfile={userProfile} isEditing={isEditing} handleChange={handleChange} handleEditClick={handleEditClick} handleCancelClick={handleCancelClick} handleSaveClick={handleSaveClick} platformIcons={platformIcons} platformColors={platformColors} isDialogOpen={isDialogOpen}/>
               <Skills userProfile={userProfile} isEditing={isEditing} />
               <ProblemsSolved userProfile={userProfile} />
             </Grid>
@@ -163,6 +173,8 @@ const platformIcons = {
   linkedin: <LinkedInIcon />,
   github: <GitHubIcon />,
   twitter: <TwitterIcon />,
+  blog: <LanguageIcon/>,
+  portfolio : <AccountCircleIcon/>
 };
 
 const platformColors = {
