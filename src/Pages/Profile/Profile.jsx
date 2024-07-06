@@ -154,7 +154,7 @@ const Profile = () => {
           <Box sx={{ padding: "20px" }}>
             <Grid container spacing={2}>
               <PersonalInformation profile={userProfile?.profile} />
-              <SocialLinks userProfile={userProfile} isEditing={isEditing} handleChange={handleChange} handleEditClick={handleEditClick} handleCancelClick={handleCancelClick} handleSaveClick={handleSaveClick} platformIcons={platformIcons} platformColors={platformColors} isDialogOpen={isDialogOpen}/>
+              {/* <SocialLinks userProfile={userProfile} isEditing={isEditing} handleChange={handleChange} handleEditClick={handleEditClick} handleCancelClick={handleCancelClick} handleSaveClick={handleSaveClick} platformIcons={platformIcons} platformColors={platformColors} isDialogOpen={isDialogOpen}/> */}
               <Skills userProfile={userProfile} isEditing={isEditing} />
               <ProblemsSolved userProfile={userProfile} />
             </Grid>
