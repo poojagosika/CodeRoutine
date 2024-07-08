@@ -11,9 +11,12 @@ import {
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import TwitterIcon from "@mui/icons-material/Twitter";
-import LanguageIcon from '@mui/icons-material/Language';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { getUserByUserName, userUpdateProfile } from "../../Services/AuthService";
+import LanguageIcon from "@mui/icons-material/Language";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import {
+  getUserByUserName,
+  userUpdateProfile,
+} from "../../Services/AuthService";
 import { useNavigate, useParams } from "react-router-dom";
 import getCuteAvatar from "../../Config/getCuteAvatar";
 import ProblemsSolved from "./ProblemsSolved";
@@ -21,6 +24,7 @@ import Skills from "./Skills";
 import SocialLinks from "./SocialLinks";
 import PersonalInformation from "./PersonalInformation";
 import CopyRight from "../../Component/CopyRight/CopyRight";
+import Education from "./Education";
 
 const Profile = () => {
   const [isEditing, setIsEditing] = React.useState({
@@ -62,7 +66,6 @@ const Profile = () => {
       },
     }));
   };
-  
 
   const handleSkillChange = (e, level, index) => {
     const newSkills = { ...userProfile.profile.skills };
@@ -109,7 +112,11 @@ const Profile = () => {
     return (
       <Container
         maxWidth="lg"
-        style={{ marginTop: "80px", marginBottom: "100px", textAlign: "center" }}
+        style={{
+          marginTop: "80px",
+          marginBottom: "100px",
+          textAlign: "center",
+        }}
       >
         <CircularProgress />
       </Container>
@@ -118,7 +125,10 @@ const Profile = () => {
 
   return (
     <>
-      <Container maxWidth="lg" style={{ marginTop: "40px", marginBottom: "80px" }}>
+      <Container
+        maxWidth="lg"
+        style={{ marginTop: "40px", marginBottom: "80px" }}
+      >
         <Paper elevation={3} sx={{ borderRadius: "10px", overflow: "hidden" }}>
           <Box
             sx={{
@@ -154,6 +164,7 @@ const Profile = () => {
           <Box sx={{ padding: "20px" }}>
             <Grid container spacing={2}>
               <PersonalInformation profile={userProfile?.profile} />
+              <Education profile={userProfile?.profile} />
               {/* <SocialLinks userProfile={userProfile} isEditing={isEditing} handleChange={handleChange} handleEditClick={handleEditClick} handleCancelClick={handleCancelClick} handleSaveClick={handleSaveClick} platformIcons={platformIcons} platformColors={platformColors} isDialogOpen={isDialogOpen}/> */}
               <Skills userProfile={userProfile} isEditing={isEditing} />
               <ProblemsSolved userProfile={userProfile} />
@@ -163,7 +174,6 @@ const Profile = () => {
       </Container>
       <CopyRight />
     </>
-
   );
 };
 
@@ -173,8 +183,8 @@ const platformIcons = {
   linkedin: <LinkedInIcon />,
   github: <GitHubIcon />,
   twitter: <TwitterIcon />,
-  blog: <LanguageIcon/>,
-  portfolio : <AccountCircleIcon/>
+  blog: <LanguageIcon />,
+  portfolio: <AccountCircleIcon />,
 };
 
 const platformColors = {
