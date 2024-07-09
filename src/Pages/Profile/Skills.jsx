@@ -1,57 +1,168 @@
-import React from 'react'
-import { Box, Chip, Divider, Grid, IconButton, Typography } from '@mui/material'
-import SaveIcon from "@mui/icons-material/Save";
-import EditIcon from "@mui/icons-material/Edit";
-const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+import React from "react";
+import {
+  Grid,
+  Typography,
+  Button,
+  Box,
+  Divider,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Chip,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+} from "@mui/material";
+import { Add as AddIcon, Clear as ClearIcon } from "@mui/icons-material";
 
-const Skills = ({ userProfile, isEditing, }) => {
+const Skills = () => {
+  const [openDialog, setOpenDialog] = React.useState(false);
+  const [skills, setSkills] = React.useState([]);
+  const [newSkill, setNewSkill] = React.useState("");
+  const [selectedLevel, setSelectedLevel] = React.useState("beginner");
+
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  const handleSaveSkill = () => {
+    if (newSkill.trim() !== "") {
+      const skillObject = {
+        skill: newSkill.trim(),
+        level: selectedLevel,
+      };
+      setSkills([...skills, skillObject]);
+      setNewSkill("");
+      setSelectedLevel("beginner");
+      setOpenDialog(false);
+    }
+  };
+
+  const handleLevelChange = (event) => {
+    setSelectedLevel(event.target.value);
+  };
+
+  const renderSkillDot = (level) => {
+    let color;
+    switch (level) {
+      case "beginner":
+        color = "red";
+        break;
+      case "intermediate":
+        color = "yellow";
+        break;
+      case "advance":
+        color = "green";
+        break;
+      default:
+        color = "gray";
+        break;
+    }
     return (
-        <Grid item xs={12}>
-            <Divider sx={{ my: 2 }} />
-            <Box display="flex" alignItems="center" gap={2}>
-                <Typography variant="h5" gutterBottom>
-                    Skills
-                </Typography>
-                {isEditing.skills ? (
-                    <>
-                        <IconButton color="primary" onClick={() => handleSaveClick("skills")}>
-                            <SaveIcon fontSize="small" />
-                        </IconButton>
-                        <Button color="secondary" onClick={() => handleCancelClick("skills")}>
-                            Cancel
-                        </Button>
-                    </>
-                ) : (
-                    <IconButton color="primary" onClick={() => handleEditClick("skills")}>
-                        <EditIcon fontSize="small" />
-                    </IconButton>
-                )}
-            </Box>
-            {["advanced", "intermediate", "fundamental"].map((level) => (
-                <Box key={level} sx={{
-                    display: "flex",
-                    gap: 2, flexWrap: "wrap"
-                }}>
-                    <Typography variant="body1" sx={{ flexBasis: "100%" }}>
-                        {capitalize(level)}:
-                    </Typography>
-                    {isEditing?.skills
-                        ? userProfile?.profile?.skills?.[level]?.map((skill, index) => (
-                            <TextField
-                                key={index}
-                                value={skill}
-                                onChange={(e) => handleSkillChange(e, level, index)}
-                                size="small"
-                                sx={{ mb: 1 }}
-                            />
-                        ))
-                        : userProfile?.profile?.skills?.[level]?.map((skill, index) => (
-                            <Chip key={index} label={skill} sx={{ mb: 1 }} />
-                        ))}
-                </Box>
-            ))}
-        </Grid>
-    )
-}
+      <span
+        style={{
+          backgroundColor: color,
+          width: "8px",
+          height: "8px",
+          display: "inline-block",
+          borderRadius: "50%",
+        }}
+      />
+    );
+  };
 
-export default Skills
+  const handleDeleteSkill = (index) => {
+    const updatedSkills = [...skills];
+    updatedSkills.splice(index, 1);
+    setSkills(updatedSkills);
+  };
+
+  return (
+    <Grid item xs={12}>
+      <Divider sx={{ my: 2 }} />
+      <Typography variant="h6">Skills</Typography>
+
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
+        <DialogTitle>Add Skill</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="skill"
+            label="Skill"
+            type="text"
+            fullWidth
+            value={newSkill}
+            onChange={(e) => setNewSkill(e.target.value)}
+          />
+          <RadioGroup
+            aria-label="skill-level"
+            name="skill-level"
+            value={selectedLevel}
+            onChange={handleLevelChange}
+            style={{
+              marginTop: "16px",
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+            }}
+          >
+            <FormControlLabel
+              value="beginner"
+              control={<Radio size="small" />}
+              label={<Typography variant="body2">Beginner</Typography>}
+            />
+            <FormControlLabel
+              value="intermediate"
+              control={<Radio size="small" />}
+              label={<Typography variant="body2">Intermediate</Typography>}
+            />
+            <FormControlLabel
+              value="advance"
+              control={<Radio size="small" />}
+              label={<Typography variant="body2">Advance</Typography>}
+            />
+          </RadioGroup>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleSaveSkill} color="primary">
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Box mt={2}>
+        {skills.map((skill, index) => (
+          <Chip
+            key={index}
+            label={skill.skill}
+            style={{ marginBottom: "8px", marginRight: "8px" }}
+            avatar={renderSkillDot(skill.level)}
+            onDelete={() => handleDeleteSkill(index)}
+            deleteIcon={<ClearIcon />}
+          />
+        ))}
+      </Box>
+
+      <Button
+        variant="text"
+        color="primary"
+        startIcon={<AddIcon />}
+        onClick={handleOpenDialog}
+      >
+        Add Skills
+      </Button>
+    </Grid>
+  );
+};
+
+export default Skills;
