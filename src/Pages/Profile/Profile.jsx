@@ -25,6 +25,7 @@ import SocialLinks from "./SocialLinks";
 import PersonalInformation from "./PersonalInformation";
 import CopyRight from "../../Component/CopyRight/CopyRight";
 import Education from "./Education";
+import Experience from "./Experience";
 
 const Profile = () => {
   const [isEditing, setIsEditing] = React.useState({
@@ -162,13 +163,12 @@ const Profile = () => {
             </Typography>
           </Box>
           <Box sx={{ padding: "20px" }}>
-            <Grid container spacing={2}>
-              <PersonalInformation profile={userProfile?.profile} />
-              <Education profile={userProfile?.profile} />
-              {/* <SocialLinks userProfile={userProfile} isEditing={isEditing} handleChange={handleChange} handleEditClick={handleEditClick} handleCancelClick={handleCancelClick} handleSaveClick={handleSaveClick} platformIcons={platformIcons} platformColors={platformColors} isDialogOpen={isDialogOpen}/> */}
-              <Skills userProfile={userProfile} isEditing={isEditing} />
-              <ProblemsSolved userProfile={userProfile} />
-            </Grid>
+            <PersonalInformation profile={userProfile?.profile} />
+            <Experience profile={userProfile?.profile} />
+            <Education profile={userProfile?.profile} />
+            <SocialLinks profile={userProfile?.profile} />
+            <Skills userProfile={userProfile} isEditing={isEditing} />
+            <ProblemsSolved userProfile={userProfile} />
           </Box>
         </Paper>
       </Container>

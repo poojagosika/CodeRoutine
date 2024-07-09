@@ -19,8 +19,8 @@ import { Link as RouterLink } from "react-router-dom";
 const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 
 const CombinedLink = React.forwardRef(function CombinedLink(props, ref) {
-    return <RouterLink ref={ref} {...props} />;
-  });
+  return <RouterLink ref={ref} {...props} />;
+});
 
 const SocialLinks = ({
   userProfile,
@@ -54,11 +54,21 @@ const SocialLinks = ({
         </Link>
       ) : (
         <Box display={"flex"} gap={3}>
-          <Link component={CombinedLink} to={"/"}>{platformIcons.linkedin}</Link>
-          <Link component={CombinedLink} to={"/"}>{platformIcons.github}</Link>
-          <Link component={CombinedLink} to={"/"}>{platformIcons.twitter}</Link>
-          <Link component={CombinedLink} to={"/"}>{platformIcons.blog}</Link>
-          <Link component={CombinedLink} to={"/"}>{platformIcons.portfolio}</Link>
+          <Link component={CombinedLink} to={"/"}>
+            {platformIcons?.linkedin}
+          </Link>
+          <Link component={CombinedLink} to={"/"}>
+            {platformIcons?.github}
+          </Link>
+          <Link component={CombinedLink} to={"/"}>
+            {platformIcons?.twitter}
+          </Link>
+          <Link component={CombinedLink} to={"/"}>
+            {platformIcons?.blog}
+          </Link>
+          <Link component={CombinedLink} to={"/"}>
+            {platformIcons?.portfolio}
+          </Link>
         </Box>
       )}
 
@@ -78,7 +88,7 @@ const SocialLinks = ({
         <DialogContent>
           {["linkedin", "github", "twitter", "Blog", "Portfolio"].map(
             (platform) =>
-              isEditing.social ? (
+              isEditing?.social ? (
                 <TextField
                   key={platform}
                   id={platform}
