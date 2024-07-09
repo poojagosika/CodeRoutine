@@ -147,11 +147,7 @@ const SocialLinks = () => {
               (url, index) =>
                 url && (
                   <Tooltip title={`Work Sample ${index + 1}`} key={index} arrow>
-                    <Link
-                      href={url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
+                    <Link href={url} target="_blank" rel="noopener noreferrer">
                       <Language sx={{ mr: 1 }} color="primary" />
                     </Link>
                   </Tooltip>

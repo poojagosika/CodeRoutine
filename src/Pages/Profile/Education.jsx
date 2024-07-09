@@ -31,12 +31,25 @@ const Education = () => {
     cgpa: "",
   });
   const [editIndex, setEditIndex] = useState(null);
+  // Custom isEqual function to compare arrays deeply
+  const isEqual = (arr1, arr2) => {
+    if (arr1.length !== arr2.length) return false;
+
+    for (let i = 0; i < arr1.length; i++) {
+      if (arr1[i] !== arr2[i]) return false;
+    }
+
+    return true;
+  };
 
   useEffect(() => {
     const sortedList = [...educationList].sort((a, b) => {
       return new Date(b.startDate) - new Date(a.startDate);
     });
-    setEducationList(sortedList);
+
+    if (!isEqual(sortedList, educationList)) {
+      setEducationList(sortedList);
+    }
   }, [educationList]);
 
   const handleOpenDialog = (index = null) => {
