@@ -16,15 +16,16 @@ import Problem from "./Pages/problem/Problem";
 import Contest from "./Pages/Contest/Contest";
 import Explore from "./Pages/Explore/Explore";
 import DiscussDetails from "./Pages/Discuss/DiscussDetails";
-import TimeAgo from 'javascript-time-ago'
-import en from 'javascript-time-ago/locale/en'
-import ru from 'javascript-time-ago/locale/ru'
-import 'react-quill/dist/quill.snow.css';
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en";
+import ru from "javascript-time-ago/locale/ru";
+import "react-quill/dist/quill.snow.css";
 import Discuss from "./Pages/Discuss/Discuss";
 import Problems from "./Pages/ProblemList/Problems";
+import InterviewOnline from "./Pages/Interview/InterviewOnline";
 
-TimeAgo.addDefaultLocale(en)
-TimeAgo.addLocale(ru)
+TimeAgo.addDefaultLocale(en);
+TimeAgo.addLocale(ru);
 
 const App = () => {
   return (
@@ -47,6 +48,11 @@ const App = () => {
           <Route path="/store/redeem" element={<Redeem />} />
           <Route path="/discuss" element={<Discuss />} />
           <Route path="/discuss/:id" element={<DiscussDetails />} />
+          <Route path="/discuss/:id" element={<DiscussDetails />} />
+          <Route
+            path="/interview/onlineinterview"
+            element={<InterviewOnline />}
+          />
         </Routes>
       </BrowserRouter>
     </Store>
