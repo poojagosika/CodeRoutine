@@ -91,7 +91,7 @@ const SocialLinks = () => {
   return (
     <Grid item xs={12}>
       <Divider sx={{ my: 2 }} />
-      <Typography variant="h6">Portfolio / Work Samples</Typography>
+      <Typography variant="h6">Social Links</Typography>
 
       {showIcons && (
         <Box sx={{ display: "flex", alignItems: "center", mt: 2 }} mb={2}>
@@ -162,7 +162,7 @@ const SocialLinks = () => {
         startIcon={<AddIcon />}
         onClick={handleOpenDialog}
       >
-        Add portfolio / work sample
+        Add Social Links
       </Button>
 
       <Dialog open={openDialog} onClose={handleCloseDialog}>

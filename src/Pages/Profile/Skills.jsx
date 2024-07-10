@@ -140,7 +140,7 @@ const Skills = () => {
         </DialogActions>
       </Dialog>
 
-      <Box mt={2}>
+      <Box>
         {skills.map((skill, index) => (
           <Chip
             key={index}
