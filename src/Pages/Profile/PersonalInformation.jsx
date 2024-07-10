@@ -74,12 +74,17 @@ const PersonalInformation = ({ profile }) => {
   return (
     <>
       <Grid item xs={12}>
-        <Box display="flex" alignItems="center" gap={2} justifyContent={"space-between"}>
+        <Box
+          display="flex"
+          alignItems="center"
+          gap={2}
+          justifyContent={"space-between"}
+        >
           <Avatar
-              src={getCuteAvatar(userProfile?.userName)}
-              alt={userProfile?.profile?.firstName}
-              sx={{ width: 150, height: 150, marginTop: "-130px" }}
-            />
+            src={getCuteAvatar(userProfile?.userName)}
+            alt={userProfile?.profile?.firstName}
+            sx={{ width: 150, height: 150, marginTop: "-130px" }}
+          />
           <IconButton color="primary" onClick={toggleEditing}>
             <EditIcon fontSize="small" />
           </IconButton>
@@ -88,10 +93,17 @@ const PersonalInformation = ({ profile }) => {
 
       <Dialog open={isEditing} onClose={handleCancel} fullWidth maxWidth="sm">
         <DialogTitle>
-          Personal Information
-          <IconButton color="secondary" onClick={handleCancel}>
-            <CloseIcon />
-          </IconButton>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            width="100%"
+          >
+            <Typography variant="h5">Personal Information</Typography>
+            <IconButton color="secondary" onClick={handleCancel}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
         </DialogTitle>
 
         <DialogContent>
