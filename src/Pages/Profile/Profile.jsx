@@ -26,6 +26,9 @@ import PersonalInformation from "./PersonalInformation";
 import CopyRight from "../../Component/CopyRight/CopyRight";
 import Education from "./Education";
 import Experience from "./Experience";
+import { Train } from "@mui/icons-material";
+import Training from "./Training";
+import ProjectDetails from "./ProjectDetails";
 
 const Profile = () => {
   const [isEditing, setIsEditing] = React.useState({
@@ -166,6 +169,8 @@ const Profile = () => {
             <PersonalInformation profile={userProfile?.profile} />
             <Experience profile={userProfile?.profile} />
             <Education profile={userProfile?.profile} />
+            <Training profile={userProfile?.profile} />
+            <ProjectDetails profile={userProfile?.profile} />
             <SocialLinks profile={userProfile?.profile} />
             <Skills userProfile={userProfile} isEditing={isEditing} />
             <ProblemsSolved userProfile={userProfile} />
