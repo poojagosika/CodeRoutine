@@ -22,6 +22,7 @@ import ru from 'javascript-time-ago/locale/ru'
 import 'react-quill/dist/quill.snow.css';
 import Discuss from "./Pages/Discuss/Discuss";
 import Problems from "./Pages/ProblemList/Problems";
+import Assessment from "./Pages/Interview/Assessment/Assessment";
 
 TimeAgo.addDefaultLocale(en)
 TimeAgo.addLocale(ru)
@@ -47,6 +48,7 @@ const App = () => {
           <Route path="/store/redeem" element={<Redeem />} />
           <Route path="/discuss" element={<Discuss />} />
           <Route path="/discuss/:id" element={<DiscussDetails />} />
+          <Route path="/interview/assessment" element={<Assessment />} />
         </Routes>
       </BrowserRouter>
     </Store>
