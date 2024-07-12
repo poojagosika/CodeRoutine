@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -11,6 +11,7 @@ import {
   Grid,
   IconButton,
   InputAdornment,
+  Paper,
   Stack,
   TextField,
   Typography,
@@ -18,14 +19,18 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import { Link as RouterLink } from "react-router-dom";
 import { ContextStore } from "../../Context/ContextStore";
-import { cards } from "./Config";
+import { cards } from "./Config.js";
 import CopyRight from "../../Component/CopyRight/CopyRight";
 
 function Home() {
   const { userData } = ContextStore();
+  const [searchQuery, setSearchQuery] = useState("");
+
   const handleSearch = (event) => {
+    setSearchQuery(event.target.value);
     console.log(event.target.value);
   };
+
   return (
     <>
       <CssBaseline />
@@ -52,30 +57,74 @@ function Home() {
               spacing={2}
               justifyContent="center"
             >
-              <Button variant="contained" color="primary" component={RouterLink} to={!userData ? "/signup" : "/explore"}>
+              <Button
+                variant="contained"
+                color="primary"
+                component={RouterLink}
+                to={!userData ? "/signup" : "/explore"}
+              >
                 {!userData ? "Sign Up" : "Explore"}
               </Button>
-              <Button variant="outlined" color="primary" component={RouterLink} to="/problems">
+              <Button
+                variant="outlined"
+                color="primary"
+                component={RouterLink}
+                to="/problems"
+              >
                 Learn More
               </Button>
             </Stack>
           </Container>
         </Box>
         <Container sx={{ py: 8 }} maxWidth="md">
+          <Typography variant="h4" textAlign="center" mb={2}>
+            Newly Launched
+          </Typography>
           <Box display="flex" alignItems="center" gap={2} mb={2}>
-            <Typography variant="h4">Newly Launched</Typography>
-            <TextField
-              placeholder="Search..."
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton onClick={handleSearch}>
-                      <SearchIcon />
-                    </IconButton>
-                  </InputAdornment>
-                ),
+            <Paper
+              component="form"
+              sx={{
+                p: "4px 8px",
+                display: "flex",
+                alignItems: "center",
+                width: 800,
+                borderRadius: 3,
+                boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.1)",
+                backgroundColor: "rgba(255, 255, 255, 0.9)",
+                backdropFilter: "blur(10px)",
               }}
-            />
+            >
+              <TextField
+                placeholder="Search..."
+                variant="outlined"
+                fullWidth
+                size="small"
+                onChange={handleSearch}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: 3,
+                    "& fieldset": {
+                      borderColor: "transparent",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "transparent",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "transparent",
+                    },
+                  },
+                }}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton>
+                        <SearchIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Paper>
           </Box>
           <Grid container spacing={4} justifyContent="center">
             {cards.map((card) => (
@@ -84,7 +133,7 @@ function Home() {
                   <CardActionArea>
                     <CardMedia
                       component="img"
-                      height="140"
+                      sx={{ height: "130px", width: "350px" }}
                       image={card.image}
                       alt={card.title}
                     />
@@ -107,7 +156,5 @@ function Home() {
     </>
   );
 }
-
-
 
 export default Home;
