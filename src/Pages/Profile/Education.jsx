@@ -17,9 +17,9 @@ import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-const Education = () => {
+const Education = (props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [educationList, setEducationList] = useState([]);
+  const [educationList, setEducationList] = useState(props?.education);
   const [currentEducation, setCurrentEducation] = useState({
     institution: "",
     degree: "",
@@ -131,7 +131,7 @@ const Education = () => {
       </Typography>
 
       <Box mt={3}>
-        {educationList.map((education, index) => (
+        {educationList?.map((education, index) => (
           <Box
             key={index}
             mb={2}

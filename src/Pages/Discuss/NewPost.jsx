@@ -3,8 +3,8 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, C
 import ReactQuill from 'react-quill';
 import CloseIcon from '@mui/icons-material/Close';
 import SendIcon from '@mui/icons-material/Send';
-import { createDiscuss } from '../../Services/AuthService';
 import { ContextStore } from '../../Context/ContextStore';
+import { createDiscuss } from '../../Api/Discuss/discussApi';
 
 const NewPost = (props) => {
     const [postLoading, setPostLoading] = useState(false);
@@ -115,7 +115,7 @@ const NewPost = (props) => {
                         startIcon={<CloseIcon />}
                         size="small"
                         disabled={postLoading}
-                        
+
                     >
                         Cancel
                     </Button>

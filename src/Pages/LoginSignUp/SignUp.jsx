@@ -12,11 +12,11 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { RegisterUser } from "../../Services/AuthService";
 import { toast } from "react-toastify";
 import CircularProgress from "@mui/material/CircularProgress";
 import codeRoutineLogo from "../../assets/logo.png";
 import { Avatar, Skeleton } from "@mui/material";
+import { registerUser } from "../../Api/userApi";
 
 const defaultTheme = createTheme();
 
@@ -74,7 +74,7 @@ export default function SignUp() {
     e.preventDefault();
     try {
       console.log(data);
-      const res = await RegisterUser(data);
+      const res = await registerUser(data);
       toast.success(res?.data?.message);
       navigate("/login");
       setIsLoading(true);

@@ -7,12 +7,11 @@ import {
     InputBase,
     debounce,
 } from "@mui/material";
-
-import { getDiscuss } from "../../Services/AuthService";
 import DiscussList from "./DiscussList";
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import DiscussLoading from "./Loading/DiscussLoading";
 import NewPost from "./NewPost";
+import { getDiscuss } from "../../Api/Discuss/discussApi";
 
 const Discuss = () => {
     const [Loading, setLoading] = useState(true);

@@ -10,9 +10,9 @@ import {
   CircularProgress,
   Skeleton,
 } from "@mui/material";
-import { addProblem } from "../../Services/AuthService";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { addProblem } from "../../Api/problemApi";
 
 const difficultyOptions = ["Easy", "Medium", "Hard"];
 

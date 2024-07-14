@@ -12,8 +12,8 @@ import {
 } from "@mui/material";
 import getCuteAvatar from '../../Config/getCuteAvatar';
 import { ContextStore } from '../../Context/ContextStore';
-import { addLikeOrRemoveLike } from '../../Services/AuthService';
 import IsLogin from '../../Component/IsLogin';
+import { addLikeOrRemoveLike } from '../../Api/Discuss/discussApi';
 const DiscussList = (props) => {
   const navagate = useNavigate();
   const { userData } = ContextStore();

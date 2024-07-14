@@ -10,9 +10,7 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import Checkbox from "@mui/material/Checkbox";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { getAllQuestionsData } from "../../Services/AuthService";
 import Link from "@mui/material/Link";
 import { Link as RouterLink } from "react-router-dom";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
@@ -21,6 +19,7 @@ import Skeleton from "@mui/material/Skeleton";
 import { ContextStore } from "../../Context/ContextStore";
 import { Container } from "@mui/material";
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import { getAllQuestionsData } from "../../Api/problemApi";
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;

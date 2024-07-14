@@ -12,8 +12,8 @@ import React from "react";
 import ReactQuill from "react-quill";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import CloseIcon from "@mui/icons-material/Close";
-import { updateDiscussByI } from "../../Services/AuthService";
 import { useParams } from "react-router-dom";
+import { updateDiscussById } from "../../Api/Discuss/discussApi";
 
 const DiscussEdit = ({
   openDialog,
@@ -22,7 +22,7 @@ const DiscussEdit = ({
   handleCloseDialog,
   handleContentChange,
   setOpenDialog,
-  setTopic, 
+  setTopic,
 }) => {
   const [postLoading, setPostLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
@@ -31,7 +31,7 @@ const DiscussEdit = ({
   const handleUpdatePost = async () => {
     try {
       setPostLoading(true);
-      const response = await updateDiscussByI(id, {
+      const response = await updateDiscussById(id, {
         title: update.title,
         content: update.content,
         tags: update.tags,

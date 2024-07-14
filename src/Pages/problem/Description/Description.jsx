@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { getProblemById } from '../../../Services/AuthService';
 import {
   Typography,
   Card,
   CardContent,
   Box,
 } from '@mui/material';
+import { getProblemById } from '../../../Api/problemApi';
 const Description = () => {
   const [problem, setProblem] = useState(null);
   const [isLoading, setIsLoading] = useState(true);

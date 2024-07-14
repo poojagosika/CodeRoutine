@@ -15,12 +15,11 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { toast } from "react-toastify";
-import { LoginUser } from "../../Services/AuthService";
-
 import codeRoutineLogo from "../../assets/logo.png";
 import { Avatar, Skeleton } from "@mui/material";
 import { ContextStore } from "../../Context/ContextStore";
 import CircularProgress from "@mui/material/CircularProgress";
+import { loginUser } from "../../Api/userApi";
 
 const defaultTheme = createTheme();
 
@@ -75,7 +74,7 @@ export default function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await LoginUser(data);
+      const res = await loginUser(data);
       localStorage.setItem("token", res?.data?.token);
       localStorage.setItem("user", JSON.stringify(res?.data?.user));
       setUserData(res.data.user);

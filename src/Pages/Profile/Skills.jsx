@@ -17,9 +17,9 @@ import {
 } from "@mui/material";
 import { Add as AddIcon, Clear as ClearIcon } from "@mui/icons-material";
 
-const Skills = () => {
+const Skills = (props) => {
   const [openDialog, setOpenDialog] = React.useState(false);
-  const [skills, setSkills] = React.useState([]);
+  const [skills, setSkills] = React.useState(props?.skills);
   const [newSkill, setNewSkill] = React.useState("");
   const [selectedLevel, setSelectedLevel] = React.useState("beginner");
 
@@ -37,7 +37,7 @@ const Skills = () => {
         skill: newSkill.trim(),
         level: selectedLevel,
       };
-      setSkills([...skills, skillObject]);
+      setSkills((prevSkills) => [...prevSkills, skillObject]);
       setNewSkill("");
       setSelectedLevel("beginner");
       setOpenDialog(false);
@@ -57,7 +57,7 @@ const Skills = () => {
       case "intermediate":
         color = "yellow";
         break;
-      case "advance":
+      case "advanced":
         color = "green";
         break;
       default:
@@ -78,9 +78,7 @@ const Skills = () => {
   };
 
   const handleDeleteSkill = (index) => {
-    const updatedSkills = [...skills];
-    updatedSkills.splice(index, 1);
-    setSkills(updatedSkills);
+    setSkills((prevSkills) => prevSkills.filter((_, i) => i !== index));
   };
 
   return (
@@ -124,9 +122,9 @@ const Skills = () => {
               label={<Typography variant="body2">Intermediate</Typography>}
             />
             <FormControlLabel
-              value="advance"
+              value="advanced"
               control={<Radio size="small" />}
-              label={<Typography variant="body2">Advance</Typography>}
+              label={<Typography variant="body2">Advanced</Typography>}
             />
           </RadioGroup>
         </DialogContent>

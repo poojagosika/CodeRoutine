@@ -30,11 +30,10 @@ const PersonalInformation = ({ profile }) => {
     gender: profile?.gender || "",
     country: profile?.country || "",
   });
-  const [userProfile, setUserProfile] = React.useState(null);
 
-  const [tempPersonalInformation, setTempPersonalInformation] =
-    useState(personalInformation);
+  const [tempPersonalInformation, setTempPersonalInformation] = useState(personalInformation);
   const [formUpdated, setFormUpdated] = useState(false);
+  const [userProfile, setUserProfile] = useState(null);
 
   const toggleEditing = () => {
     setTempPersonalInformation(personalInformation);
@@ -67,8 +66,8 @@ const PersonalInformation = ({ profile }) => {
     toggleEditing();
   };
 
-  const formatAddress = ({ address, city, state, country, zip }) => {
-    return [address, city, state, country, zip].filter(Boolean).join(", ");
+  const formatAddress = ({ city, country }) => {
+    return [city, country].filter(Boolean).join(", ");
   };
 
   return (

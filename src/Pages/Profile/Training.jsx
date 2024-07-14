@@ -19,9 +19,9 @@ import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-const Training = () => {
+const Training = (props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [trainingList, setTrainingList] = useState([]);
+  const [trainingList, setTrainingList] = useState(props?.training);
   const [currentTraining, setCurrentTraining] = useState({
     courseName: "",
     institution: "",
@@ -33,7 +33,6 @@ const Training = () => {
   const [editIndex, setEditIndex] = useState(null);
   const [isChecked, setIsChecked] = useState(false);
   const [online, setIsOnline] = useState(false);
-  // State for checkbox
 
   const handleOpenDialog = (index = null) => {
     if (index !== null) {
@@ -60,12 +59,6 @@ const Training = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // Update current training state
-    setCurrentTraining((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-
     // Additional validation for start and end dates
     if (
       name === "startDate" &&
@@ -81,21 +74,25 @@ const Training = () => {
       alert("End date must be after start date!");
       return;
     }
+
+    setCurrentTraining((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleSave = () => {
-    // Update currentTraining with isChecked state
     const updatedTraining = {
       ...currentTraining,
       isCurrent: isChecked,
-      isonline: online, // Add isChecked state to currentTraining
+      isOnline: online, // Add isChecked state to currentTraining
     };
 
     const updatedTrainingList =
       editIndex !== null
         ? trainingList.map((training, idx) =>
-            idx === editIndex ? updatedTraining : training
-          )
+          idx === editIndex ? updatedTraining : training
+        )
         : [...trainingList, updatedTraining];
 
     // Sort the training list by start date (latest first)
@@ -142,7 +139,7 @@ const Training = () => {
       </Typography>
 
       <Box mt={3}>
-        {trainingList.map((training, index) => (
+        {trainingList?.map((training, index) => (
           <Box
             key={index}
             mb={2}
@@ -154,12 +151,13 @@ const Training = () => {
               <Typography variant="h6">{training.courseName}</Typography>
               <Typography>
                 {training.institution}
-                {training.isonline && <span> - Online - </span>}
+                {training.isOnline && <span> - Online</span>}
               </Typography>
               <Typography>{training.location}</Typography>
               <Typography>
                 {training.startDate} - {training.endDate}
-                {training.isCurrent && <span> - Present - </span>}(
+                {training.isCurrent && <span> - Present</span>}
+                (
                 {
                   calculateYearsMonths(training.startDate, training.endDate)
                     .years
@@ -196,7 +194,7 @@ const Training = () => {
       >
         <DialogTitle>
           {editIndex !== null
-            ? "Edit Training/Course Details "
+            ? "Edit Training/Course Details"
             : "Add Training/Course Details"}
           <IconButton
             color="secondary"
@@ -209,7 +207,7 @@ const Training = () => {
         <DialogContent>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Typography mb={1}>Training program</Typography>
+              <Typography mb={1}>Training Program</Typography>
 
               <TextField
                 name="courseName"

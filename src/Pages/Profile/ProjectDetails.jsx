@@ -19,9 +19,9 @@ import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-const ProjectDetails = () => {
+const ProjectDetails = (props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [projectList, setProjectList] = useState([]);
+  const [projectList, setProjectList] = useState(props?.project);
   const [currentProject, setCurrentProject] = useState({
     projectName: "",
     projectLink: "",
@@ -92,8 +92,8 @@ const ProjectDetails = () => {
     const updatedProjectList =
       editIndex !== null
         ? projectList.map((project, idx) =>
-            idx === editIndex ? updatedProject : project
-          )
+          idx === editIndex ? updatedProject : project
+        )
         : [...projectList, updatedProject];
 
     // Sort the project list by start date (latest first)

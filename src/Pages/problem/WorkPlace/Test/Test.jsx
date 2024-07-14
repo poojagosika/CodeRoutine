@@ -5,8 +5,8 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import { getProblemById } from "../../../../Services/AuthService";
 import { useParams } from "react-router-dom";
+import { getProblemById } from "../../../../Api/problemApi";
 export default function Test() {
   const [showCases, setShowCases] = React.useState(true);
   const [activeCase, setActiveCase] = React.useState(0);
@@ -39,7 +39,7 @@ export default function Test() {
     setShowCases(false);
     setShowTestResult(true);
   };
-  const handleplus = () => {};
+  const handleplus = () => { };
 
   return (
     <div

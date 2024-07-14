@@ -25,9 +25,9 @@ import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-const Experience = () => {
+const Experience = (props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [experienceList, setExperienceList] = useState([]);
+  const [experienceList, setExperienceList] = useState(props?.experience);
   const [currentExperience, setCurrentExperience] = useState({
     company: "",
     title: "",
@@ -103,8 +103,8 @@ const Experience = () => {
     const updatedExperienceList =
       editIndex !== null
         ? experienceList.map((exp, idx) =>
-            idx === editIndex ? updatedExperience : exp
-          )
+          idx === editIndex ? updatedExperience : exp
+        )
         : [...experienceList, updatedExperience];
 
     // Sort the experience list by start date (latest first)
@@ -169,7 +169,7 @@ const Experience = () => {
       </Typography>
 
       <Box mt={3}>
-        {experienceList.map((experience, index) => (
+        {experienceList?.map((experience, index) => (
           <Box
             key={index}
             mb={2}

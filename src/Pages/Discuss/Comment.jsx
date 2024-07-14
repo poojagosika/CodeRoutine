@@ -21,12 +21,6 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import SendIcon from "@mui/icons-material/Send";
 
-import {
-  addLikeOrRemoveLikeComment,
-  addReplyToComment,
-  deleteComment,
-  editComment,
-} from "../../Services/AuthService";
 import { ContextStore } from "../../Context/ContextStore";
 import Reply from "./Reply";
 import ReplyIcon from "@mui/icons-material/Reply";
@@ -35,6 +29,8 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import IsLogin from "../../Component/IsLogin";
 import CommentLoading from "./Loading/CommentLoading";
 import { useNavigate } from "react-router-dom";
+import { addLikeOrRemoveLikeComment, deleteComment, editComment } from "../../Api/Discuss/commentApi";
+import { addReplyToComment } from "../../Api/Discuss/replyApi";
 
 const Comment = (props) => {
   const [comment, setComment] = React.useState(props?.comment);
@@ -381,12 +377,10 @@ const Comment = (props) => {
                       }
                     >
                       {showReplies
-                        ? `Hide ${comment?.replies?.length} ${
-                            comment?.replies?.length > 1 ? "Replies" : "Reply"
-                          }`
-                        : `Show ${comment?.replies?.length} ${
-                            comment?.replies?.length > 1 ? "Replies" : "Reply"
-                          }`}
+                        ? `Hide ${comment?.replies?.length} ${comment?.replies?.length > 1 ? "Replies" : "Reply"
+                        }`
+                        : `Show ${comment?.replies?.length} ${comment?.replies?.length > 1 ? "Replies" : "Reply"
+                        }`}
                     </Button>
                   )}
                 </Box>

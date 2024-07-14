@@ -17,17 +17,12 @@ import getCuteAvatar from "../../Config/getCuteAvatar";
 import ReactTimeAgo from "react-time-ago";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import SendIcon from "@mui/icons-material/Send";
-import {
-  addLikeOrRemoveLikeReply,
-  deleteReply,
-  editReply,
-} from "../../Services/AuthService";
 import IsLogin from "../../Component/IsLogin";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import CloseIcon from "@mui/icons-material/Close";
-import ReplyIcon from "@mui/icons-material/Reply";
+import { addLikeOrRemoveLikeReply, deleteReply, editReply } from "../../Api/Discuss/replyApi";
 
 const Reply = (props) => {
   const [reply, setReply] = useState(props.reply);

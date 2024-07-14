@@ -24,7 +24,7 @@ import {
   DeleteForever,
 } from "@mui/icons-material";
 
-const SocialLinks = () => {
+const SocialLinks = (props) => {
   const [openDialog, setOpenDialog] = useState(false);
   const [tempUrls, setTempUrls] = useState({
     linkedin: "",
@@ -35,7 +35,7 @@ const SocialLinks = () => {
   });
   const [additionalUrls, setAdditionalUrls] = useState([]);
   const [showIcons, setShowIcons] = useState(false);
-  const [urls, setUrls] = useState({});
+  const [urls, setUrls] = useState(props?.socialLinks);
 
   const handleOpenDialog = () => {
     setOpenDialog(true);

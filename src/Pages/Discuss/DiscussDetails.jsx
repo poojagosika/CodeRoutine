@@ -15,18 +15,14 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import SendIcon from "@mui/icons-material/Send";
 
-import {
-  addCommentToTopic,
-  deleteDiscussById,
-  getDiscussById,
-  addLikeOrRemoveLike,
-} from "../../Services/AuthService";
 import getCuteAvatar from "../../Config/getCuteAvatar";
 import DiscussEdit from "./DiscussEdit";
 import { ContextStore } from "../../Context/ContextStore";
 import Comment from "./Comment";
 import IsLogin from "../../Component/IsLogin";
 import TopicLoadig from "./Loading/TopicLoadig";
+import { addLikeOrRemoveLike, deleteDiscussById, getDiscussById } from "../../Api/Discuss/discussApi";
+import { addCommentToTopic } from "../../Api/Discuss/commentApi";
 
 const DiscussDetails = () => {
   const { id } = useParams();
