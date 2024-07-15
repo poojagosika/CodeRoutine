@@ -4,8 +4,8 @@ export const createDiscuss = async (data) => {
   return await axiosInstance.post("/api/discuss", data);
 };
 
-export const getDiscuss = async () => {
-  return await axiosInstance.get("/api/discuss");
+export const getDiscuss = async ({ params }) => {
+  return await axiosInstance.get("/api/discuss", { params });
 };
 
 export const getDiscussById = async (id) => {

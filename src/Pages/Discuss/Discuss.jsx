@@ -6,29 +6,51 @@ import {
     Button,
     InputBase,
     debounce,
+    IconButton,
+    Pagination,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem
 } from "@mui/material";
 import DiscussList from "./DiscussList";
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import DiscussLoading from "./Loading/DiscussLoading";
 import NewPost from "./NewPost";
 import { getDiscuss } from "../../Api/Discuss/discussApi";
 
 const Discuss = () => {
-    const [Loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(true);
     const [discussions, setDiscussions] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [openDialog, setOpenDialog] = useState(false);
+    const [sortBy, setSortBy] = useState("createdAt");
+    const [order, setOrder] = useState("desc");
+    const [page, setPage] = useState(1);
+    const [limit, setLimit] = useState(10);
+    const [totalPages, setTotalPages] = useState(0);
 
     const fetchDiscussions = useCallback(async () => {
+        setLoading(true);
         try {
-            const response = await getDiscuss();
-            setDiscussions(response?.data?.topics || []);
+            const response = await getDiscuss({
+                params: {
+                    page,
+                    limit,
+                    sortBy,
+                    order,
+                    searchTerm,
+                },
+            });
+            const { topics, total, pages } = response?.data || {};
+            setDiscussions(topics || []);
+            setTotalPages(pages || 0);
         } catch (error) {
             console.error("Error fetching discussions:", error);
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [page, limit, sortBy, order, searchTerm]);
 
     useEffect(() => {
         fetchDiscussions();
@@ -36,12 +58,10 @@ const Discuss = () => {
 
     const handleSearch = useCallback(
         debounce((searchTerm) => {
-            const filteredDiscussions = discussions.filter((topic) =>
-                topic.title.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-            setDiscussions(filteredDiscussions);
+            setSearchTerm(searchTerm);
+            setPage(1); // Reset page when search term changes
         }, 300),
-        [discussions]
+        []
     );
 
     const handleSearchChange = (event) => {
@@ -58,9 +78,29 @@ const Discuss = () => {
         setOpenDialog(false);
     };
 
+    const handleSort = (field) => {
+        if (sortBy === field) {
+            setOrder(order === "asc" ? "desc" : "asc");
+        } else {
+            setSortBy(field);
+            setOrder("desc"); // Default to descending order when changing sort field
+        }
+        setPage(1); // Reset to first page on sort change
+    };
+
+    const handlePageChange = (event, value) => {
+        setPage(value);
+    };
+
+    const handleLimitChange = (event) => {
+        const newLimit = parseInt(event.target.value, 10);
+        setLimit(newLimit);
+        setPage(1); // Reset page when limit changes
+    };
+
     return (
-        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }} >
-            <Box display="flex" justifyContent="right" gap={2} alignItems="center">
+        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+            <Box display="flex" justifyContent="space-between" alignItems="center">
                 <InputBase
                     placeholder="Search..."
                     style={{ width: 300 }}
@@ -74,31 +114,74 @@ const Discuss = () => {
                     }}
                     size="small"
                 />
-                <Button variant="contained" color="primary" onClick={handleOpenDialog}
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleOpenDialog}
                     startIcon={<OpenInNewIcon />}
                     size="small"
                 >
                     New
                 </Button>
             </Box>
-            {Loading ? (
+            <Box mt={2} display="flex" justifyContent="space-between" alignItems="center">
+                <Box display="flex" gap={1}>
+                    <IconButton onClick={() => handleSort("createdAt")} size="small">
+                        Created {sortBy === "createdAt" && (order === "asc" ? "↑" : "↓")}
+                    </IconButton>
+                    <IconButton onClick={() => handleSort("title")} size="small">
+                        Title {sortBy === "title" && (order === "asc" ? "↑" : "↓")}
+                    </IconButton>
+                    <IconButton onClick={() => handleSort("author")} size="small">
+                        Author {sortBy === "author" && (order === "asc" ? "↑" : "↓")}
+                    </IconButton>
+                    <IconButton onClick={() => handleSort("likes")} size="small">
+                        Likes {sortBy === "likes" && (order === "asc" ? "↑" : "↓")}
+                    </IconButton>
+                </Box>
+            </Box>
+            {loading ? (
                 <DiscussLoading />
             ) : (
                 <List>
-                    {discussions
-                        .map((discussion) => (
-                            <DiscussList discussion={discussion} key={discussion._id}
-                            />
-                        ))
-                    }
+                    {discussions.map((discussion) => (
+                        <DiscussList key={discussion._id} discussion={discussion} />
+                    ))}
                 </List>
             )}
+            <Box mt={2} display="flex" justifyContent="center" alignItems="center" gap={2}>
+                <FormControl sx={{ minWidth: 80 }} >
+                    <InputLabel id="limit-select-label">Per Page</InputLabel>
+                    <Select
+                        labelId="limit-select-label"
+                        value={limit}
+                        onChange={handleLimitChange}
+                        size="small"
+                        label="Per Page"
+                    >
+                        <MenuItem value={5}>5</MenuItem>
+                        <MenuItem value={10}>10</MenuItem>
+                        <MenuItem value={20}>20</MenuItem>
+                        <MenuItem value={50}>50</MenuItem>
+                    </Select>
+                </FormControl>
+                {totalPages > 1 && (
+                    <Pagination
+                        count={totalPages}
+                        page={page}
+                        onChange={handlePageChange}
+                        color="primary"
+                        size="small"
+                    />
+                )}
+            </Box>
             <NewPost
                 openDialog={openDialog}
                 handleCloseDialog={handleCloseDialog}
                 setDiscussions={setDiscussions}
-                setOpenDialog={setOpenDialog} />
-        </Container >
+                setOpenDialog={setOpenDialog}
+            />
+        </Container>
     );
 };
 

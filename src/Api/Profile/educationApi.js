@@ -1,10 +1,7 @@
 import axiosInstance from "../axiosConfig";
 
 export const addEducation = async (data) => {
-  return await axiosInstance.post(
-    "/api/users/profile/profile/addEducation",
-    data
-  );
+  return await axiosInstance.post("/api/users/profile/addEducation", data);
 };
 
 export const updateEducation = async (educationId, data) => {
@@ -14,9 +11,8 @@ export const updateEducation = async (educationId, data) => {
   );
 };
 
-export const deleteEducation = async (educationId, data) => {
+export const deleteEducation = async (educationId) => {
   return await axiosInstance.delete(
-    `/api/users/profile/deleteEducation/${educationId}`,
-    data
+    `/api/users/profile/deleteEducation/${educationId}`
   );
 };

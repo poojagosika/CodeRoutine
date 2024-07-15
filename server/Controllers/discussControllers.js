@@ -21,6 +21,7 @@ export const getDiscuss = async (req, res) => {
       tags,
       sortBy = "createdAt",
       order = "desc",
+      searchTerm = "",
     } = req.query;
 
     // Ensure page and limit are positive integers
@@ -33,16 +34,19 @@ export const getDiscuss = async (req, res) => {
     let query = {};
     if (author) query.author = author;
     if (tags) query.tags = { $in: tags.split(",") };
+    if (searchTerm) query.title = { $regex: searchTerm, $options: "i" };
 
     // Sorting
-    const sortOrder = order === "desc" ? -1 : 1;
-    const sortFields = ["createdAt", "title", "author"]; // Add more valid fields as needed
-    if (!sortFields.includes(sortBy)) sortBy = "createdAt";
-    const sort = { [sortBy]: sortOrder };
+    let sort = {};
+    if (sortBy === "likes") {
+      sort = { likes: { $size: order === "desc" ? -1 : 1 } };
+    } else {
+      sort = { [sortBy]: order === "desc" ? -1 : 1 };
+    }
 
     // Fetching topics with pagination, filtering, and sorting
     const topics = await Topic.find(query)
-      .populate("author", "userName") // Assuming User model has a 'userName' field
+      .populate("author", "userName")
       .populate({
         path: "comments",
         populate: {
@@ -67,7 +71,7 @@ export const getDiscuss = async (req, res) => {
       .status(200)
       .json({ topics, total, page, pages: Math.ceil(total / limit) });
   } catch (error) {
-    console.error(error); // Log the error for debugging
+    console.error(error);
     return res
       .status(500)
       .json({ message: "Failed to fetch topics", error: error.message });
