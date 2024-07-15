@@ -10,18 +10,23 @@ import {
   DialogContent,
   DialogActions,
   TextField,
-  Chip,
   RadioGroup,
   FormControlLabel,
   Radio,
+  IconButton,
+  Chip,
 } from "@mui/material";
 import { Add as AddIcon, Clear as ClearIcon } from "@mui/icons-material";
+import { addSkill, deleteSkill } from "../../Api/Profile/skillsApi";
+import { toast } from "react-toastify";
+import { ContextStore } from "../../Context/ContextStore";
 
 const Skills = (props) => {
   const [openDialog, setOpenDialog] = React.useState(false);
-  const [skills, setSkills] = React.useState(props?.skills);
+  const [skills, setSkills] = React.useState(props?.userProfile.skills || []);
   const [newSkill, setNewSkill] = React.useState("");
   const [selectedLevel, setSelectedLevel] = React.useState("beginner");
+  const { userData } = ContextStore();
 
   const handleOpenDialog = () => {
     setOpenDialog(true);
@@ -31,16 +36,24 @@ const Skills = (props) => {
     setOpenDialog(false);
   };
 
-  const handleSaveSkill = () => {
+  const handleSaveSkill = async () => {
     if (newSkill.trim() !== "") {
       const skillObject = {
         skill: newSkill.trim(),
         level: selectedLevel,
       };
-      setSkills((prevSkills) => [...prevSkills, skillObject]);
-      setNewSkill("");
-      setSelectedLevel("beginner");
-      setOpenDialog(false);
+      try {
+        const response = await addSkill(skillObject);
+        if (response.data) {
+          setSkills(response.data.skills);
+          setNewSkill("");
+          setSelectedLevel("beginner");
+          setOpenDialog(false);
+        }
+      } catch (error) {
+        toast.error(error?.response?.data?.message || "Failed to add skill");
+        console.error("Failed to add skill:", error);
+      }
     }
   };
 
@@ -77,8 +90,17 @@ const Skills = (props) => {
     );
   };
 
-  const handleDeleteSkill = (index) => {
-    setSkills((prevSkills) => prevSkills.filter((_, i) => i !== index));
+  const handleDeleteSkill = async (index) => {
+    const skillId = skills[index]._id;
+    try {
+      const response = await deleteSkill(skillId);
+      if (response.data) {
+        setSkills((prevSkills) => prevSkills.filter((_, i) => i !== index));
+      }
+    } catch (error) {
+      toast.error("Error deleting skill");
+      console.error("Error deleting skill:", error);
+    }
   };
 
   return (
@@ -142,23 +164,44 @@ const Skills = (props) => {
         {skills.map((skill, index) => (
           <Chip
             key={index}
-            label={skill.skill}
+            label={
+              <Box display="flex" alignItems="center">
+                {renderSkillDot(skill.level)}
+                <Typography
+                  variant="body2"
+                  component="span"
+                  style={{ marginLeft: "8px" }}
+                >
+                  {skill.skill}
+                </Typography>
+              </Box>
+            }
             style={{ marginBottom: "8px", marginRight: "8px" }}
-            avatar={renderSkillDot(skill.level)}
-            onDelete={() => handleDeleteSkill(index)}
-            deleteIcon={<ClearIcon />}
+            onDelete={
+              userData._id === props.userProfile?._id
+                ? () => handleDeleteSkill(index)
+                : undefined
+            }
+            deleteIcon={
+              userData._id === props.userProfile?._id ? <ClearIcon /> : undefined
+            }
+            variant="outlined"
           />
         ))}
       </Box>
 
-      <Button
-        variant="text"
-        color="primary"
-        startIcon={<AddIcon />}
-        onClick={handleOpenDialog}
-      >
-        Add Skills
-      </Button>
+      {userData._id === props.userProfile?._id ? (
+        <Button
+          variant="text"
+          color="primary"
+          startIcon={<AddIcon />}
+          onClick={handleOpenDialog}
+        >
+          Add Skills
+        </Button>
+      ) : (
+        ""
+      )}
     </Grid>
   );
 };

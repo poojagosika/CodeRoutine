@@ -79,7 +79,7 @@ const Profile = () => {
             <Training training={userProfile?.training} />
             <ProjectDetails project={userProfile?.project} />
             <SocialLinks socialLinks={userProfile?.socialLinks} />
-            <Skills skills={userProfile?.skills} />
+            <Skills userProfile={userProfile}/>
             <ProblemsSolved problemsSolved={userProfile?.problemsSolved} />
           </Box>
         </Paper>

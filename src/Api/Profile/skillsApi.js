@@ -1,7 +1,7 @@
 import axiosInstance from "../axiosConfig";
 
 export const addSkill = async (data) => {
-  return await axiosInstance.post("/api/users/profile/profile/addSkill", data);
+  return await axiosInstance.post("/api/users/profile/addSkill", data);
 };
 
 export const updateSkill = async (skillId, data) => {
@@ -11,9 +11,8 @@ export const updateSkill = async (skillId, data) => {
   );
 };
 
-export const deleteSkill = async (skillId, data) => {
+export const deleteSkill = async (skillId) => {
   return await axiosInstance.delete(
-    `/api/users/profile/deleteSkill/${skillId}`,
-    data
+    `/api/users/profile/deleteSkill/${skillId}`
   );
 };
