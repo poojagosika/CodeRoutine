@@ -19,7 +19,6 @@ const TrainingList = ({ trainingList, handleOpenDialog, userId, setTrainingList 
             years--;
             months += 12;
         }
-
         return { years, months };
     };
 
@@ -38,6 +37,7 @@ const TrainingList = ({ trainingList, handleOpenDialog, userId, setTrainingList 
             const response = await deleteTraining(trainingId);
             if (response.status === 200) {
                 setTrainingList((prev) => prev.filter((_, idx) => idx !== index));
+                toast.success(response?.data?.message);
             }
         }
         catch (error) {
@@ -80,7 +80,7 @@ const TrainingList = ({ trainingList, handleOpenDialog, userId, setTrainingList 
                                     gap: 1
                                 }}
                             >
-                                {training?.institution}
+                                {training?.organization}
                                 {training?.isOnline && (
                                     <Box
                                         sx={{
@@ -109,8 +109,8 @@ const TrainingList = ({ trainingList, handleOpenDialog, userId, setTrainingList 
                                     color: "#6B7280",
                                 }}
                             >
-                                {formatDate(training?.startDate)} - {formatDate(training?.endDate)}
-                                {training?.isCurrent && <span> - Present</span>}.
+                                {formatDate(training?.startDate)}{" - "}
+                                {training?.isCurrent ? <span>Present</span> : formatDate(training?.endDate)}.
                                 {` ${formatDuration(duration)}`}
                             </Typography>
                             <Typography

@@ -13,6 +13,7 @@ import {
   TextareaAutosize,
   Checkbox,
   FormControlLabel,
+  InputLabel,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
@@ -26,36 +27,33 @@ const Training = (props) => {
   const [trainingList, setTrainingList] = useState(props?.userProfile?.training);
   const [currentTraining, setCurrentTraining] = useState({
     courseName: "",
-    institution: "",
+    organization: "",
     location: "",
     startDate: "",
     endDate: "",
     description: "",
+    isCurrent: false,
+    isOnline: false,
   });
   const [editIndex, setEditIndex] = useState(null);
-  const [isChecked, setIsChecked] = useState(false);
-  const [online, setIsOnline] = useState(false);
   const { userData } = ContextStore();
 
   const handleOpenDialog = (index = null) => {
-
     if (index !== null) {
       const training = trainingList[index];
       setCurrentTraining(training);
-      setIsChecked(training.isCurrent || false);
-      setIsOnline(training.isOnline || false);
       setEditIndex(index);
     } else {
       setCurrentTraining({
         courseName: "",
-        institution: "",
+        organization: "",
         location: "",
         startDate: "",
         endDate: "",
         description: "",
+        isCurrent: false,
+        isOnline: false,
       });
-      setIsChecked(false);
-      setIsOnline(false);
       setEditIndex(null);
     }
     setIsDialogOpen(true);
@@ -63,64 +61,52 @@ const Training = (props) => {
 
   const handleCloseDialog = () => {
     setIsDialogOpen(false);
+    setCurrentTraining({
+      courseName: "",
+      organization: "",
+      location: "",
+      startDate: "",
+      endDate: "",
+      description: "",
+      isCurrent: false,
+      isOnline: false,
+    });
+    setEditIndex(null);
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    if (
-      (name === "startDate" && new Date(value) >= new Date(currentTraining.endDate)) ||
-      (name === "endDate" && new Date(value) <= new Date(currentTraining.startDate))
-    ) {
-      alert("Start date must be before end date!");
-      return;
-    }
+    const { name, value, type, checked } = e.target;
     setCurrentTraining((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
   const handleSave = async () => {
-    const updatedTraining = {
-      ...currentTraining,
-      isCurrent: isChecked,
-      isOnline: online,
-    };
-    let updatedTrainingList;
-    if (editIndex !== null) {
-      updatedTrainingList = trainingList.map((training, idx) =>
-        idx === editIndex ? updatedTraining : training
-      );
-    } else {
-      updatedTrainingList = [...trainingList, updatedTraining];
-    }
-
-    const sortedTrainingList = updatedTrainingList.sort(
-      (a, b) => new Date(b.startDate) - new Date(a.startDate)
-    );
-
     try {
       if (editIndex !== null) {
-        const response = await updateTraining(currentTraining._id, updatedTraining);
+        const response = await updateTraining(currentTraining?._id, currentTraining);
         if (response.status === 200) {
+          const updatedTrainingList = trainingList.map((training, idx) =>
+            idx === editIndex ? currentTraining : training
+          );
+          setTrainingList(updatedTrainingList);
           toast.success("Training updated successfully");
         } else {
           toast.error("Failed to update training");
         }
       } else {
-        const response = await addTraining(updatedTraining);
+        const response = await addTraining(currentTraining);
         if (response.data) {
+          setTrainingList(response?.data?.training);
           toast.success(response.data.message);
         } else {
           toast.error("Failed to add training");
         }
       }
-      setTrainingList(sortedTrainingList);
-      setIsDialogOpen(false);
+      handleCloseDialog();
     } catch (error) {
-      toast.error(
-        error?.response?.data?.message || "Failed to process training"
-      );
+      toast.error(error?.response?.data?.message || "Failed to process training");
       console.log(error);
     }
   };
@@ -128,9 +114,9 @@ const Training = (props) => {
   const isFormValid = () => {
     return (
       currentTraining.courseName &&
-      currentTraining.institution &&
+      currentTraining.organization &&
       currentTraining.startDate &&
-      currentTraining.endDate
+      (currentTraining.isCurrent || currentTraining.endDate)
     );
   };
 
@@ -147,15 +133,13 @@ const Training = (props) => {
           }}
           gutterBottom
         >
-          Training / Courses
+          Training | Courses
         </Typography>
         {userData?._id === props?.userProfile?._id && (
           <IconButton
             color="primary"
             onClick={() => handleOpenDialog()}
-            sx={{
-              mr: 1,
-            }}
+            sx={{ mr: 1 }}
           >
             <AddIcon />
           </IconButton>
@@ -170,17 +154,30 @@ const Training = (props) => {
       <Dialog
         open={isDialogOpen}
         onClose={handleCloseDialog}
+        aria-labelledby="form-dialog-title"
         fullWidth
         maxWidth="sm"
       >
-        <DialogTitle>
-          {editIndex !== null
-            ? "Edit Training/Course Details"
-            : "Add Training/Course Details"}
+        <DialogTitle
+          id="form-dialog-title"
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          {editIndex !== null ? "Edit Training | Course Details" : "Add Training | Course Details"}
           <IconButton
-            color="secondary"
             onClick={handleCloseDialog}
-            style={{ float: "right" }}
+            sx={{
+              color: "grey.500",
+              "&:hover": {
+                color: "grey.700",
+              },
+            }}
+            aria-label="close"
+            size="small"
+            edge="end"
           >
             <CloseIcon />
           </IconButton>
@@ -188,34 +185,47 @@ const Training = (props) => {
         <DialogContent>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Typography mb={1}>Training Program</Typography>
               <TextField
                 name="courseName"
                 variant="outlined"
                 value={currentTraining.courseName}
                 onChange={handleChange}
                 fullWidth
-                size="small"
-                margin="normal"
+                margin="dense"
+                label="Training | Course Name"
+                required
+                autoFocus
+                autoComplete="off"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck="false"
               />
             </Grid>
             <Grid item xs={12}>
-              <Typography mb={1}>Organization</Typography>
               <TextField
-                name="institution"
+                name="organization"
                 variant="outlined"
-                value={currentTraining.institution}
-                onChange={handleChange}
                 fullWidth
-                size="small"
-                margin="normal"
+                margin="dense"
+                label="Organization"
+                required
+                autoComplete="off"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck="false"
+                value={currentTraining.organization}
+                onChange={handleChange}
               />
               <Box>
                 <FormControlLabel
                   control={
                     <Checkbox
-                      checked={online}
-                      onChange={() => setIsOnline(!online)}
+                      name="isOnline"
+                      checked={currentTraining.isOnline}
+                      onChange={handleChange}
+                      inputProps={{ "aria-label": "primary checkbox" }}
+                      color="primary"
+                      size="small"
                     />
                   }
                   label="Online"
@@ -223,19 +233,20 @@ const Training = (props) => {
               </Box>
             </Grid>
             <Grid item xs={12}>
-              <Typography mb={1}>Location</Typography>
               <TextField
                 name="location"
                 variant="outlined"
                 value={currentTraining.location}
                 onChange={handleChange}
                 fullWidth
-                size="small"
-                margin="normal"
+                label="Location"
+                autoComplete="off"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck="false"
               />
             </Grid>
             <Grid item xs={6}>
-              <Typography mb={1}>Start Date</Typography>
               <TextField
                 name="startDate"
                 variant="outlined"
@@ -244,12 +255,18 @@ const Training = (props) => {
                 value={currentTraining.startDate}
                 onChange={handleChange}
                 fullWidth
-                size="small"
-                margin="normal"
+                margin="dense"
+                required
+                autoComplete="off"
+                label="Start Date"
+                InputProps={{
+                  inputProps: {
+                    min: "1970-01-01",
+                  },
+                }}
               />
             </Grid>
             <Grid item xs={6}>
-              <Typography mb={1}>End Date</Typography>
               <TextField
                 name="endDate"
                 variant="outlined"
@@ -258,15 +275,22 @@ const Training = (props) => {
                 value={currentTraining.endDate}
                 onChange={handleChange}
                 fullWidth
-                size="small"
-                margin="normal"
+                margin="dense"
+                required
+                autoComplete="off"
+                label="End Date"
+                disabled={currentTraining.isCurrent}
               />
               <Box>
                 <FormControlLabel
                   control={
                     <Checkbox
-                      checked={isChecked}
-                      onChange={() => setIsChecked(!isChecked)}
+                      checked={currentTraining.isCurrent}
+                      onChange={handleChange}
+                      inputProps={{ "aria-label": "primary checkbox" }}
+                      color="primary"
+                      size="small"
+                      name="isCurrent"
                     />
                   }
                   label="Currently Ongoing"
@@ -274,7 +298,12 @@ const Training = (props) => {
               </Box>
             </Grid>
             <Grid item xs={12}>
-              <Typography mb={1}>Description</Typography>
+              <InputLabel
+                shrink
+                htmlFor="description"
+              >
+                Description
+              </InputLabel>
               <TextareaAutosize
                 name="description"
                 style={{
@@ -287,14 +316,18 @@ const Training = (props) => {
                 value={currentTraining.description}
                 onChange={handleChange}
                 fullWidth
-                size="small"
+                margin="dense"
+                autoComplete="off"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck="false"
               />
             </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleSave} disabled={!isFormValid()}>
-            {editIndex !== null ? "Update" : "Add "}
+            {editIndex !== null ? "Update" : "Add"}
           </Button>
         </DialogActions>
       </Dialog>

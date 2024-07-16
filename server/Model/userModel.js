@@ -150,7 +150,7 @@ const trainingSchema = new Schema(
       type: String,
       required: true,
     },
-    institution: {
+    organization: {
       type: String,
       required: true,
     },
@@ -164,7 +164,6 @@ const trainingSchema = new Schema(
     },
     endDate: {
       type: Date,
-      required: true,
     },
     description: {
       type: String,
