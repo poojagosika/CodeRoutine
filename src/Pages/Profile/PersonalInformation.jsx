@@ -16,24 +16,27 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
 import WorkIcon from "@mui/icons-material/Work";
-import getCuteAvatar from "../../Config/getCuteAvatar";
+import getCuteAvatar from "../../Config/getCuteAvatar.js";
+import { personalInformationUpdate } from "../../Api/Profile/personalInformationApi.js";
+import { toast } from "react-toastify";
+import SchoolIcon from "@mui/icons-material/School";
 
-const PersonalInformation = ({ profile }) => {
+const PersonalInformation = ({ userProfile }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [personalInformation, setPersonalInformation] = useState({
-    firstName: profile?.firstName || "",
-    lastName: profile?.lastName || "",
-    headline: profile?.headline || "",
-    currentPosition: profile?.currentPosition || "",
-    education: profile?.education || "",
-    city: profile?.city || "",
-    gender: profile?.gender || "",
-    country: profile?.country || "",
+    firstName: userProfile?.profile?.firstName || "",
+    lastName: userProfile?.profile?.lastName || "",
+    headline: userProfile?.profile?.headline || "",
+    currentPosition: userProfile?.profile?.currentPosition || "",
+    education: userProfile?.profile?.education || "",
+    city: userProfile?.profile?.city || "",
+    gender: userProfile?.profile?.gender || "",
+    country: userProfile?.profile?.country || "",
   });
 
-  const [tempPersonalInformation, setTempPersonalInformation] = useState(personalInformation);
+  const [tempPersonalInformation, setTempPersonalInformation] =
+    useState(personalInformation);
   const [formUpdated, setFormUpdated] = useState(false);
-  const [userProfile, setUserProfile] = useState(null);
 
   const toggleEditing = () => {
     setTempPersonalInformation(personalInformation);
@@ -55,14 +58,21 @@ const PersonalInformation = ({ profile }) => {
     }));
   };
 
-  const handleSave = () => {
-    setPersonalInformation(tempPersonalInformation);
-    setFormUpdated(true);
-    toggleEditing();
+  const handleSave = async () => {
+    try {
+      const response = await personalInformationUpdate(tempPersonalInformation);
+      if (response?.data) {
+        setPersonalInformation(tempPersonalInformation);
+        setFormUpdated(true);
+        toggleEditing();
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
+      console.error("Error updating personal information:", error);
+    }
   };
 
   const handleCancel = () => {
-    console.log("Canceling changes");
     toggleEditing();
   };
 
@@ -81,7 +91,7 @@ const PersonalInformation = ({ profile }) => {
         >
           <Avatar
             src={getCuteAvatar(userProfile?.userName)}
-            alt={userProfile?.profile?.firstName}
+            alt={userProfile?.firstName}
             sx={{ width: 150, height: 150, marginTop: "-130px" }}
           />
           <IconButton color="primary" onClick={toggleEditing}>
@@ -185,15 +195,22 @@ const PersonalInformation = ({ profile }) => {
                 id="education"
                 select
                 variant="outlined"
-                value={tempPersonalInformation.education}
-                onChange={handleChange}
+                onChange={(e) =>
+                  setTempPersonalInformation((prevInfo) => ({
+                    ...prevInfo,
+                    education: e.target.value,
+                  }))
+                }
+                defaultValue="UG"
                 fullWidth
                 size="small"
                 sx={{ mb: 2 }}
               >
-                <MenuItem value="UG">UG</MenuItem>
-                <MenuItem value="12th">12th</MenuItem>
-                <MenuItem value="10th">10th</MenuItem>
+                {["UG", "12th", "10th"].map((education) => (
+                  <MenuItem key={education} value={education}>
+                    {education}
+                  </MenuItem>
+                ))}
               </TextField>
             </Grid>
 
@@ -232,7 +249,7 @@ const PersonalInformation = ({ profile }) => {
         </DialogActions>
       </Dialog>
 
-      <Grid container spacing={1} mt={2}>
+      <Grid container spacing={1} mt={1}>
         <Grid item xs={12} sm={8}>
           <Box
             display="flex"
@@ -260,17 +277,30 @@ const PersonalInformation = ({ profile }) => {
           <Box display="flex" flexDirection="column" alignItems="flex-end">
             <Typography
               variant="body1"
-              display={"flex"}
-              alignItems={"center"}
-              justifyContent={"center"}
-              textAlign={"center"}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                textAlign: "center",
+              }}
             >
-              {formUpdated && personalInformation.currentPosition && (
+              {!formUpdated && personalInformation.currentPosition && (
                 <WorkIcon sx={{ mr: 1 }} />
               )}
               {personalInformation.currentPosition}
             </Typography>
-            <Typography variant="body1">
+            <Typography
+              variant="body1"
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                textAlign: "center",
+              }}
+            >
+              {!formUpdated && personalInformation.education && (
+                <SchoolIcon sx={{ mr: 1 }} />
+              )}
               {personalInformation.education}
             </Typography>
           </Box>

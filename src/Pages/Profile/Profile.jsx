@@ -73,7 +73,7 @@ const Profile = () => {
 
           </Box>
           <Box sx={{ padding: "20px" }}>
-            <PersonalInformation profile={userProfile?.profile} />
+            <PersonalInformation userProfile={userProfile} />
             <Experience experience={userProfile?.experience} />
             <Education education={userProfile?.education} />
             <Training training={userProfile?.training} />
