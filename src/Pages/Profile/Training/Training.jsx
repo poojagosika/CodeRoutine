@@ -15,13 +15,15 @@ import {
   FormControlLabel,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
-import DeleteIcon from "@mui/icons-material/Delete";
+import TrainingList from "./TrainingList";
+import { ContextStore } from "../../../Context/ContextStore";
+import { toast } from "react-toastify";
+import { addTraining, updateTraining } from "../../../Api/Profile/trainingApi";
 
 const Training = (props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [trainingList, setTrainingList] = useState(props?.training);
+  const [trainingList, setTrainingList] = useState(props?.userProfile?.training);
   const [currentTraining, setCurrentTraining] = useState({
     courseName: "",
     institution: "",
@@ -33,10 +35,15 @@ const Training = (props) => {
   const [editIndex, setEditIndex] = useState(null);
   const [isChecked, setIsChecked] = useState(false);
   const [online, setIsOnline] = useState(false);
+  const { userData } = ContextStore();
 
   const handleOpenDialog = (index = null) => {
+
     if (index !== null) {
-      setCurrentTraining(trainingList[index]);
+      const training = trainingList[index];
+      setCurrentTraining(training);
+      setIsChecked(training.isCurrent || false);
+      setIsOnline(training.isOnline || false);
       setEditIndex(index);
     } else {
       setCurrentTraining({
@@ -47,6 +54,8 @@ const Training = (props) => {
         endDate: "",
         description: "",
       });
+      setIsChecked(false);
+      setIsOnline(false);
       setEditIndex(null);
     }
     setIsDialogOpen(true);
@@ -58,54 +67,62 @@ const Training = (props) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    // Additional validation for start and end dates
     if (
-      name === "startDate" &&
-      new Date(value) >= new Date(currentTraining.endDate)
+      (name === "startDate" && new Date(value) >= new Date(currentTraining.endDate)) ||
+      (name === "endDate" && new Date(value) <= new Date(currentTraining.startDate))
     ) {
       alert("Start date must be before end date!");
       return;
     }
-    if (
-      name === "endDate" &&
-      new Date(value) <= new Date(currentTraining.startDate)
-    ) {
-      alert("End date must be after start date!");
-      return;
-    }
-
     setCurrentTraining((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const updatedTraining = {
       ...currentTraining,
       isCurrent: isChecked,
-      isOnline: online, // Add isChecked state to currentTraining
+      isOnline: online,
     };
+    let updatedTrainingList;
+    if (editIndex !== null) {
+      updatedTrainingList = trainingList.map((training, idx) =>
+        idx === editIndex ? updatedTraining : training
+      );
+    } else {
+      updatedTrainingList = [...trainingList, updatedTraining];
+    }
 
-    const updatedTrainingList =
-      editIndex !== null
-        ? trainingList.map((training, idx) =>
-          idx === editIndex ? updatedTraining : training
-        )
-        : [...trainingList, updatedTraining];
-
-    // Sort the training list by start date (latest first)
     const sortedTrainingList = updatedTrainingList.sort(
       (a, b) => new Date(b.startDate) - new Date(a.startDate)
     );
 
-    setTrainingList(sortedTrainingList);
-    setIsDialogOpen(false);
-  };
-
-  const handleDelete = (index) => {
-    setTrainingList((prev) => prev.filter((_, idx) => idx !== index));
+    try {
+      if (editIndex !== null) {
+        const response = await updateTraining(currentTraining._id, updatedTraining);
+        if (response.status === 200) {
+          toast.success("Training updated successfully");
+        } else {
+          toast.error("Failed to update training");
+        }
+      } else {
+        const response = await addTraining(updatedTraining);
+        if (response.data) {
+          toast.success(response.data.message);
+        } else {
+          toast.error("Failed to add training");
+        }
+      }
+      setTrainingList(sortedTrainingList);
+      setIsDialogOpen(false);
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message || "Failed to process training"
+      );
+      console.log(error);
+    }
   };
 
   const isFormValid = () => {
@@ -117,75 +134,39 @@ const Training = (props) => {
     );
   };
 
-  const calculateYearsMonths = (startDate, endDate) => {
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-
-    let years = end.getFullYear() - start.getFullYear();
-    let months = end.getMonth() - start.getMonth();
-
-    if (months < 0) {
-      years--;
-      months += 12;
-    }
-
-    return { years, months };
-  };
-
   return (
     <Box p={2}>
-      <Typography variant="h5" gutterBottom>
-        Training / Courses
-      </Typography>
-
-      <Box mt={3}>
-        {trainingList?.map((training, index) => (
-          <Box
-            key={index}
-            mb={2}
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Typography
+          variant="h5"
+          sx={{
+            fontWeight: 600,
+            fontSize: "1.25rem",
+            letterSpacing: "0.025em",
+            mb: 2,
+          }}
+          gutterBottom
+        >
+          Training / Courses
+        </Typography>
+        {userData?._id === props?.userProfile?._id && (
+          <IconButton
+            color="primary"
+            onClick={() => handleOpenDialog()}
+            sx={{
+              mr: 1,
+            }}
           >
-            <Box ml={2} spacing={2}>
-              <Typography variant="h6">{training.courseName}</Typography>
-              <Typography>
-                {training.institution}
-                {training.isOnline && <span> - Online</span>}
-              </Typography>
-              <Typography>{training.location}</Typography>
-              <Typography>
-                {training.startDate} - {training.endDate}
-                {training.isCurrent && <span> - Present</span>}
-                (
-                {
-                  calculateYearsMonths(training.startDate, training.endDate)
-                    .years
-                }{" "}
-                years{" "}
-                {
-                  calculateYearsMonths(training.startDate, training.endDate)
-                    .months
-                }{" "}
-                months)
-              </Typography>
-              <Typography>{training.description}</Typography>
-            </Box>
-            <Box>
-              <IconButton
-                color="success"
-                onClick={() => handleOpenDialog(index)}
-              >
-                <EditIcon />
-              </IconButton>
-              <IconButton color="warning" onClick={() => handleDelete(index)}>
-                <DeleteIcon />
-              </IconButton>
-            </Box>
-          </Box>
-        ))}
+            <AddIcon />
+          </IconButton>
+        )}
       </Box>
-
+      <TrainingList
+        trainingList={trainingList}
+        userId={props?.userProfile?._id}
+        setTrainingList={setTrainingList}
+        handleOpenDialog={handleOpenDialog}
+      />
       <Dialog
         open={isDialogOpen}
         onClose={handleCloseDialog}
@@ -208,7 +189,6 @@ const Training = (props) => {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <Typography mb={1}>Training Program</Typography>
-
               <TextField
                 name="courseName"
                 variant="outlined"
@@ -221,7 +201,6 @@ const Training = (props) => {
             </Grid>
             <Grid item xs={12}>
               <Typography mb={1}>Organization</Typography>
-
               <TextField
                 name="institution"
                 variant="outlined"
@@ -245,7 +224,6 @@ const Training = (props) => {
             </Grid>
             <Grid item xs={12}>
               <Typography mb={1}>Location</Typography>
-
               <TextField
                 name="location"
                 variant="outlined"
@@ -258,7 +236,6 @@ const Training = (props) => {
             </Grid>
             <Grid item xs={6}>
               <Typography mb={1}>Start Date</Typography>
-
               <TextField
                 name="startDate"
                 variant="outlined"
@@ -273,7 +250,6 @@ const Training = (props) => {
             </Grid>
             <Grid item xs={6}>
               <Typography mb={1}>End Date</Typography>
-
               <TextField
                 name="endDate"
                 variant="outlined"
@@ -297,7 +273,6 @@ const Training = (props) => {
                 />
               </Box>
             </Grid>
-
             <Grid item xs={12}>
               <Typography mb={1}>Description</Typography>
               <TextareaAutosize
@@ -323,17 +298,6 @@ const Training = (props) => {
           </Button>
         </DialogActions>
       </Dialog>
-
-      <Box mt={2}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => handleOpenDialog()}
-        >
-          <AddIcon />
-          Add Training / Course
-        </Button>
-      </Box>
     </Box>
   );
 };

@@ -4,7 +4,9 @@ export const tokenVerify = async (req, res, next) => {
   const token = req.header("Authorization")?.replace("Bearer ", ""); // Note the space after "Bearer"
 
   if (!token) {
-    return res.status(401).json({ message: "Please try to login" });
+    return res.status(401).json({
+      message: "Your session has expired. Please log in again to continue.",
+    });
   }
 
   try {
@@ -14,6 +16,8 @@ export const tokenVerify = async (req, res, next) => {
     next();
   } catch (error) {
     console.error(`Token verification error: ${error}`);
-    return res.status(401).json({ message: "Please try to login" });
+    return res.status(401).json({
+      message: "Your session has expired. Please log in again to continue.",
+    });
   }
 };

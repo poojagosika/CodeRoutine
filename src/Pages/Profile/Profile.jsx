@@ -16,8 +16,8 @@ import PersonalInformation from "./PersonalInformation";
 import CopyRight from "../../Component/CopyRight/CopyRight";
 import Education from "./Education";
 import Experience from "./Experience";
-import Training from "./Training";
 import ProjectDetails from "./ProjectDetails";
+import Training from "./Training/Training";
 
 const Profile = () => {
   const [userProfile, setUserProfile] = React.useState(null);
@@ -76,10 +76,10 @@ const Profile = () => {
             <PersonalInformation profile={userProfile?.profile} />
             <Experience experience={userProfile?.experience} />
             <Education education={userProfile?.education} />
-            <Training training={userProfile?.training} />
+            <Training userProfile={userProfile} />
             <ProjectDetails project={userProfile?.project} />
             <SocialLinks socialLinks={userProfile?.socialLinks} />
-            <Skills userProfile={userProfile}/>
+            <Skills userProfile={userProfile} />
             <ProblemsSolved problemsSolved={userProfile?.problemsSolved} />
           </Box>
         </Paper>
