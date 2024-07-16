@@ -129,9 +129,7 @@ const Training = (props) => {
             fontWeight: 600,
             fontSize: "1.25rem",
             letterSpacing: "0.025em",
-            mb: 2,
           }}
-          gutterBottom
         >
           Training | Courses
         </Typography>
@@ -298,29 +296,18 @@ const Training = (props) => {
               </Box>
             </Grid>
             <Grid item xs={12}>
-              <InputLabel
-                shrink
-                htmlFor="description"
-              >
-                Description
-              </InputLabel>
-              <TextareaAutosize
-                name="description"
-                style={{
-                  width: "100%",
-                  minHeight: 100,
-                  padding: 10,
-                  fontFamily: "Times New Roman",
-                }}
+              <TextField
+                id="Description"
+                label="Description"
                 variant="outlined"
+                name="description"
+                multiline
+                fullWidth
+                minRows={2}
+                maxRows={10}
+                inputProps={{ maxLength: 220 }}
                 value={currentTraining.description}
                 onChange={handleChange}
-                fullWidth
-                margin="dense"
-                autoComplete="off"
-                autoCapitalize="none"
-                autoCorrect="off"
-                spellCheck="false"
               />
             </Grid>
           </Grid>

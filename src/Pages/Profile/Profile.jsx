@@ -12,7 +12,7 @@ import { useParams } from "react-router-dom";
 import ProblemsSolved from "./ProblemsSolved";
 import Skills from "./Skills";
 import SocialLinks from "./SocialLinks";
-import PersonalInformation from "./PersonalInformation";
+import PersonalInformation from "./PersonalInformation/PersonalInformation";
 import CopyRight from "../../Component/CopyRight/CopyRight";
 import Education from "./Education";
 import Experience from "./Experience";
