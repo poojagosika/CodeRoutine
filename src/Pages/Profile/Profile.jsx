@@ -66,7 +66,7 @@ const Profile = () => {
           <Box sx={{ padding: "20px" }}>
             <PersonalInformation userProfile={userProfile} />
             <Experience experience={userProfile?.experience} />
-            <Education education={userProfile?.education} />
+            {/* <Education education={userProfile?.education} /> */}
             <Training userProfile={userProfile} />
             <Project userProfile={userProfile} />
             <SocialLinks socialLinks={userProfile?.socialLinks} />
