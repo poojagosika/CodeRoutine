@@ -52,7 +52,7 @@ const ProjectList = ({
   };
 
   return (
-    <Box p={2}>
+    <Box>
       {projectList?.map((project, index) => {
         const duration = calculateYearsMonths(
           project?.startDate,
@@ -69,7 +69,7 @@ const ProjectList = ({
               borderBottom: "1px solid #E5E5E5",
             }}
           >
-            <Box>
+            <Box ml={2}>
               <Typography
                 variant="body2"
                 sx={{
@@ -84,9 +84,10 @@ const ProjectList = ({
                     href={project?.projectLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    sx={{ color: "black" }}
+                    sx={{ color: "black", textDecoration: "none",fontWeight: 600 }}
+                    variant="body1"
                   >
-                    {project?.projectLink}
+                    {project?.projectName}
                   </Link>
                 ) : (
                   <Link
