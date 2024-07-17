@@ -25,7 +25,7 @@ const Skills = (props) => {
   const [openDialog, setOpenDialog] = React.useState(false);
   const [skills, setSkills] = React.useState(props?.userProfile.skills || []);
   const [newSkill, setNewSkill] = React.useState("");
-  const [selectedLevel, setSelectedLevel] = React.useState("beginner");
+  const [selectedLevel, setSelectedLevel] = React.useState("intermediate");
   const { userData } = ContextStore();
 
   const handleOpenDialog = () => {
@@ -47,7 +47,7 @@ const Skills = (props) => {
         if (response.data) {
           setSkills(response.data.skills);
           setNewSkill("");
-          setSelectedLevel("beginner");
+          setSelectedLevel("intermediate");
           setOpenDialog(false);
         }
       } catch (error) {
@@ -104,9 +104,19 @@ const Skills = (props) => {
   };
 
   return (
-    <Grid item xs={12}>
+    <Grid item xs={12} p={2}>
       <Divider sx={{ my: 2 }} />
-      <Typography variant="h6">Skills</Typography>
+      <Typography
+        gutterBottom
+        variant="h5"
+        sx={{
+          fontWeight: 600,
+          fontSize: "1.25rem",
+          letterSpacing: "0.025em",
+        }}
+      >
+        Skills
+      </Typography>
 
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         <DialogTitle>Add Skill</DialogTitle>
@@ -160,7 +170,7 @@ const Skills = (props) => {
         </DialogActions>
       </Dialog>
 
-      <Box>
+      <Box ml={2}>
         {skills.map((skill, index) => (
           <Chip
             key={index}
@@ -183,7 +193,9 @@ const Skills = (props) => {
                 : undefined
             }
             deleteIcon={
-              userData?._id === props.userProfile?._id ? <ClearIcon /> : undefined
+              userData?._id === props.userProfile?._id ? (
+                <ClearIcon />
+              ) : undefined
             }
             variant="outlined"
           />
@@ -196,6 +208,7 @@ const Skills = (props) => {
           color="primary"
           startIcon={<AddIcon />}
           onClick={handleOpenDialog}
+          sx={{ ml: 2 }}
         >
           Add Skills
         </Button>
