@@ -8,14 +8,20 @@ import {
   DialogTitle,
   Grid,
   IconButton,
+  Typography,
   TextareaAutosize,
   TextField,
-  Typography,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { toast } from "react-toastify";
+import {
+  addEducation,
+  updateEducation,
+  deleteEducation,
+} from "../../../Api/Profile/educationApi";
 
 const Education = (props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -31,25 +37,12 @@ const Education = (props) => {
     cgpa: "",
   });
   const [editIndex, setEditIndex] = useState(null);
-  // Custom isEqual function to compare arrays deeply
-  const isEqual = (arr1, arr2) => {
-    if (arr1.length !== arr2.length) return false;
-
-    for (let i = 0; i < arr1.length; i++) {
-      if (arr1[i] !== arr2[i]) return false;
-    }
-
-    return true;
-  };
 
   useEffect(() => {
     const sortedList = [...educationList].sort((a, b) => {
       return new Date(b.startDate) - new Date(a.startDate);
     });
-
-    if (!isEqual(sortedList, educationList)) {
-      setEducationList(sortedList);
-    }
+    setEducationList(sortedList);
   }, [educationList]);
 
   const handleOpenDialog = (index = null) => {
@@ -100,19 +93,54 @@ const Education = (props) => {
     }));
   };
 
-  const handleSave = () => {
-    if (editIndex !== null) {
-      setEducationList((prev) =>
-        prev.map((edu, idx) => (idx === editIndex ? currentEducation : edu))
+  const handleSave = async () => {
+    try {
+      if (editIndex !== null) {
+        const response = await updateEducation(
+          educationList[editIndex]._id,
+          currentEducation
+        );
+        if (response.status === 200) {
+          toast.success("Education updated successfully");
+          setEducationList((prev) =>
+            prev.map((edu, idx) => (idx === editIndex ? currentEducation : edu))
+          );
+        } else {
+          toast.error("Failed to update education");
+        }
+      } else {
+        const response = await addEducation(currentEducation);
+        if (response.data) {
+          toast.success(response.data.message);
+          setEducationList((prev) => [...prev, currentEducation]);
+        } else {
+          toast.error("Failed to add education");
+        }
+      }
+      setIsDialogOpen(false);
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message || "Failed to process education"
       );
-    } else {
-      setEducationList((prev) => [...prev, currentEducation]);
+      console.error(error);
     }
-    setIsDialogOpen(false);
   };
 
-  const handleDelete = (index) => {
-    setEducationList((prev) => prev.filter((_, idx) => idx !== index));
+  const handleDelete = async (index, educationId) => {
+    try {
+      const response = await deleteEducation(educationId);
+      if (response.status === 200) {
+        setEducationList((prev) => prev.filter((_, idx) => idx !== index));
+        toast.success("Education deleted successfully");
+      } else {
+        toast.error("Failed to delete education");
+      }
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message || "Failed to delete education"
+      );
+      console.error(error);
+    }
   };
 
   const isFormValid = () => {
@@ -126,9 +154,30 @@ const Education = (props) => {
 
   return (
     <Box>
-      <Typography variant="h5" gutterBottom ml={2} mt={2}>
-        Education
-      </Typography>
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Typography
+          variant="h5"
+          sx={{
+            fontWeight: 600,
+            fontSize: "1.25rem",
+            letterSpacing: "0.025em",
+            m: 2,
+          }}
+          gutterBottom
+        >
+          Education
+        </Typography>
+
+        <IconButton
+          color="primary"
+          onClick={() => handleOpenDialog()}
+          sx={{
+            mr: 3,
+          }}
+        >
+          <AddIcon />
+        </IconButton>
+      </Box>
 
       <Box mt={3}>
         {educationList?.map((education, index) => (
@@ -158,7 +207,10 @@ const Education = (props) => {
               >
                 <EditIcon />
               </IconButton>
-              <IconButton color="warning" onClick={() => handleDelete(index)}>
+              <IconButton
+                color="error"
+                onClick={() => handleDelete(index, education._id)}
+              >
                 <DeleteIcon />
               </IconButton>
             </Box>
@@ -297,16 +349,6 @@ const Education = (props) => {
           </Button>
         </DialogActions>
       </Dialog>
-
-      <Box ml={3}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => handleOpenDialog()}
-        >
-          <AddIcon /> Add Education
-        </Button>
-      </Box>
     </Box>
   );
 };

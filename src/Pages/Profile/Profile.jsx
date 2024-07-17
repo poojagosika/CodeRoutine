@@ -1,23 +1,16 @@
 import * as React from "react";
-import {
-  Box,
-  Container,
-  Paper,
-  CircularProgress,
-} from "@mui/material";
-import {
-  getUserByUserName,
-} from "../../Api/userApi";
+import { Box, Container, Paper, CircularProgress } from "@mui/material";
+import { getUserByUserName } from "../../Api/userApi";
 import { useParams } from "react-router-dom";
 import ProblemsSolved from "./ProblemsSolved";
 import Skills from "./Skills";
 import SocialLinks from "./SocialLinks";
 import PersonalInformation from "./PersonalInformation";
 import CopyRight from "../../Component/CopyRight/CopyRight";
-import Education from "./Education";
 import Experience from "./Experience";
 import ProjectDetails from "./ProjectDetails";
 import Training from "./Training/Training";
+import Education from "./Education/Education";
 
 const Profile = () => {
   const [userProfile, setUserProfile] = React.useState(null);
@@ -67,11 +60,9 @@ const Profile = () => {
               color: "white",
               padding: "20px",
               textAlign: "center",
-              height: '200px'
+              height: "200px",
             }}
-          >
-
-          </Box>
+          ></Box>
           <Box sx={{ padding: "20px" }}>
             <PersonalInformation profile={userProfile?.profile} />
             <Experience experience={userProfile?.experience} />
