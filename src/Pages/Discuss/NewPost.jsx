@@ -5,6 +5,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import SendIcon from '@mui/icons-material/Send';
 import { ContextStore } from '../../Context/ContextStore';
 import { createDiscuss } from '../../Api/Discuss/discussApi';
+import { toast } from 'react-toastify';
 
 const NewPost = (props) => {
     const [postLoading, setPostLoading] = useState(false);
@@ -39,7 +40,7 @@ const NewPost = (props) => {
                 props.setOpenDialog(false);
             }
         } catch (error) {
-            setError("Error creating post. Please try again.");
+            toast.error(error.response.data.message)
             console.error("Error creating post:", error);
         } finally {
             setPostLoading(false);

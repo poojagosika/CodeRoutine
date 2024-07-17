@@ -23,6 +23,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import CloseIcon from "@mui/icons-material/Close";
 import { addLikeOrRemoveLikeReply, deleteReply, editReply } from "../../Api/Discuss/replyApi";
+import { toast } from "react-toastify";
 
 const Reply = (props) => {
   const [reply, setReply] = useState(props.reply);
@@ -87,6 +88,7 @@ const Reply = (props) => {
         console.error("Invalid response data:", response);
       }
     } catch (error) {
+      toast.error(error.response.data.message);
       console.error("Error editing comment:", error);
     }
   };
@@ -104,6 +106,7 @@ const Reply = (props) => {
         console.error("Invalid response data:", response);
       }
     } catch (error) {
+      toast.error(error.response.data.message);
       console.error("Error deleting comment:", error);
     }
   };
@@ -180,57 +183,62 @@ const Reply = (props) => {
                   locale="en-US"
                 />
               </Typography>
-
-              <MoreVertIcon
-                onClick={handleClick}
-                style={{ cursor: "pointer" }}
-                fontSize="small"
-                sx={{ color: "blue" }}
-              />
-              <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-              >
-                <MenuItem
-                  onClick={() => {
-                    handleClose();
-                    handleCloseEdit();
-                  }}
-                  style={{ cursor: "pointer", gap: 5 }}
-                >
-                  <EditIcon
-                    sx={{
-                      color: "green",
-                      "&:hover": {
-                        color: "blue",
-                      },
-                    }}
-                    color="action"
+              {userData ? (
+                <>
+                  <MoreVertIcon
+                    onClick={handleClick}
+                    style={{ cursor: "pointer" }}
                     fontSize="small"
+                    sx={{ color: "blue" }}
                   />
-                  Edit
-                </MenuItem>
-                <MenuItem
-                  onClick={() => {
-                    handleClose();
-                    handleDeleteComment();
-                  }}
-                  style={{ cursor: "pointer", gap: 5 }}
-                >
-                  <DeleteOutlineIcon
-                    sx={{
-                      color: "red",
-                      "&:hover": {
-                        color: "orange",
-                      },
-                    }}
-                    color="action"
-                    fontSize="small"
-                  />
-                  Delete
-                </MenuItem>
-              </Menu>
+                  <Menu
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                  >
+                    <MenuItem
+                      onClick={() => {
+                        handleClose();
+                        handleCloseEdit();
+                      }}
+                      style={{ cursor: "pointer", gap: 5 }}
+                    >
+                      <EditIcon
+                        sx={{
+                          color: "green",
+                          "&:hover": {
+                            color: "blue",
+                          },
+                        }}
+                        color="action"
+                        fontSize="small"
+                      />
+                      Edit
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => {
+                        handleClose();
+                        handleDeleteComment();
+                      }}
+                      style={{ cursor: "pointer", gap: 5 }}
+                    >
+                      <DeleteOutlineIcon
+                        sx={{
+                          color: "red",
+                          "&:hover": {
+                            color: "orange",
+                          },
+                        }}
+                        color="action"
+                        fontSize="small"
+                      />
+                      Delete
+                    </MenuItem>
+                  </Menu>
+                </>
+              ) : (
+                ""
+              )}
             </Box>
 
             <Typography
