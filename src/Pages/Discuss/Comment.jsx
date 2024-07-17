@@ -31,6 +31,7 @@ import CommentLoading from "./Loading/CommentLoading";
 import { useNavigate } from "react-router-dom";
 import { addLikeOrRemoveLikeComment, deleteComment, editComment } from "../../Api/Discuss/commentApi";
 import { addReplyToComment } from "../../Api/Discuss/replyApi";
+import { toast } from "react-toastify";
 
 const Comment = (props) => {
   const [comment, setComment] = React.useState(props?.comment);
@@ -154,6 +155,7 @@ const Comment = (props) => {
         console.error("Invalid response data:", response);
       }
     } catch (error) {
+      toast.error(error.response.data.message);
       console.error("Error editing comment:", error);
     }
   };
@@ -173,6 +175,7 @@ const Comment = (props) => {
         console.error("Invalid response data:", response);
       }
     } catch (error) {
+      toast.error(error.response.data.message);
       console.error("Error deleting comment:", error);
     }
   };
@@ -256,56 +259,62 @@ const Comment = (props) => {
                     locale="en-US"
                   />
                 </Typography>
-                <MoreVertIcon
-                  onClick={handleClick}
-                  style={{ cursor: "pointer" }}
-                  fontSize="small"
-                  sx={{ color: "blue" }}
-                />
-                <Menu
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
-                  onClose={handleClose}
-                >
-                  <MenuItem
-                    onClick={() => {
-                      handleClose();
-                      handleCloseEdit();
-                    }}
-                    style={{ cursor: "pointer", gap: 5 }}
-                  >
-                    <EditIcon
-                      sx={{
-                        color: "green",
-                        "&:hover": {
-                          color: "blue",
-                        },
-                      }}
-                      color="action"
+                {userData ? (
+                  <>
+                    <MoreVertIcon
+                      onClick={handleClick}
+                      style={{ cursor: "pointer" }}
                       fontSize="small"
+                      sx={{ color: "blue" }}
                     />
-                    Edit
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => {
-                      handleClose();
-                      handleDeleteComment();
-                    }}
-                    style={{ cursor: "pointer", gap: 5 }}
-                  >
-                    <DeleteOutlineIcon
-                      sx={{
-                        color: "red",
-                        "&:hover": {
-                          color: "orange",
-                        },
-                      }}
-                      color="action"
-                      fontSize="small"
-                    />
-                    Delete
-                  </MenuItem>
-                </Menu>
+                    <Menu
+                      anchorEl={anchorEl}
+                      open={Boolean(anchorEl)}
+                      onClose={handleClose}
+                    >
+                      <MenuItem
+                        onClick={() => {
+                          handleClose();
+                          handleCloseEdit();
+                        }}
+                        style={{ cursor: "pointer", gap: 5 }}
+                      >
+                        <EditIcon
+                          sx={{
+                            color: "green",
+                            "&:hover": {
+                              color: "blue",
+                            },
+                          }}
+                          color="action"
+                          fontSize="small"
+                        />
+                        Edit
+                      </MenuItem>
+                      <MenuItem
+                        onClick={() => {
+                          handleClose();
+                          handleDeleteComment();
+                        }}
+                        style={{ cursor: "pointer", gap: 5 }}
+                      >
+                        <DeleteOutlineIcon
+                          sx={{
+                            color: "red",
+                            "&:hover": {
+                              color: "orange",
+                            },
+                          }}
+                          color="action"
+                          fontSize="small"
+                        />
+                        Delete
+                      </MenuItem>
+                    </Menu>
+                  </>
+                ) : (
+                  ""
+                )}
               </Box>
             }
             secondary={
@@ -377,10 +386,12 @@ const Comment = (props) => {
                       }
                     >
                       {showReplies
-                        ? `Hide ${comment?.replies?.length} ${comment?.replies?.length > 1 ? "Replies" : "Reply"
-                        }`
-                        : `Show ${comment?.replies?.length} ${comment?.replies?.length > 1 ? "Replies" : "Reply"
-                        }`}
+                        ? `Hide ${comment?.replies?.length} ${
+                            comment?.replies?.length > 1 ? "Replies" : "Reply"
+                          }`
+                        : `Show ${comment?.replies?.length} ${
+                            comment?.replies?.length > 1 ? "Replies" : "Reply"
+                          }`}
                     </Button>
                   )}
                 </Box>

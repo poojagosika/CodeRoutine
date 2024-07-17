@@ -14,6 +14,7 @@ import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import CloseIcon from "@mui/icons-material/Close";
 import { useParams } from "react-router-dom";
 import { updateDiscussById } from "../../Api/Discuss/discussApi";
+import { toast } from "react-toastify";
 
 const DiscussEdit = ({
   openDialog,
@@ -39,6 +40,7 @@ const DiscussEdit = ({
       setTopic(response.data.topic);
       setOpenDialog(false);
     } catch (error) {
+      toast.error(error.response.data.message);
       setError("Error updating post:", error);
     } finally {
       setPostLoading(false);

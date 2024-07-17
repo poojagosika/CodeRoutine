@@ -178,19 +178,19 @@ const Skills = (props) => {
             }
             style={{ marginBottom: "8px", marginRight: "8px" }}
             onDelete={
-              userData._id === props.userProfile?._id
+              userData?._id === props.userProfile?._id
                 ? () => handleDeleteSkill(index)
                 : undefined
             }
             deleteIcon={
-              userData._id === props.userProfile?._id ? <ClearIcon /> : undefined
+              userData?._id === props.userProfile?._id ? <ClearIcon /> : undefined
             }
             variant="outlined"
           />
         ))}
       </Box>
 
-      {userData._id === props.userProfile?._id ? (
+      {userData?._id === props.userProfile?._id ? (
         <Button
           variant="text"
           color="primary"
