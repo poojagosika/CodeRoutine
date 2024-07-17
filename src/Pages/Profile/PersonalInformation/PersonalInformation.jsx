@@ -45,6 +45,8 @@ const PersonalInformation = (props) => {
         setTempPersonalInfo={setTempPersonalInfo}
         setPersonalInfo={setPersonalInfo}
         userId={props?.userProfile?._id}
+        experience={props?.userProfile?.experience}
+        education={props?.userProfile?.education}
       />
       <Box
         display="flex"

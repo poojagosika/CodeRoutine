@@ -25,7 +25,6 @@ const personalInformationSchema = new Schema(
     },
     education: {
       type: String,
-      trim: true,
     },
     city: {
       type: String,
@@ -164,6 +163,9 @@ const trainingSchema = new Schema(
     },
     endDate: {
       type: Date,
+      required: function () {
+        return !this.isCurrent;
+      },
     },
     description: {
       type: String,
@@ -199,6 +201,9 @@ const projectSchema = new Schema(
     },
     endDate: {
       type: Date,
+      required: function () {
+        return !this.isCurrent;
+      },
     },
     description: {
       type: String,

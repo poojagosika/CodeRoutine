@@ -10,10 +10,8 @@ import {
   IconButton,
   TextField,
   Typography,
-  TextareaAutosize,
   Checkbox,
   FormControlLabel,
-  InputLabel,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import SaveIcon from "@mui/icons-material/Save";

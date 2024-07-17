@@ -56,7 +56,7 @@ userRouter.put(
   updateExperience
 );
 userRouter.delete(
-  "/profile/deleteExperience/:educationId",
+  "/profile/deleteExperience/:experienceId",
   tokenVerify,
   deleteExperience
 );
