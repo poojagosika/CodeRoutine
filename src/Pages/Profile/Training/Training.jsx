@@ -16,6 +16,7 @@ import {
   InputLabel,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import SaveIcon from "@mui/icons-material/Save";
 import CloseIcon from "@mui/icons-material/Close";
 import TrainingList from "./TrainingList";
 import { ContextStore } from "../../../Context/ContextStore";
@@ -24,7 +25,9 @@ import { addTraining, updateTraining } from "../../../Api/Profile/trainingApi";
 
 const Training = (props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [trainingList, setTrainingList] = useState(props?.userProfile?.training);
+  const [trainingList, setTrainingList] = useState(
+    props?.userProfile?.training
+  );
   const [currentTraining, setCurrentTraining] = useState({
     courseName: "",
     organization: "",
@@ -85,7 +88,10 @@ const Training = (props) => {
   const handleSave = async () => {
     try {
       if (editIndex !== null) {
-        const response = await updateTraining(currentTraining?._id, currentTraining);
+        const response = await updateTraining(
+          currentTraining?._id,
+          currentTraining
+        );
         if (response.status === 200) {
           const updatedTrainingList = trainingList.map((training, idx) =>
             idx === editIndex ? currentTraining : training
@@ -106,7 +112,9 @@ const Training = (props) => {
       }
       handleCloseDialog();
     } catch (error) {
-      toast.error(error?.response?.data?.message || "Failed to process training");
+      toast.error(
+        error?.response?.data?.message || "Failed to process training"
+      );
       console.log(error);
     }
   };
@@ -164,7 +172,9 @@ const Training = (props) => {
             alignItems: "center",
           }}
         >
-          {editIndex !== null ? "Edit Training | Course Details" : "Add Training | Course Details"}
+          {editIndex !== null
+            ? "Edit Training | Course Details"
+            : "Add Training | Course Details"}
           <IconButton
             onClick={handleCloseDialog}
             sx={{
@@ -313,7 +323,13 @@ const Training = (props) => {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleSave} disabled={!isFormValid()}>
+          <Button
+            onClick={handleSave}
+            disabled={!isFormValid()}
+            color="primary"
+            variant="contained"
+            startIcon={editIndex !== null ? <SaveIcon /> : <AddIcon />}
+          >
             {editIndex !== null ? "Update" : "Add"}
           </Button>
         </DialogActions>
