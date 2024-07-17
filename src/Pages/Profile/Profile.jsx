@@ -8,8 +8,8 @@ import SocialLinks from "./SocialLinks";
 import PersonalInformation from "./PersonalInformation/PersonalInformation";
 import CopyRight from "../../Component/CopyRight/CopyRight";
 import Experience from "./Experience";
-import ProjectDetails from "./ProjectDetails";
 import Training from "./Training/Training";
+import Project from "./Project/Project";
 import Education from "./Education/Education";
 
 const Profile = () => {
@@ -68,7 +68,7 @@ const Profile = () => {
             <Experience experience={userProfile?.experience} />
             <Education education={userProfile?.education} />
             <Training userProfile={userProfile} />
-            <ProjectDetails project={userProfile?.project} />
+            <Project userProfile={userProfile} />
             <SocialLinks socialLinks={userProfile?.socialLinks} />
             <Skills userProfile={userProfile} />
             <ProblemsSolved problemsSolved={userProfile?.problemsSolved} />

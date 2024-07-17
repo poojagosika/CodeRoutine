@@ -90,7 +90,6 @@ const SocialLinks = (props) => {
 
   return (
     <Grid item xs={12}>
-      <Divider sx={{ my: 2 }} />
       <Typography variant="h6">Social Links</Typography>
 
       {showIcons && (
