@@ -14,6 +14,7 @@ import {
   FormControlLabel,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import SaveIcon from "@mui/icons-material/Save";
 import CloseIcon from "@mui/icons-material/Close";
 import ProjectList from "./ProjectList";
 import { ContextStore } from "../../../Context/ContextStore";
@@ -281,8 +282,14 @@ const Project = (props) => {
             </Grid>
           </Grid>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleSave} disabled={!isFormValid()}>
+        <DialogActions style={{ marginRight: "20px" }}>
+          <Button
+            onClick={handleSave}
+            disabled={!isFormValid()}
+            color="primary"
+            variant="contained"
+            startIcon={editIndex !== null ? <SaveIcon /> : <AddIcon />}
+          >
             {editIndex !== null ? "Update" : "Add"}
           </Button>
         </DialogActions>
