@@ -18,16 +18,22 @@ import {
   Checkbox,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import SaveIcon from "@mui/icons-material/Save";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ExperienceList from "./ExperienceList";
 import { ContextStore } from "../../../Context/ContextStore";
-import { addExperience, updateExperience } from "../../../Api/Profile/experienceApi";
+import {
+  addExperience,
+  updateExperience,
+} from "../../../Api/Profile/experienceApi";
 import { toast } from "react-toastify";
 
 const Experience = (props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [experienceList, setExperienceList] = useState(props?.userProfile?.experience || []);
+  const [experienceList, setExperienceList] = useState(
+    props?.userProfile?.experience || []
+  );
   const [currentExperience, setCurrentExperience] = useState({
     company: "",
     title: "",
@@ -78,11 +84,13 @@ const Experience = (props) => {
     }));
   };
 
-
   const handleSave = async () => {
     try {
       if (editIndex !== null) {
-        const response = await updateExperience(currentExperience?._id, currentExperience);
+        const response = await updateExperience(
+          currentExperience?._id,
+          currentExperience
+        );
         if (response.status === 200) {
           const updatedExperienceList = experienceList.map((experience, idx) =>
             idx === editIndex ? currentExperience : experience
@@ -103,7 +111,9 @@ const Experience = (props) => {
       }
       handleCloseDialog();
     } catch (error) {
-      toast.error(error?.response?.data?.message || "Failed to process experience");
+      toast.error(
+        error?.response?.data?.message || "Failed to process experience"
+      );
       console.log(error);
     }
   };
@@ -178,7 +188,9 @@ const Experience = (props) => {
             alignItems: "center",
           }}
         >
-          {editIndex !== null ? "Edit Experience Details" : "Add Experience Details"}
+          {editIndex !== null
+            ? "Edit Experience Details"
+            : "Add Experience Details"}
           <IconButton
             onClick={handleCloseDialog}
             sx={{
@@ -233,7 +245,13 @@ const Experience = (props) => {
                 fullWidth
                 margin="dense"
               >
-                {["Full-time", "Part-time", "Internship", "Contract", "Trainee"].map((type) => (
+                {[
+                  "Full-time",
+                  "Part-time",
+                  "Internship",
+                  "Contract",
+                  "Trainee",
+                ].map((type) => (
                   <MenuItem key={type} value={type}>
                     {type}
                   </MenuItem>
@@ -367,8 +385,14 @@ const Experience = (props) => {
             </Grid>
           </Grid>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleSave} disabled={!isFormValid()}>
+        <DialogActions style={{ marginRight: "30px" }}>
+          <Button
+            onClick={handleSave}
+            disabled={!isFormValid()}
+            color="primary"
+            variant="contained"
+            startIcon={editIndex !== null ? <SaveIcon /> : <AddIcon />}
+          >
             {editIndex !== null ? "Update" : "Add"}
           </Button>
         </DialogActions>
