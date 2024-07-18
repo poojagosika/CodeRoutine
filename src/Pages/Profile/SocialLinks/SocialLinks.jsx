@@ -13,21 +13,28 @@ import {
   InputAdornment,
   Divider,
 } from "@mui/material";
-import { Add as AddIcon, DeleteForever, Close as CloseIcon } from "@mui/icons-material";
+import {
+  Add as AddIcon,
+  DeleteForever,
+  Close as CloseIcon,
+} from "@mui/icons-material";
 import { ContextStore } from "../../../Context/ContextStore";
 import SocialLinksList from "./SocialLinksList";
 import { addOrUpdateSocialLinks } from "../../../Api/Profile/socialLinksApi";
 import { toast } from "react-toastify";
+import SendIcon from "@mui/icons-material/Send";
 
 const SocialLinks = (props) => {
-  const [urls, setUrls] = useState(props?.userProfile?.socialLinks || {
-    linkedin: "",
-    github: "",
-    x: "",
-    blog: "",
-    portfolio: "",
-    additional: [],
-  });
+  const [urls, setUrls] = useState(
+    props?.userProfile?.socialLinks || {
+      linkedin: "",
+      github: "",
+      x: "",
+      blog: "",
+      portfolio: "",
+      additional: [],
+    }
+  );
   const [openDialog, setOpenDialog] = useState(false);
   const [tempUrls, setTempUrls] = useState({ ...urls });
   const { userData } = ContextStore();
@@ -68,13 +75,18 @@ const SocialLinks = (props) => {
         return { ...prevTempUrls, additional: newAdditional };
       });
     } else {
-      setTempUrls((prevTempUrls) => ({ ...prevTempUrls, [name]: e.target.value }));
+      setTempUrls((prevTempUrls) => ({
+        ...prevTempUrls,
+        [name]: e.target.value,
+      }));
     }
   };
 
   const handleDelete = (index) => () => {
     setTempUrls((prevTempUrls) => {
-      const newAdditional = prevTempUrls.additional.filter((_, i) => i !== index);
+      const newAdditional = prevTempUrls.additional.filter(
+        (_, i) => i !== index
+      );
       return { ...prevTempUrls, additional: newAdditional };
     });
   };
@@ -97,18 +109,42 @@ const SocialLinks = (props) => {
           Social Links
         </Typography>
         {userData?._id === props?.userProfile?._id && (
-          <IconButton
-            color="primary"
-            onClick={handleOpenDialog}
-            sx={{ mr: 1 }}
-          >
+          <IconButton color="primary" onClick={handleOpenDialog} sx={{ mr: 1 }}>
             <AddIcon />
           </IconButton>
         )}
       </Box>
       <SocialLinksList urls={urls} />
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>Add Social Links</DialogTitle>
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle
+          id="form-dialog-title"
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          Add Social Links
+          <IconButton
+            onClick={handleCloseDialog}
+            sx={{
+              color: "grey.500",
+              "&:hover": {
+                color: "grey.700",
+              },
+            }}
+            aria-label="close"
+            size="small"
+            edge="end"
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
         <DialogContent>
           <Typography variant="subtitle1" gutterBottom>
             Showcase your skills by adding your Social Links work samples
@@ -126,7 +162,10 @@ const SocialLinks = (props) => {
             InputProps={{
               endAdornment: tempUrls.linkedin && (
                 <InputAdornment position="end">
-                  <IconButton onClick={handleClearField("linkedin")} size="small">
+                  <IconButton
+                    onClick={handleClearField("linkedin")}
+                    size="small"
+                  >
                     <CloseIcon />
                   </IconButton>
                 </InputAdornment>
@@ -202,7 +241,10 @@ const SocialLinks = (props) => {
             InputProps={{
               endAdornment: tempUrls.portfolio && (
                 <InputAdornment position="end">
-                  <IconButton onClick={handleClearField("portfolio")} size="small">
+                  <IconButton
+                    onClick={handleClearField("portfolio")}
+                    size="small"
+                  >
                     <CloseIcon />
                   </IconButton>
                 </InputAdornment>
@@ -252,7 +294,12 @@ const SocialLinks = (props) => {
           >
             Cancel
           </Button>
-          <Button onClick={handleSaveLinks} variant="contained" color="primary">
+          <Button
+            onClick={handleSaveLinks}
+            variant="contained"
+            color="primary"
+            startIcon={<SendIcon fontSize="small" />}
+          >
             Save
           </Button>
         </DialogActions>
