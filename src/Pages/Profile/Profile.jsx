@@ -12,11 +12,13 @@ import Project from "./Project/Project";
 import Education from "./Education/Education";
 import Experience from "./Experience/Experience";
 import { toast } from "react-toastify";
+import { ContextStore } from "../../Context/ContextStore";
 
 const Profile = () => {
   const [userProfile, setUserProfile] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
   const { id: userName } = useParams();
+  const { userData } = ContextStore();
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -48,7 +50,9 @@ const Profile = () => {
       firstName || lastName || headline || currentPosition || education || city || gender || country
     );
   };
-
+  const isLogin = () => {
+    return userData?._id === userProfile?._id;
+  };
 
   if (loading) {
     return (

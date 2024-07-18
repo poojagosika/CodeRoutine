@@ -105,7 +105,7 @@ const PersonalInformation = (props) => {
           </Typography>
         </Box>
         <Box display="flex" flexDirection="column" alignItems={{ xs: "flex-start", sm: "flex-end" }}>
-          {personalInfo.currentPosition && (
+          {personalInfo?.currentPosition && (
             <Typography
               variant="body1"
               sx={{ color: "#6B7280" }}
@@ -117,10 +117,10 @@ const PersonalInformation = (props) => {
               gap={1}
             >
               <WorkIcon />
-              {personalInfo.currentPosition}
+              {personalInfo?.currentPosition}
             </Typography>
           )}
-          {personalInfo.education && (
+          {personalInfo?.education && (
             <Typography
               variant="body1"
               sx={{ color: "#6B7280" }}
@@ -132,7 +132,7 @@ const PersonalInformation = (props) => {
               gap={1}
             >
               <SchoolIcon />
-              {personalInfo.education}
+              {personalInfo?.education}
             </Typography>
           )}
         </Box>
