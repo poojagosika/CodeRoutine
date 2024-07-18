@@ -138,7 +138,7 @@ const Education = (props) => {
         >
           Education
         </Typography>
-        {props?.userProfile?._id === props?.userProfile?._id && (
+        {userData?._id === props?.userProfile?._id && (
           <IconButton
             color="primary"
             onClick={() => handleOpenDialog()}
