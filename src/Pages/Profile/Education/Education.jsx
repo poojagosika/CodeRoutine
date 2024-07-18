@@ -40,6 +40,7 @@ const Education = (props) => {
     grade: "",
     activities: "",
     cgpa: "",
+    isCurrent: false,
   });
   const [editIndex, setEditIndex] = useState(null);
   const { userData } = ContextStore();
@@ -65,6 +66,7 @@ const Education = (props) => {
         grade: "",
         activities: "",
         cgpa: "",
+        isCurrent:false,
       });
       setEditIndex(null);
     }
@@ -121,7 +123,7 @@ const Education = (props) => {
       currentEducation.institution &&
       currentEducation.degree &&
       currentEducation.startDate &&
-      (currentEducation.endDate || currentEducation.isChecked)
+      (currentEducation.endDate || currentEducation.isCurrent)
     );
   };
 
@@ -253,18 +255,18 @@ const Education = (props) => {
                 onChange={handleChange}
                 fullWidth
                 margin="dense"
-                required={!currentEducation?.isChecked}
+                required={!currentEducation?.isCurrent}
                 label="End Date"
-                disabled={currentEducation?.isChecked}
+                disabled={currentEducation?.isCurrent}
               />
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={currentEducation?.isChecked}
+                    checked={currentEducation?.isCurrent}
                     onChange={handleChange}
                     color="primary"
                     size="small"
-                    name="isChecked"
+                    name="isCurrent"
                   />
                 }
                 label="Currently Working here"
