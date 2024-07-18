@@ -79,10 +79,10 @@ const experienceSchema = new Schema(
     endDate: {
       type: Date,
       required: function () {
-        return !this.isChecked;
+        return !this.isCurrent;
       },
     },
-    isChecked: {
+    isCurrent: {
       type: Boolean,
       default: false,
     },
@@ -122,7 +122,13 @@ const educationSchema = new Schema(
     },
     endDate: {
       type: Date,
-      required: true,
+      required: function () {
+        return !this.isCurrent;
+      },
+    },
+    isCurrent: {
+      type: Boolean,
+      default: false,
     },
     grade: {
       type: String,

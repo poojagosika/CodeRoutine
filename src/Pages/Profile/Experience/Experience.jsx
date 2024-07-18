@@ -42,7 +42,7 @@ const Experience = (props) => {
     LocationType: "",
     startDate: "",
     endDate: "",
-    isChecked: false,
+    isCurrent: false,
     description: "",
     skills: [],
   });
@@ -64,7 +64,7 @@ const Experience = (props) => {
         startDate: "",
         endDate: "",
         description: "",
-        isChecked: false,
+        isCurrent: false,
         skills: [],
       });
       setEditIndex(null);
@@ -87,6 +87,7 @@ const Experience = (props) => {
   const handleSave = async () => {
     try {
       if (editIndex !== null) {
+        console.log(currentExperience)
         const response = await updateExperience(
           currentExperience?._id,
           currentExperience
@@ -123,7 +124,7 @@ const Experience = (props) => {
       currentExperience.company &&
       currentExperience.title &&
       currentExperience.startDate &&
-      (currentExperience.endDate || currentExperience.isChecked)
+      (currentExperience.endDate || currentExperience.isCurrent)
     );
   };
 
@@ -318,18 +319,18 @@ const Experience = (props) => {
                 onChange={handleChange}
                 fullWidth
                 margin="dense"
-                required={!currentExperience?.isChecked}
+                required={!currentExperience?.isCurrent}
                 label="End Date"
-                disabled={currentExperience?.isChecked}
+                disabled={currentExperience?.isCurrent}
               />
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={currentExperience?.isChecked}
+                    checked={currentExperience?.isCurrent}
                     onChange={handleChange}
                     color="primary"
                     size="small"
-                    name="isChecked"
+                    name="isCurrent"
                   />
                 }
                 label="Currently Working here"
