@@ -9,8 +9,9 @@ import {
   Grid,
   IconButton,
   Typography,
-  TextareaAutosize,
   TextField,
+  FormControlLabel,
+  Checkbox,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
@@ -22,10 +23,14 @@ import {
   updateEducation,
   deleteEducation,
 } from "../../../Api/Profile/educationApi";
+import EducationList from "./EducationList";
+import { ContextStore } from "../../../Context/ContextStore";
 
 const Education = (props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [educationList, setEducationList] = useState(props?.education);
+  const [educationList, setEducationList] = useState(
+    props?.userProfile?.education || []
+  );
   const [currentEducation, setCurrentEducation] = useState({
     institution: "",
     degree: "",
@@ -37,13 +42,14 @@ const Education = (props) => {
     cgpa: "",
   });
   const [editIndex, setEditIndex] = useState(null);
+  const { userData } = ContextStore();
 
-  useEffect(() => {
-    const sortedList = [...educationList].sort((a, b) => {
-      return new Date(b.startDate) - new Date(a.startDate);
-    });
-    setEducationList(sortedList);
-  }, [educationList]);
+  // useEffect(() => {
+  //   const sortedList = [...educationList].sort((a, b) => {
+  //     return new Date(b.startDate) - new Date(a.startDate);
+  //   });
+  //   setEducationList(sortedList);
+  // }, [educationList]);
 
   const handleOpenDialog = (index = null) => {
     if (index !== null) {
@@ -70,26 +76,10 @@ const Education = (props) => {
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    if (
-      name === "startDate" &&
-      new Date(value) >= new Date(currentEducation.endDate)
-    ) {
-      alert("Start date must be before end date!");
-      return;
-    }
-    if (
-      name === "endDate" &&
-      new Date(value) <= new Date(currentEducation.startDate)
-    ) {
-      alert("End date must be after start date!");
-      return;
-    }
-
+    const { name, value, type, checked } = e.target;
     setCurrentEducation((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
@@ -101,7 +91,7 @@ const Education = (props) => {
           currentEducation
         );
         if (response.status === 200) {
-          toast.success("Education updated successfully");
+          toast.success(response?.data?.message);
           setEducationList((prev) =>
             prev.map((edu, idx) => (idx === editIndex ? currentEducation : edu))
           );
@@ -111,8 +101,8 @@ const Education = (props) => {
       } else {
         const response = await addEducation(currentEducation);
         if (response.data) {
-          toast.success(response.data.message);
           setEducationList((prev) => [...prev, currentEducation]);
+          toast.success(response?.data?.message);
         } else {
           toast.error("Failed to add education");
         }
@@ -126,34 +116,17 @@ const Education = (props) => {
     }
   };
 
-  const handleDelete = async (index, educationId) => {
-    try {
-      const response = await deleteEducation(educationId);
-      if (response.status === 200) {
-        setEducationList((prev) => prev.filter((_, idx) => idx !== index));
-        toast.success("Education deleted successfully");
-      } else {
-        toast.error("Failed to delete education");
-      }
-    } catch (error) {
-      toast.error(
-        error?.response?.data?.message || "Failed to delete education"
-      );
-      console.error(error);
-    }
-  };
-
   const isFormValid = () => {
     return (
       currentEducation.institution &&
       currentEducation.degree &&
       currentEducation.startDate &&
-      currentEducation.endDate
+      (currentEducation.endDate || currentEducation.isChecked)
     );
   };
 
   return (
-    <Box>
+    <Box p={2}>
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <Typography
           variant="h5"
@@ -161,62 +134,27 @@ const Education = (props) => {
             fontWeight: 600,
             fontSize: "1.25rem",
             letterSpacing: "0.025em",
-            m: 2,
           }}
-          gutterBottom
         >
           Education
         </Typography>
-
-        <IconButton
-          color="primary"
-          onClick={() => handleOpenDialog()}
-          sx={{
-            mr: 3,
-          }}
-        >
-          <AddIcon />
-        </IconButton>
-      </Box>
-
-      <Box mt={3}>
-        {educationList?.map((education, index) => (
-          <Box
-            key={index}
-            mb={2}
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
+        {props?.userProfile?._id === props?.userProfile?._id && (
+          <IconButton
+            color="primary"
+            onClick={() => handleOpenDialog()}
+            sx={{ mr: 1 }}
           >
-            <Box ml={2} spacing={2}>
-              <Typography variant="h6">{education.institution}</Typography>
-              <Typography>
-                {education.degree} in {education.fieldOfStudy}
-              </Typography>
-              <Typography>
-                {education.startDate} - {education.endDate}
-              </Typography>
-              <Typography>{education.grade}</Typography>
-              <Typography>{education.activities}</Typography>
-              <Typography>{education.cgpa}</Typography>
-            </Box>
-            <Box>
-              <IconButton
-                color="success"
-                onClick={() => handleOpenDialog(index)}
-              >
-                <EditIcon />
-              </IconButton>
-              <IconButton
-                color="error"
-                onClick={() => handleDelete(index, education._id)}
-              >
-                <DeleteIcon />
-              </IconButton>
-            </Box>
-          </Box>
-        ))}
+            <AddIcon />
+          </IconButton>
+        )}
       </Box>
+
+      <EducationList
+        educationList={educationList}
+        userId={props?.userProfile?._id}
+        setEducationList={setEducationList}
+        handleOpenDialog={handleOpenDialog}
+      />
 
       <Dialog
         open={isDialogOpen}
@@ -224,53 +162,70 @@ const Education = (props) => {
         fullWidth
         maxWidth="sm"
       >
-        <DialogTitle display="flex" justifyContent="space-between" mt={2}>
+        <DialogTitle
+          id="form-dialog-title"
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           {editIndex !== null
             ? "Edit Education Details"
             : "Add Education Details"}
-          <IconButton color="secondary" onClick={handleCloseDialog}>
+          <IconButton
+            onClick={handleCloseDialog}
+            sx={{
+              color: "grey.500",
+              "&:hover": {
+                color: "grey.700",
+              },
+            }}
+            aria-label="close"
+            size="small"
+            edge="end"
+          >
             <CloseIcon />
           </IconButton>
         </DialogTitle>
         <DialogContent>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Typography mb={2}>College</Typography>
               <TextField
                 name="institution"
                 variant="outlined"
                 value={currentEducation.institution}
                 onChange={handleChange}
                 fullWidth
-                size="small"
+                margin="dense"
+                label="Institution"
+                required
               />
             </Grid>
-            <Grid item xs={6}>
-              <Typography mb={2}>Degree</Typography>
+            <Grid item xs={12}>
               <TextField
                 name="degree"
                 variant="outlined"
                 value={currentEducation.degree}
                 onChange={handleChange}
                 fullWidth
-                size="small"
+                margin="dense"
+                label="Degree"
+                required
               />
             </Grid>
-            <Grid item xs={6}>
-              <Typography mb={2}>
-                Stream <small>(optional)</small>
-              </Typography>
+            <Grid item xs={12}>
               <TextField
                 name="fieldOfStudy"
                 variant="outlined"
                 value={currentEducation.fieldOfStudy}
                 onChange={handleChange}
                 fullWidth
-                size="small"
+                margin="dense"
+                label="Field of Study"
               />
             </Grid>
             <Grid item xs={6}>
-              <Typography mb={2}>Start Date</Typography>
               <TextField
                 name="startDate"
                 variant="outlined"
@@ -279,11 +234,17 @@ const Education = (props) => {
                 value={currentEducation.startDate}
                 onChange={handleChange}
                 fullWidth
-                size="small"
+                margin="dense"
+                required
+                label="Start Date"
+                InputProps={{
+                  inputProps: {
+                    min: "1970-01-01",
+                  },
+                }}
               />
             </Grid>
             <Grid item xs={6}>
-              <Typography mb={2}>End Date</Typography>
               <TextField
                 name="endDate"
                 variant="outlined"
@@ -292,59 +253,64 @@ const Education = (props) => {
                 value={currentEducation.endDate}
                 onChange={handleChange}
                 fullWidth
-                size="small"
+                margin="dense"
+                required={!currentEducation?.isChecked}
+                label="End Date"
+                disabled={currentEducation?.isChecked}
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={currentEducation?.isChecked}
+                    onChange={handleChange}
+                    color="primary"
+                    size="small"
+                    name="isChecked"
+                  />
+                }
+                label="Currently Working here"
               />
             </Grid>
             <Grid item xs={12}>
-              <Typography mb={2}>Grade</Typography>
               <TextField
                 name="grade"
                 variant="outlined"
                 value={currentEducation.grade}
                 onChange={handleChange}
                 fullWidth
-                size="small"
+                margin="dense"
+                label="Grade"
               />
             </Grid>
             <Grid item xs={12}>
-              <Typography mb={2}>Activities and Sports</Typography>
-              <TextareaAutosize
+              <TextField
                 name="activities"
-                style={{
-                  width: "100%",
-                  minHeight: 100,
-                  padding: 10,
-                  fontFamily: "Times New Roman",
-                }}
                 variant="outlined"
                 value={currentEducation.activities}
                 onChange={handleChange}
                 fullWidth
-                size="small"
+                margin="dense"
+                label="Activities"
+                multiline
+                minRows={2}
+                maxRows={4}
               />
             </Grid>
             <Grid item xs={12}>
-              <Typography mb={2}>
-                Performance Score <small>(Recommended)</small>
-              </Typography>
               <TextField
                 name="cgpa"
                 variant="outlined"
                 value={currentEducation.cgpa}
                 onChange={handleChange}
                 fullWidth
-                size="small"
-                sx={{ mb: 2 }}
+                margin="dense"
+                label="CGPA"
               />
             </Grid>
           </Grid>
         </DialogContent>
-        <DialogActions sx={{ mr: 2 }}>
-          <Button
-            onClick={handleSave}
-            color="primary"
-            disabled={!isFormValid()}
-          >
+        <DialogActions>
+          <Button onClick={handleSave} disabled={!isFormValid()}>
             {editIndex !== null ? "Update" : "Add"}
           </Button>
         </DialogActions>
