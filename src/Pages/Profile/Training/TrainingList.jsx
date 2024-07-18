@@ -68,7 +68,6 @@ const TrainingList = ({ trainingList, handleOpenDialog, userId, setTrainingList 
                                 sx={{
                                     fontWeight: 600,
                                 }}
-                                gutterBottom
                             >
                                 {training?.courseName}
                             </Typography>

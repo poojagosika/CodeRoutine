@@ -29,34 +29,3 @@ export const addOrUpdateSocialLinks = async (req, res) => {
     res.status(500).json({ message: "Something went wrong", error });
   }
 };
-
-// Delete a specific social link
-export const deleteSocialLink = async (req, res) => {
-  try {
-    const userId = req.params.userId;
-    const { linkType } = req.params; // e.g., 'linkedin', 'github'
-
-    const userData = await user.findById(userId);
-
-    if (!userData) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    if (!userData.socialLinks[linkType]) {
-      return res
-        .status(404)
-        .json({ message: `Social link of type ${linkType} not found` });
-    }
-
-    userData.socialLinks[linkType] = "";
-    await userData.save();
-
-    res.status(200).json({
-      message: "Social link deleted successfully",
-      socialLinks: userData.socialLinks,
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Something went wrong", error });
-  }
-};

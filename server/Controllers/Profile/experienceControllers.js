@@ -62,7 +62,6 @@ export const deleteExperience = async (req, res) => {
   try {
     const userId = req.id;
     const experienceId = req.params.experienceId;
-    console.log(experienceId);
     const existingUser = await user.findById(userId);
 
     if (!existingUser) {

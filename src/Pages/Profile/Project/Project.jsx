@@ -120,14 +120,13 @@ const Project = (props) => {
   };
 
   return (
-    <Box p={2}>
+    <Box>
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <Typography
           variant="h5"
           sx={{
             fontWeight: 600,
             fontSize: "1.25rem",
-            letterSpacing: "0.025em",
           }}
         >
           Projects

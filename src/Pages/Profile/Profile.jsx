@@ -4,7 +4,7 @@ import { getUserByUserName } from "../../Api/userApi";
 import { useParams } from "react-router-dom";
 import ProblemsSolved from "./ProblemsSolved";
 import Skills from "./Skills";
-import SocialLinks from "./SocialLinks";
+import SocialLinks from "./SocialLinks/SocialLinks";
 import PersonalInformation from "./PersonalInformation/PersonalInformation";
 import CopyRight from "../../Component/CopyRight/CopyRight";
 import Training from "./Training/Training";
@@ -63,14 +63,14 @@ const Profile = () => {
               height: "200px",
             }}
           ></Box>
-          <Box sx={{ padding: "20px" }}>
+          <Box p={4}>
             <PersonalInformation userProfile={userProfile} />
             <Experience userProfile={userProfile} />
             <Education userProfile={userProfile} />
             <Training userProfile={userProfile} />
             <Project userProfile={userProfile} />
-            <SocialLinks socialLinks={userProfile?.socialLinks} />
             <Skills userProfile={userProfile} />
+            <SocialLinks userProfile={userProfile} />
             <ProblemsSolved problemsSolved={userProfile?.problemsSolved} />
           </Box>
         </Paper>

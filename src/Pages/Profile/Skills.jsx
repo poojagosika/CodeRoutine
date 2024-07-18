@@ -104,20 +104,27 @@ const Skills = (props) => {
   };
 
   return (
-    <Grid item xs={12} p={2}>
-      <Divider sx={{ my: 2 }} />
-      <Typography
-        gutterBottom
-        variant="h5"
-        sx={{
-          fontWeight: 600,
-          fontSize: "1.25rem",
-          letterSpacing: "0.025em",
-        }}
-      >
-        Skills
-      </Typography>
-
+    <Grid item xs={12} >
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Typography
+          variant="h5"
+          sx={{
+            fontWeight: 600,
+            fontSize: "1.25rem",
+          }}
+        >
+          Skills
+        </Typography>
+        {userData?._id === props?.userProfile?._id && (
+          <IconButton
+            color="primary"
+            onClick={() => handleOpenDialog()}
+            sx={{ mr: 1 }}
+          >
+            <AddIcon />
+          </IconButton>
+        )}
+      </Box>
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         <DialogTitle>Add Skill</DialogTitle>
         <DialogContent>
@@ -201,20 +208,6 @@ const Skills = (props) => {
           />
         ))}
       </Box>
-
-      {userData?._id === props.userProfile?._id ? (
-        <Button
-          variant="text"
-          color="primary"
-          startIcon={<AddIcon />}
-          onClick={handleOpenDialog}
-          sx={{ ml: 2 }}
-        >
-          Add Skills
-        </Button>
-      ) : (
-        ""
-      )}
     </Grid>
   );
 };

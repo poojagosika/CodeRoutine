@@ -27,10 +27,7 @@ import {
   deleteProject,
   updateProject,
 } from "../Controllers/Profile/projectController.js";
-import {
-  addOrUpdateSocialLinks,
-  deleteSocialLink,
-} from "../Controllers/Profile/socialLinksController.js";
+import { addOrUpdateSocialLinks } from "../Controllers/Profile/socialLinksController.js";
 import {
   addSkill,
   deleteSkill,
@@ -103,7 +100,6 @@ userRouter.put(
   tokenVerify,
   addOrUpdateSocialLinks
 );
-userRouter.delete("/profile/deleteSocialLink", tokenVerify, deleteSocialLink);
 
 // skill
 userRouter.post("/profile/addSkill", tokenVerify, addSkill);
