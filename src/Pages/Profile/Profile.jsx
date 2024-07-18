@@ -43,6 +43,7 @@ const Profile = () => {
       linkedin || github || x || blog || portfolio || (additional && additional.length > 0)
     );
   };
+
   const hasPersonalInformation = (profile) => {
     if (!profile) return false;
     const { firstName, lastName, headline, currentPosition, education, city, gender, country } = profile;
@@ -50,8 +51,9 @@ const Profile = () => {
       firstName || lastName || headline || currentPosition || education || city || gender || country
     );
   };
+
   const isLogin = () => {
-    return userData?._id === userProfile?._id;
+    return userData?._id && userProfile?._id && userData._id === userProfile._id;
   };
 
   if (loading) {
@@ -68,6 +70,13 @@ const Profile = () => {
       </Container>
     );
   }
+
+  const renderSection = (Component, condition) => {
+    if (isLogin() || condition) {
+      return <Component userProfile={userProfile} />;
+    }
+    return null;
+  };
 
   return (
     <>
@@ -86,27 +95,13 @@ const Profile = () => {
             }}
           ></Box>
           <Box p={4}>
-            {hasPersonalInformation(userProfile?.profile) && (
-              <PersonalInformation userProfile={userProfile} />
-            )}
-            {userProfile?.experience?.length > 0 && (
-              <Experience userProfile={userProfile} />
-            )}
-            {userProfile?.education?.length > 0 && (
-              <Education userProfile={userProfile} />
-            )}
-            {userProfile?.training?.length > 0 && (
-              <Training userProfile={userProfile} />
-            )}
-            {userProfile?.project?.length > 0 && (
-              <Project userProfile={userProfile} />
-            )}
-            {userProfile?.skills?.length > 0 && (
-              <Skills userProfile={userProfile} />
-            )}
-            {hasSocialLinks(userProfile?.socialLinks) && (
-              <SocialLinks userProfile={userProfile} />
-            )}
+            {renderSection(PersonalInformation, hasPersonalInformation(userProfile?.profile))}
+            {renderSection(Experience, userProfile?.experience?.length > 0)}
+            {renderSection(Education, userProfile?.education?.length > 0)}
+            {renderSection(Training, userProfile?.training?.length > 0)}
+            {renderSection(Project, userProfile?.project?.length > 0)}
+            {renderSection(Skills, userProfile?.skills?.length > 0)}
+            {renderSection(SocialLinks, hasSocialLinks(userProfile?.socialLinks))}
             <ProblemsSolved problemsSolved={userProfile?.problemsSolved} />
           </Box>
         </Paper>

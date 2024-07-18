@@ -23,7 +23,7 @@ import { ContextStore } from "../../Context/ContextStore";
 
 const Skills = (props) => {
   const [openDialog, setOpenDialog] = React.useState(false);
-  const [skills, setSkills] = React.useState(props?.userProfile.skills || []);
+  const [skills, setSkills] = React.useState(props?.userProfile?.skills || []);
   const [newSkill, setNewSkill] = React.useState("");
   const [selectedLevel, setSelectedLevel] = React.useState("intermediate");
   const { userData } = ContextStore();
