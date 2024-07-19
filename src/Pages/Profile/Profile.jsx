@@ -1,7 +1,7 @@
 import * as React from "react";
-import { Box, Container, Paper, CircularProgress } from "@mui/material";
+import { Box, Container, Paper, CircularProgress, Button } from "@mui/material";
 import { getUserByUserName } from "../../Api/userApi";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ProblemsSolved from "./ProblemsSolved";
 import Skills from "./Skills";
 import SocialLinks from "./SocialLinks/SocialLinks";
@@ -19,6 +19,7 @@ const Profile = () => {
   const [loading, setLoading] = React.useState(true);
   const { id: userName } = useParams();
   const { userData } = ContextStore();
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -92,9 +93,27 @@ const Profile = () => {
               padding: "20px",
               textAlign: "center",
               height: "200px",
+              display: "flex",
+              justifyContent: 'flex-end',
+              alignItems: "flex-end",
             }}
-          ></Box>
-          <Box p={4}>
+          >
+            {isLogin() &&
+              <Button
+                variant="contained"
+                color="primary"
+                style={{ marginTop: "20px" }}
+                onClick={() =>
+                  navigate(`/resume/${userProfile?.userName}`, {
+                    state: { userProfile },
+                  })
+                }
+              >
+                Resume
+              </Button>
+            }
+          </Box>
+          <Container>
             {renderSection(PersonalInformation, hasPersonalInformation(userProfile?.profile))}
             {renderSection(Experience, userProfile?.experience?.length > 0)}
             {renderSection(Education, userProfile?.education?.length > 0)}
@@ -103,7 +122,7 @@ const Profile = () => {
             {renderSection(Skills, userProfile?.skills?.length > 0)}
             {renderSection(SocialLinks, hasSocialLinks(userProfile?.socialLinks))}
             <ProblemsSolved problemsSolved={userProfile?.problemsSolved} />
-          </Box>
+          </Container>
         </Paper>
       </Container>
       <CopyRight />

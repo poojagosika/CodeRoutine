@@ -4,7 +4,7 @@ const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 
 const ProblemsSolved = ({ userProfile }) => {
     return (
-        <Grid item xs={12}>
+        <Grid item xs={12} pb={2}>
             <Divider sx={{ my: 2 }} />
             <Typography variant="h5" gutterBottom>
                 Problems Solved
