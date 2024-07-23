@@ -131,20 +131,18 @@ const TemplateCard3 = ({ user }) => {
                 </Box>
               </Box>
               <Divider />
+              <Typography
+                variant="body1"
+                textAlign="center"
+                component="p"
+                sx={{ my: 1 }}
+              >
+                <i>{user?.profile?.headline}</i>
+              </Typography>
             </>
           )}
-          {user?.profile?.headline && (
-            <Typography
-              variant="body1"
-              textAlign="center"
-              component="p"
-              sx={{ my: 1 }}
-            >
-              <i>{user?.profile?.headline}</i>
-            </Typography>
-          )}
           <Grid container gap={1}>
-            {user?.experience && (
+            {user?.experience.length > 0 && (
               <Grid item xs={12}>
                 <Typography
                   variant="h6"
@@ -170,7 +168,7 @@ const TemplateCard3 = ({ user }) => {
                 ))}
               </Grid>
             )}
-            {user?.education && (
+            {user?.education.length > 0 && (
               <Grid item xs={12}>
                 <Typography
                   variant="h6"
@@ -205,7 +203,7 @@ const TemplateCard3 = ({ user }) => {
               </Grid>
             )}
             {/* Training & Courses Section */}
-            {user?.training && (
+            {user?.training.length > 0 && (
               <Grid item xs={12}>
                 <Typography
                   variant="h6"
@@ -238,7 +236,7 @@ const TemplateCard3 = ({ user }) => {
                 ))}
               </Grid>
             )}
-            {user?.project && (
+            {user?.project.length > 0 && (
               <Grid item xs={12}>
                 <Typography
                   variant="h6"
@@ -273,7 +271,7 @@ const TemplateCard3 = ({ user }) => {
             )}
 
             {/* Skills Section */}
-            {user?.skills && (
+            {user?.skills.length > 0 && (
               <Grid item xs={12}>
                 <Typography
                   variant="h6"
