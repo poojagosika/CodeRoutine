@@ -1,16 +1,11 @@
 import React, { useState } from "react";
-import {
-  Box,
-  IconButton,
-  Typography,
-  Avatar,
-} from "@mui/material";
+import { Box, IconButton, Typography, Avatar } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import WorkIcon from "@mui/icons-material/Work";
 import SchoolIcon from "@mui/icons-material/School";
 import getCuteAvatar from "../../../Config/getCuteAvatar.js";
 import PersonalInfoDialog from "./PersonalInfoDialog.jsx";
-import { ContextStore } from '../../../Context/ContextStore.jsx';
+import { ContextStore } from "../../../Context/ContextStore.jsx";
 
 const PersonalInformation = (props) => {
   const initialState = {
@@ -56,7 +51,10 @@ const PersonalInformation = (props) => {
         sx={{ height: 50 }}
       >
         <Avatar
-          src={getCuteAvatar(props?.userProfile?.userName)}
+          src={
+            props?.userProfile?.profile.picture ||
+            getCuteAvatar(props?.userProfile?.userName)
+          }
           alt={props?.userProfile?.profile?.firstName}
           sx={{
             width: 150,
@@ -68,7 +66,6 @@ const PersonalInformation = (props) => {
           component="span"
         />
         {userData?._id === props?.userProfile?._id && (
-
           <IconButton
             onClick={toggleEditing}
             color="primary"
@@ -77,7 +74,8 @@ const PersonalInformation = (props) => {
             component="span"
           >
             <EditIcon />
-          </IconButton>)}
+          </IconButton>
+        )}
       </Box>
       <Box
         display="flex"
@@ -97,14 +95,18 @@ const PersonalInformation = (props) => {
             {personalInfo.gender === "👦🏻 Male" && <span>👦🏻</span>}
             {personalInfo.gender === "👧🏻 Female" && <span>👧🏻</span>}
           </Typography>
-          <Typography variant="body1" style={{ maxWidth: '500px' }}>
+          <Typography variant="body1" style={{ maxWidth: "500px" }}>
             {personalInfo.headline}
           </Typography>
           <Typography sx={{ color: "#6B7280" }} variant="body2">
             {formatAddress(personalInfo)}
           </Typography>
         </Box>
-        <Box display="flex" flexDirection="column" alignItems={{ xs: "flex-start", sm: "flex-end" }}>
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignItems={{ xs: "flex-start", sm: "flex-end" }}
+        >
           {personalInfo?.currentPosition && (
             <Typography
               variant="body1"
