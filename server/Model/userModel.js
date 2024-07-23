@@ -14,6 +14,10 @@ const personalInformationSchema = new Schema(
       required: true,
       trim: true,
     },
+    picture: {
+      type: String,
+      default: "",
+    },
     headline: {
       type: String,
       trim: true,
@@ -33,7 +37,7 @@ const personalInformationSchema = new Schema(
     gender: {
       type: String,
       enum: ["👦🏻 Male", "👧🏻 Female", "💫 Other"],
-      default: "👦🏻 Male",
+      default: "",
     },
     country: {
       type: String,
@@ -281,12 +285,18 @@ const skillSchema = new Schema(
 const userSchema = new Schema({
   userName: { type: String, required: true },
   email: { type: String, required: true },
-  password: { type: String, required: true },
+  password: {
+    type: String,
+    required: function () {
+      return !this.isGoogleLogin;
+    },
+  },
   role: {
     type: String,
     enum: ["user", "admin"],
     default: "user",
   },
+  isGoogleLogin: { type: Boolean, default: false },
   profile: personalInformationSchema,
   experience: [experienceSchema],
   education: [educationSchema],

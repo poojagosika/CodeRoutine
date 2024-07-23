@@ -26,42 +26,45 @@ import Assessment from "./Pages/Interview/Assessment/Assessment";
 import InterviewOnline from "./Pages/Interview/InterviewOnline";
 import Premium from "./Pages/Store/Premium";
 import Resume from "./Pages/Profile/Resume/Resume";
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 TimeAgo.addDefaultLocale(en);
 TimeAgo.addLocale(ru);
 
 const App = () => {
   return (
-    <Store>
-      <BrowserRouter>
-        <NavBar />
-        <ToastContainer position="top-right" theme="light" />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/problems" element={<Problems />} />
-          <Route path="/problems/:id" element={<Problem />} />
-          <Route path="/login" element={<SignIn />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/profile/:id" element={<Profile />} />
-          <Route path="/resume/:id" element={<Resume />} />
-          <Route path="/settings/orders" element={<Orders />} />
-          <Route path="/settings/playgrounds" element={<Playgrounds />} />
-          <Route path="/addProblems" element={<AddProblem />} />
-          <Route path="/contest" element={<Contest />} />
-          <Route path="/explore" element={<Explore />} />
-          <Route path="/store/redeem" element={<Redeem />} />
-          <Route path="/store/premium" element={<Premium />} />
-          <Route path="/discuss" element={<Discuss />} />
-          <Route path="/discuss/:id" element={<DiscussDetails />} />
-          <Route path="/interview/assessment" element={<Assessment />} />
-          <Route path="/discuss/:id" element={<DiscussDetails />} />
-          <Route
-            path="/interview/onlineinterview"
-            element={<InterviewOnline />}
-          />
-        </Routes>
-      </BrowserRouter>
-    </Store>
+    <GoogleOAuthProvider clientId={"125434099781-rrkb4s7blkuai2dkaecta6l31km8ipd3.apps.googleusercontent.com"}>
+      <Store>
+        <BrowserRouter>
+          <NavBar />
+          <ToastContainer position="top-right" theme="light" />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/problems" element={<Problems />} />
+            <Route path="/problems/:id" element={<Problem />} />
+            <Route path="/login" element={<SignIn />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/profile/:id" element={<Profile />} />
+            <Route path="/resume/:id" element={<Resume />} />
+            <Route path="/settings/orders" element={<Orders />} />
+            <Route path="/settings/playgrounds" element={<Playgrounds />} />
+            <Route path="/addProblems" element={<AddProblem />} />
+            <Route path="/contest" element={<Contest />} />
+            <Route path="/explore" element={<Explore />} />
+            <Route path="/store/redeem" element={<Redeem />} />
+            <Route path="/store/premium" element={<Premium />} />
+            <Route path="/discuss" element={<Discuss />} />
+            <Route path="/discuss/:id" element={<DiscussDetails />} />
+            <Route path="/interview/assessment" element={<Assessment />} />
+            <Route path="/discuss/:id" element={<DiscussDetails />} />
+            <Route
+              path="/interview/onlineinterview"
+              element={<InterviewOnline />}
+            />
+          </Routes>
+        </BrowserRouter>
+      </Store>
+    </GoogleOAuthProvider>
   );
 };
 

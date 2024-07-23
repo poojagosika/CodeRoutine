@@ -1,6 +1,7 @@
 import express from "express";
 import {
   getUserByUserName,
+  googleLogin,
   userLogin,
   userRegister,
   userUpdateProfile,
@@ -37,6 +38,7 @@ const userRouter = express.Router();
 
 userRouter.post("/register", userRegister);
 userRouter.post("/login", userLogin);
+userRouter.post("/googleLogin", googleLogin);
 userRouter.put("/updateProfile", tokenVerify, userUpdateProfile);
 userRouter.get("/:userName", getUserByUserName);
 userRouter.put(

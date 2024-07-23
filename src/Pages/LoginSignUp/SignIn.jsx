@@ -16,10 +16,11 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { toast } from "react-toastify";
 import codeRoutineLogo from "../../assets/logo.png";
-import { Avatar, Skeleton } from "@mui/material";
+import { Avatar, IconButton, Skeleton } from "@mui/material";
 import { ContextStore } from "../../Context/ContextStore";
 import CircularProgress from "@mui/material/CircularProgress";
-import { loginUser } from "../../Api/userApi";
+import { googleLogin, loginUser } from "../../Api/userApi";
+import { GoogleLogin } from '@react-oauth/google';
 
 const defaultTheme = createTheme();
 
@@ -71,6 +72,29 @@ export default function SignIn() {
   });
   const [isLoading, setIsLoading] = React.useState(false);
 
+  const handleLoginSuccess = async (response) => {
+    if (response && response.credential) {
+      const { credential } = response;
+      try {
+        const res = await googleLogin({ credential: credential });
+        localStorage.setItem("token", res?.data?.token);
+        localStorage.setItem("user", JSON.stringify(res?.data?.user));
+        setUserData(res.data.user);
+        setToken(res.data.token);
+        toast.success(res?.data?.message);
+        navigate("/");
+      } catch (err) {
+        toast.error(err?.response?.data?.message);
+        console.error('Error fetching user info:', error);
+      }
+    } else {
+      console.error('No credential received');
+    }
+  };
+
+  const handleLoginFailure = (error) => {
+    console.log('Login Failed:', error);
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -185,8 +209,11 @@ export default function SignIn() {
             >
               or you can sign in with
             </Typography>
+            <GoogleLogin
+              onSuccess={handleLoginSuccess}
+              onFailure={handleLoginFailure}
+            />
             <Stack direction="row" spacing={3} color="grey" mt={2}>
-              <GoogleIcon />
               <GitHubIcon />
               <LinkedInIcon />
               <FacebookIcon />

@@ -4,22 +4,26 @@ import htmlToPdfmake from 'html-to-pdfmake';
 import pdfMake from 'pdfmake/build/pdfmake';
 
 const TemplateCard1 = ({ user }) => {
-    const resumeRef = useRef();
+    // const resumeRef = useRef();
 
-    const handleDownload = async (resume) => {
-        const { default: pdfFonts } = await import('pdfmake/build/vfs_fonts');
-        pdfMake.vfs = pdfFonts.pdfMake.vfs;
+    // const handleDownload = async (resume) => {
+    //     const { default: pdfFonts } = await import('pdfmake/build/vfs_fonts');
+    //     pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
-        const resumeContent = resumeRef.current.innerHTML;
-        const pdfContent = htmlToPdfmake(resumeContent);
-        const documentDefinition = { content: pdfContent };
-        pdfMake.createPdf(documentDefinition).download(`${resume} resume.pdf`);
+    //     const resumeContent = resumeRef.current.innerHTML;
+    //     const pdfContent = htmlToPdfmake(resumeContent);
+    //     const documentDefinition = { content: pdfContent };
+    //     pdfMake.createPdf(documentDefinition).open();
+    // };
+
+    const handlePrint = () => {
+        window.print();
     };
-
     return (
         <Card>
             <CardContent>
-                <div ref={resumeRef}>
+                <button onClick={handlePrint}>Print</button>
+                <div id="printableArea">
                     <Typography variant="h5">{user.profile.firstName} {user.profile.lastName}</Typography>
                     <Typography variant="subtitle1">{user.profile.headline}</Typography>
                     <Typography variant="body2">{user.profile.city}, {user.profile.country}</Typography>
@@ -38,6 +42,23 @@ const TemplateCard1 = ({ user }) => {
                         </Grid>
                     </Grid>
                 </div>
+                <style>
+                    {`
+                    @media print {
+                        body * {
+                            visibility: hidden;
+                        }
+                        #printableArea, #printableArea * {
+                            visibility: visible;
+                        }
+                        #printableArea {
+                            position: absolute;
+                            left: 0;
+                            top: 0;
+                        }
+                    }
+                `}
+                </style>
                 <Button variant="contained" color="primary" onClick={() => handleDownload(user.profile.firstName + user.profile.lastName)} style={{ marginTop: '20px' }}>
                     Download Resume
                 </Button>

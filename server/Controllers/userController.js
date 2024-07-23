@@ -1,7 +1,7 @@
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import user from "../Model/userModel.js";
-
+import { jwtDecode } from "jwt-decode";
 export const userRegister = async (req, res) => {
   try {
     const { userName, password, confirmPassword, email } = req.body;
@@ -60,12 +60,84 @@ export const userLogin = async (req, res) => {
       userName: existingUser.userName,
       email: existingUser.email,
       role: existingUser.role,
+      isGoogleLogin: existingUser?.isGoogleLogin,
     };
     return res
       .status(200)
       .json({ token, user: userData, message: "Login successful" });
   } catch (error) {
     console.error(error);
+    return res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+export const googleLogin = async (req, res) => {
+  try {
+    const { credential } = req.body;
+
+    // Validate input
+    if (!credential) {
+      return res.status(400).json({ message: "Credential is required" });
+    }
+
+    // Verify the credential using jwt decode
+    const payload = jwtDecode(credential);
+    const { email, given_name, family_name, picture } = payload;
+    // Check if the user already exists
+    const existingUser = await user.findOne({ email });
+    if (existingUser) {
+      // If the user exists, return the user data
+      const userData = {
+        _id: existingUser._id,
+        userName: existingUser.userName,
+        email: existingUser.email,
+        role: existingUser.role,
+        profilePicture: existingUser.profile.picture,
+        isGoogleLogin: existingUser.isGoogleLogin,
+      };
+      // Generate a JWT token
+      const token = jwt.sign(
+        { _id: existingUser._id, userName: existingUser.userName },
+        process.env.JWT_SECRET,
+        { expiresIn: "12h" }
+      );
+      // Return the user data and the JWT token
+      return res
+        .status(200)
+        .json({ token, user: userData, message: "Login successful" });
+    }
+    // If the user doesn't exist, create a new user
+    const newUser = await user.create({
+      userName: email,
+      email,
+      profile: {
+        picture,
+        firstName: given_name,
+        lastName: family_name,
+      },
+      isGoogleLogin: true,
+    });
+    // Return the new user data
+    const userData = {
+      _id: newUser._id,
+      userName: newUser.userName,
+      email: newUser.email,
+      role: newUser.role,
+      profilePicture: newUser.profile.picture,
+      isGoogleLogin: newUser.isGoogleLogin,
+    };
+    // Generate a JWT token
+    const token = jwt.sign(
+      { _id: newUser._id, userName: newUser.userName },
+      process.env.JWT_SECRET,
+      { expiresIn: "12h" }
+    );
+    // Return the new user data and the JWT token
+    return res
+      .status(201)
+      .json({ token, user: userData, message: "Welcome to CodeRoutine" });
+  } catch (error) {
+    console.error("Error verifying token:", error);
     return res.status(500).json({ message: "Something went wrong" });
   }
 };
