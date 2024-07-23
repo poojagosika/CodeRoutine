@@ -209,11 +209,21 @@ export default function SignIn() {
             >
               or you can sign in with
             </Typography>
-            <GoogleLogin
-              onSuccess={handleLoginSuccess}
-              onFailure={handleLoginFailure}
-            />
-            <Stack direction="row" spacing={3} color="grey" mt={2}>
+            <Stack
+              direction="row"
+              spacing={3}
+              color="grey"
+              mt={2}
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <GoogleLogin
+                onSuccess={handleLoginSuccess}
+                onFailure={handleLoginFailure}
+                shape="circle"
+                type="icon"
+              />
               <GitHubIcon />
               <LinkedInIcon />
               <FacebookIcon />

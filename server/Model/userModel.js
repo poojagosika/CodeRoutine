@@ -37,7 +37,7 @@ const personalInformationSchema = new Schema(
     gender: {
       type: String,
       enum: ["👦🏻 Male", "👧🏻 Female", "💫 Other"],
-      default: "",
+      default: "👦🏻 Male",
     },
     country: {
       type: String,
