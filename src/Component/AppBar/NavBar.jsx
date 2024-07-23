@@ -234,7 +234,7 @@ function NavBar() {
 
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt={userData?.userName} src={getCuteAvatar(userData?.userName)} />
+                    <Avatar alt={userData?.userName} src={userData?.profilePicture || getCuteAvatar(userData?.userName)} />
                   </IconButton>
                 </Tooltip>
               </Box>
