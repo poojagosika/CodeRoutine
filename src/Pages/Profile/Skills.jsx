@@ -1,10 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Grid,
   Typography,
   Button,
   Box,
-  Divider,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -21,66 +20,54 @@ import { addSkill, deleteSkill } from "../../Api/Profile/skillsApi";
 import { toast } from "react-toastify";
 import { ContextStore } from "../../Context/ContextStore";
 
-const Skills = (props) => {
-  const [openDialog, setOpenDialog] = React.useState(false);
-  const [skills, setSkills] = React.useState(props?.userProfile?.skills || []);
-  const [newSkill, setNewSkill] = React.useState("");
-  const [selectedLevel, setSelectedLevel] = React.useState("intermediate");
+const Skills = ({ userProfile }) => {
+  const [openDialog, setOpenDialog] = useState(false);
+  const [skills, setSkills] = useState(userProfile?.skills || []);
+  const [newSkill, setNewSkill] = useState("");
+  const [selectedLevel, setSelectedLevel] = useState("intermediate");
   const { userData } = ContextStore();
 
-  const handleOpenDialog = () => {
-    setOpenDialog(true);
-  };
-
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-  };
+  const handleOpenDialog = () => setOpenDialog(true);
+  const handleCloseDialog = () => setOpenDialog(false);
 
   const handleSaveSkill = async () => {
-    if (newSkill.trim() !== "") {
-      const skillObject = {
-        skill: newSkill.trim(),
-        level: selectedLevel,
-      };
+    if (newSkill.trim()) {
+      const skillObject = { skill: newSkill.trim(), level: selectedLevel };
       try {
         const response = await addSkill(skillObject);
         if (response.data) {
           setSkills(response.data.skills);
-          setNewSkill("");
-          setSelectedLevel("intermediate");
-          setOpenDialog(false);
+          resetDialog();
         }
       } catch (error) {
-        toast.error(error?.response?.data?.message || "Failed to add skill");
-        console.error("Failed to add skill:", error);
+        handleError(error, "Failed to add skill");
       }
     }
   };
 
-  const handleLevelChange = (event) => {
-    setSelectedLevel(event.target.value);
+  const handleError = (error, defaultMessage) => {
+    toast.error(error?.response?.data?.message || defaultMessage);
+    console.error(defaultMessage, error);
   };
 
+  const resetDialog = () => {
+    setNewSkill("");
+    setSelectedLevel("intermediate");
+    setOpenDialog(false);
+  };
+
+  const handleLevelChange = (event) => setSelectedLevel(event.target.value);
+
   const renderSkillDot = (level) => {
-    let color;
-    switch (level) {
-      case "beginner":
-        color = "red";
-        break;
-      case "intermediate":
-        color = "yellow";
-        break;
-      case "advanced":
-        color = "green";
-        break;
-      default:
-        color = "gray";
-        break;
-    }
+    const colors = {
+      beginner: "red",
+      intermediate: "orange",
+      advanced: "green",
+    };
     return (
       <span
         style={{
-          backgroundColor: color,
+          backgroundColor: colors[level] || "gray",
           width: "8px",
           height: "8px",
           display: "inline-block",
@@ -98,29 +85,20 @@ const Skills = (props) => {
         setSkills((prevSkills) => prevSkills.filter((_, i) => i !== index));
       }
     } catch (error) {
-      toast.error("Error deleting skill");
-      console.error("Error deleting skill:", error);
+      handleError(error, "Error deleting skill");
     }
   };
 
+  const canEdit = userData?._id === userProfile?._id;
+
   return (
-    <Grid item xs={12} >
+    <Grid item xs={12}>
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Typography
-          variant="h5"
-          sx={{
-            fontWeight: 600,
-            fontSize: "1.25rem",
-          }}
-        >
+        <Typography variant="h5" sx={{ fontWeight: 600, fontSize: "1.25rem" }}>
           Skills
         </Typography>
-        {userData?._id === props?.userProfile?._id && (
-          <IconButton
-            color="primary"
-            onClick={() => handleOpenDialog()}
-            sx={{ mr: 1 }}
-          >
+        {canEdit && (
+          <IconButton color="primary" onClick={handleOpenDialog} sx={{ mr: 1 }}>
             <AddIcon />
           </IconButton>
         )}
@@ -143,28 +121,25 @@ const Skills = (props) => {
             name="skill-level"
             value={selectedLevel}
             onChange={handleLevelChange}
-            style={{
-              marginTop: "16px",
+            sx={{
+              mt: 2,
               display: "flex",
               flexDirection: "row",
               justifyContent: "center",
             }}
           >
-            <FormControlLabel
-              value="beginner"
-              control={<Radio size="small" />}
-              label={<Typography variant="body2">Beginner</Typography>}
-            />
-            <FormControlLabel
-              value="intermediate"
-              control={<Radio size="small" />}
-              label={<Typography variant="body2">Intermediate</Typography>}
-            />
-            <FormControlLabel
-              value="advanced"
-              control={<Radio size="small" />}
-              label={<Typography variant="body2">Advanced</Typography>}
-            />
+            {["beginner", "intermediate", "advanced"].map((level) => (
+              <FormControlLabel
+                key={level}
+                value={level}
+                control={<Radio size="small" />}
+                label={
+                  <Typography variant="body2">
+                    {level.charAt(0).toUpperCase() + level.slice(1)}
+                  </Typography>
+                }
+              />
+            ))}
           </RadioGroup>
         </DialogContent>
         <DialogActions>
@@ -184,30 +159,56 @@ const Skills = (props) => {
             label={
               <Box display="flex" alignItems="center">
                 {renderSkillDot(skill.level)}
-                <Typography
-                  variant="body2"
-                  component="span"
-                  style={{ marginLeft: "8px" }}
-                >
+                <Typography variant="body2" component="span" sx={{ ml: 1 }}>
                   {skill.skill}
                 </Typography>
               </Box>
             }
-            style={{ marginBottom: "8px", marginRight: "8px" }}
-            onDelete={
-              userData?._id === props.userProfile?._id
-                ? () => handleDeleteSkill(index)
-                : undefined
-            }
-            deleteIcon={
-              userData?._id === props.userProfile?._id ? (
-                <ClearIcon />
-              ) : undefined
-            }
+            sx={{ mb: 1, mr: 1 }}
+            onDelete={canEdit ? () => handleDeleteSkill(index) : undefined}
+            deleteIcon={canEdit ? <ClearIcon /> : undefined}
             variant="outlined"
           />
         ))}
       </Box>
+
+      {skills.length === 0 ? (
+        <Typography variant="body2" sx={{ color: "#6B7280" }}>
+          No skills added yet.
+        </Typography>
+      ) : (
+        <Box
+          display="flex"
+          justifyContent="flex-start"
+          gap={2}
+          ml={2}
+          mt={1}
+          sx={{ color: "#6B7280" }}
+        >
+          {["beginner", "intermediate", "advanced"].map((level) => (
+            <Box
+              key={level}
+              display="flex"
+              justifyContent="center"
+              gap={1}
+              alignItems="center"
+            >
+              {renderSkillDot(level)}
+              <Typography
+                variant="body2"
+                display="flex"
+                gap={1}
+                alignItems="center"
+                borderBottom={`1px solid ${
+                  renderSkillDot(level).props.style.backgroundColor
+                }`}
+              >
+                {level.charAt(0).toUpperCase() + level.slice(1)}
+              </Typography>
+            </Box>
+          ))}
+        </Box>
+      )}
     </Grid>
   );
 };
