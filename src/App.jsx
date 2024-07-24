@@ -33,7 +33,7 @@ TimeAgo.addLocale(ru);
 
 const App = () => {
   return (
-    <GoogleOAuthProvider clientId={"125434099781-rrkb4s7blkuai2dkaecta6l31km8ipd3.apps.googleusercontent.com"}>
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_Client_ID}>
       <Store>
         <BrowserRouter>
           <NavBar />
