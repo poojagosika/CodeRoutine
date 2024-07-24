@@ -21,3 +21,12 @@ export const formatDuration = ({ years, months }) => {
   const monthStr = months > 0 ? `${months} mo${months > 1 ? "s" : ""}` : "";
   return `${yearStr}${yearStr && monthStr ? " " : ""}${monthStr}`;
 };
+
+export const formatDateWithYearMonth = (dateString) => {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
