@@ -5,33 +5,11 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { ContextStore } from '../../../Context/ContextStore';
 import { deleteTraining } from '../../../Api/Profile/trainingApi';
 import { toast } from 'react-toastify';
+import { calculateYearsMonths, formatDate, formatDuration } from "../config";
 
 const TrainingList = ({ trainingList, handleOpenDialog, userId, setTrainingList }) => {
     const { userData } = ContextStore();
 
-    const calculateYearsMonths = (startDate, endDate) => {
-        const start = new Date(startDate);
-        const end = new Date(endDate);
-        let years = end.getFullYear() - start.getFullYear();
-        let months = end.getMonth() - start.getMonth();
-
-        if (months < 0) {
-            years--;
-            months += 12;
-        }
-        return { years, months };
-    };
-
-    const formatDate = (date) => {
-        const options = { year: 'numeric', month: 'short', day: 'numeric' };
-        return new Intl.DateTimeFormat('en-US', options).format(new Date(date));
-    };
-
-    const formatDuration = ({ years, months }) => {
-        const yearStr = years > 0 ? `${years} yr${years > 1 ? 's' : ''}` : '';
-        const monthStr = months > 0 ? `${months} mo${months > 1 ? 's' : ''}` : '';
-        return `${yearStr}${yearStr && monthStr ? ' ' : ''}${monthStr}`;
-    };
     const handleDelete = async (index, trainingId) => {
         try {
             const response = await deleteTraining(trainingId);
@@ -50,7 +28,10 @@ const TrainingList = ({ trainingList, handleOpenDialog, userId, setTrainingList 
     return (
         <Box>
             {trainingList?.map((training, index) => {
-                const duration = calculateYearsMonths(training?.startDate, training?.endDate);
+                const duration = calculateYearsMonths(
+                    training?.startDate,
+                    training?.isCurrent ? new Date() : training?.endDate
+                  );
                 return (
                     <Box
                         key={index}
