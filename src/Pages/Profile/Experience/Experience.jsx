@@ -28,6 +28,7 @@ import {
   updateExperience,
 } from "../../../Api/Profile/experienceApi";
 import { toast } from "react-toastify";
+import { formatDateWithYearMonth } from "../config.js";
 
 const Experience = (props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -52,7 +53,12 @@ const Experience = (props) => {
 
   const handleOpenDialog = (index = null) => {
     if (index !== null) {
-      setCurrentExperience(experienceList[index]);
+      const experience = experienceList[index];
+      setCurrentExperience({
+        ...experience,
+        startDate: formatDateWithYearMonth(experience.startDate),
+        endDate: formatDateWithYearMonth(experience.endDate),
+      });
       setEditIndex(index);
     } else {
       setCurrentExperience({
@@ -86,11 +92,18 @@ const Experience = (props) => {
 
   const handleSave = async () => {
     try {
+      const experienceToSave = {
+        ...currentExperience,
+        startDate: new Date(currentExperience.startDate).toISOString(),
+        endDate: currentExperience.endDate
+          ? new Date(currentExperience.endDate).toISOString()
+          : "",
+      };
       if (editIndex !== null) {
         console.log(currentExperience)
         const response = await updateExperience(
           currentExperience?._id,
-          currentExperience
+          experienceToSave
         );
         if (response.status === 200) {
           const updatedExperienceList = experienceList.map((experience, idx) =>
@@ -102,7 +115,7 @@ const Experience = (props) => {
           toast.error("Failed to update experience");
         }
       } else {
-        const response = await addExperience(currentExperience);
+        const response = await addExperience(experienceToSave);
         if (response.data) {
           setExperienceList(response?.data?.experience);
           toast.success(response?.data?.message);
