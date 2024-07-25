@@ -25,6 +25,7 @@ import {
 } from "../../../Api/Profile/educationApi";
 import EducationList from "./EducationList";
 import { ContextStore } from "../../../Context/ContextStore";
+import { formatDateWithYearMonth } from "../config.js";
 
 const Education = (props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -54,7 +55,12 @@ const Education = (props) => {
 
   const handleOpenDialog = (index = null) => {
     if (index !== null) {
-      setCurrentEducation(educationList[index]);
+      const education = educationList[index];
+      setCurrentEducation({
+        ...education,
+        startDate: formatDateWithYearMonth(education.startDate),
+        endDate: formatDateWithYearMonth(education.endDate),
+      });
       setEditIndex(index);
     } else {
       setCurrentEducation({
@@ -87,10 +93,17 @@ const Education = (props) => {
 
   const handleSave = async () => {
     try {
+      const educationToSave = {
+        ...currentEducation,
+        startDate: new Date(currentEducation.startDate).toISOString(),
+        endDate: currentEducation.endDate
+          ? new Date(currentEducation.endDate).toISOString()
+          : "",
+      };
       if (editIndex !== null) {
         const response = await updateEducation(
           educationList[editIndex]._id,
-          currentEducation
+          educationToSave
         );
         if (response.status === 200) {
           toast.success(response?.data?.message);
@@ -101,7 +114,7 @@ const Education = (props) => {
           toast.error("Failed to update education");
         }
       } else {
-        const response = await addEducation(currentEducation);
+        const response = await addEducation(educationToSave);
         if (response.data) {
           setEducationList((prev) => [...prev, currentEducation]);
           toast.success(response?.data?.message);

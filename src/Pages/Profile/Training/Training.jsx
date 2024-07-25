@@ -20,6 +20,7 @@ import TrainingList from "./TrainingList";
 import { ContextStore } from "../../../Context/ContextStore";
 import { toast } from "react-toastify";
 import { addTraining, updateTraining } from "../../../Api/Profile/trainingApi";
+import { formatDateWithYearMonth } from "../config.js";
 
 const Training = (props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -42,7 +43,11 @@ const Training = (props) => {
   const handleOpenDialog = (index = null) => {
     if (index !== null) {
       const training = trainingList[index];
-      setCurrentTraining(training);
+      setCurrentTraining({
+        ...training,
+        startDate: formatDateWithYearMonth(training.startDate),
+        endDate: formatDateWithYearMonth(training.endDate),
+      });
       setEditIndex(index);
     } else {
       setCurrentTraining({
@@ -85,10 +90,17 @@ const Training = (props) => {
 
   const handleSave = async () => {
     try {
+      const trainingToSave = {
+        ...currentTraining,
+        startDate: new Date(currentTraining.startDate).toISOString(),
+        endDate: currentTraining.endDate
+          ? new Date(currentTraining.endDate).toISOString()
+          : "",
+      };
       if (editIndex !== null) {
         const response = await updateTraining(
           currentTraining?._id,
-          currentTraining
+          trainingToSave
         );
         if (response.status === 200) {
           const updatedTrainingList = trainingList.map((training, idx) =>
@@ -100,7 +112,7 @@ const Training = (props) => {
           toast.error("Failed to update training");
         }
       } else {
-        const response = await addTraining(currentTraining);
+        const response = await addTraining(trainingToSave);
         if (response.data) {
           setTrainingList(response?.data?.training);
           toast.success(response.data.message);
