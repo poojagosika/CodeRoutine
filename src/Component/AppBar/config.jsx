@@ -6,6 +6,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 
 export const pages = [
   { name: "Explore", path: "/explore", role: "user", login: false },
+  { name: "Jobs", path: "/jobs", role: "user", login: false },
   { name: "Problems", path: "/problems", role: "user", login: false },
   { name: "Add Problems", path: "/addProblems", role: "admin", login: true },
   { name: "Contest", path: "/contest", role: "user", login: false },
@@ -26,7 +27,15 @@ export const interviewSubmenuItems = [
 export const settings = [
   { name: "Profile", path: "/profile", icon: <AccountCircleIcon /> },
   { name: "Orders", path: "/settings/orders", icon: <ListAltIcon /> },
-  { name: "My Playgrounds", path: "/settings/playgrounds", icon: <ImportantDevicesIcon /> },
-  { name: "Appearance", path: "/settings/appearance", icon: <DarkModeOutlinedIcon /> },
+  {
+    name: "My Playgrounds",
+    path: "/settings/playgrounds",
+    icon: <ImportantDevicesIcon />,
+  },
+  {
+    name: "Appearance",
+    path: "/settings/appearance",
+    icon: <DarkModeOutlinedIcon />,
+  },
   { name: "Sign Out", icon: <LogoutIcon /> },
 ];

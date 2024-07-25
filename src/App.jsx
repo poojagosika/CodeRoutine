@@ -26,7 +26,8 @@ import Assessment from "./Pages/Interview/Assessment/Assessment";
 import InterviewOnline from "./Pages/Interview/InterviewOnline";
 import Premium from "./Pages/Store/Premium";
 import Resume from "./Pages/Profile/Resume/Resume";
-import { GoogleOAuthProvider } from '@react-oauth/google';
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import Jobs from "./Pages/Jobs/Jobs";
 
 TimeAgo.addDefaultLocale(en);
 TimeAgo.addLocale(ru);
@@ -51,6 +52,7 @@ const App = () => {
             <Route path="/addProblems" element={<AddProblem />} />
             <Route path="/contest" element={<Contest />} />
             <Route path="/explore" element={<Explore />} />
+            <Route path="/jobs" element={<Jobs />} />
             <Route path="/store/redeem" element={<Redeem />} />
             <Route path="/store/premium" element={<Premium />} />
             <Route path="/discuss" element={<Discuss />} />
