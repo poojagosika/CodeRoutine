@@ -25,13 +25,24 @@ const Skills = ({ userProfile }) => {
   const [skills, setSkills] = useState(userProfile?.skills || []);
   const [newSkill, setNewSkill] = useState("");
   const [selectedLevel, setSelectedLevel] = useState("intermediate");
+  const [error, setError] = useState("");
   const { userData } = ContextStore();
 
   const handleOpenDialog = () => setOpenDialog(true);
-  const handleCloseDialog = () => setOpenDialog(false);
+  const handleCloseDialog = () => {
+    setError("");
+    setNewSkill("");
+    setOpenDialog(false);
+  };
 
   const handleSaveSkill = async () => {
     if (newSkill.trim()) {
+      const skillExists = skills.some(skill => skill.skill.toLowerCase() === newSkill.trim().toLowerCase());
+      if (skillExists) {
+        setError("Skill already exists");
+        return;
+      }
+
       const skillObject = { skill: newSkill.trim(), level: selectedLevel };
       try {
         const response = await addSkill(skillObject);
@@ -91,6 +102,8 @@ const Skills = ({ userProfile }) => {
 
   const canEdit = userData?._id === userProfile?._id;
 
+  const isSaveDisabled = !newSkill.trim() || Boolean(error);
+
   return (
     <Grid item xs={12}>
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -115,6 +128,8 @@ const Skills = ({ userProfile }) => {
             fullWidth
             value={newSkill}
             onChange={(e) => setNewSkill(e.target.value)}
+            error={Boolean(error)}
+            helperText={error}
           />
           <RadioGroup
             aria-label="skill-level"
@@ -146,7 +161,11 @@ const Skills = ({ userProfile }) => {
           <Button onClick={handleCloseDialog} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleSaveSkill} color="primary">
+          <Button
+            onClick={handleSaveSkill}
+            color="primary"
+            disabled={isSaveDisabled}
+          >
             Save
           </Button>
         </DialogActions>
