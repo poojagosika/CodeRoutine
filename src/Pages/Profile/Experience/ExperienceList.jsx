@@ -26,7 +26,10 @@ const ExperienceList = ({ experienceList, userId, setExperienceList, handleOpenD
     return (
         <Box>
             {experienceList?.map((experience, index) => {
-                const duration = calculateYearsMonths(experience?.startDate, experience?.endDate);
+                const duration = calculateYearsMonths(
+                    experience?.startDate,
+                    experience?.isCurrent ? new Date() : experience?.endDate
+                );
                 return (
                     <Box
                         key={index}

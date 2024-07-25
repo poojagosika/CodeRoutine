@@ -35,7 +35,7 @@ const EducationList = ({
       {educationList?.map((education, index) => {
         const duration = calculateYearsMonths(
           education?.startDate,
-          education?.endDate
+          education?.isCurrent ? new Date() : education?.endDate
         );
         return (
           <Box
