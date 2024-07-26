@@ -49,6 +49,7 @@ const Experience = (props) => {
   });
   const [editIndex, setEditIndex] = useState(null);
   const [currentSkill, setCurrentSkill] = useState("");
+  const [error, setError] = useState("");
   const { userData } = ContextStore();
 
   const handleOpenDialog = (index = null) => {
@@ -79,15 +80,24 @@ const Experience = (props) => {
   };
 
   const handleCloseDialog = () => {
+    setError("");
+    setCurrentSkill("");
     setIsDialogOpen(false);
   };
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setCurrentExperience((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+    if (name === "skills") {
+      setCurrentSkill(value);
+      if (value.trim()) {
+        setError("");
+      }
+    } else {
+      setCurrentExperience((prev) => ({
+        ...prev,
+        [name]: type === "checkbox" ? checked : value,
+      }));
+    }
   };
 
   const handleSave = async () => {
@@ -142,12 +152,20 @@ const Experience = (props) => {
   };
 
   const handleAddSkill = () => {
-    if (currentSkill.trim() !== "") {
-      setCurrentExperience((prev) => ({
-        ...prev,
-        skills: [...prev.skills, currentSkill],
-      }));
-      setCurrentSkill("");
+    if (currentSkill.trim()) {
+      const skillExists = currentExperience.skills.some(
+        (skill) => skill.toLowerCase() === currentSkill.trim().toLowerCase()
+      );
+      if (skillExists) {
+        setError("Skill already exists");
+      } else {
+        setCurrentExperience((prev) => ({
+          ...prev,
+          skills: [...prev.skills, currentSkill.trim()],
+        }));
+        setCurrentSkill("");
+        setError("");
+      }
     }
   };
 
@@ -157,6 +175,8 @@ const Experience = (props) => {
       skills: prev.skills.filter((_, i) => i !== index),
     }));
   };
+
+  const isSaveDisabled = !currentSkill.trim();
 
   return (
     <Box>
@@ -369,10 +389,12 @@ const Experience = (props) => {
                 name="skills"
                 variant="outlined"
                 value={currentSkill}
-                onChange={(e) => setCurrentSkill(e.target.value)}
+                onChange={handleChange}
                 fullWidth
                 margin="dense"
                 label="Skills"
+                error={Boolean(error)}
+                helperText={error}
               />
             </Grid>
             <Grid item xs={12}>
@@ -382,6 +404,7 @@ const Experience = (props) => {
                 onClick={handleAddSkill}
                 style={{ borderRadius: "20px" }}
                 startIcon={<AddIcon fontSize="small" />}
+                disabled={isSaveDisabled}
               >
                 Add Skill
               </Button>

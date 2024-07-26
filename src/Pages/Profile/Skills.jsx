@@ -37,7 +37,9 @@ const Skills = ({ userProfile }) => {
 
   const handleSaveSkill = async () => {
     if (newSkill.trim()) {
-      const skillExists = skills.some(skill => skill.skill.toLowerCase() === newSkill.trim().toLowerCase());
+      const skillExists = skills.some(
+        (skill) => skill.skill.toLowerCase() === newSkill.trim().toLowerCase()
+      );
       if (skillExists) {
         setError("Skill already exists");
         return;
@@ -68,6 +70,16 @@ const Skills = ({ userProfile }) => {
   };
 
   const handleLevelChange = (event) => setSelectedLevel(event.target.value);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "skills") {
+      setNewSkill(value);
+      if (value.trim()) {
+        setError("");
+      }
+    }
+  };
 
   const renderSkillDot = (level) => {
     const colors = {
@@ -102,7 +114,7 @@ const Skills = ({ userProfile }) => {
 
   const canEdit = userData?._id === userProfile?._id;
 
-  const isSaveDisabled = !newSkill.trim() || Boolean(error);
+  const isSaveDisabled = !newSkill.trim();
 
   return (
     <Grid item xs={12}>
@@ -125,9 +137,10 @@ const Skills = ({ userProfile }) => {
             id="skill"
             label="Skill"
             type="text"
+            name="skills"
             fullWidth
             value={newSkill}
-            onChange={(e) => setNewSkill(e.target.value)}
+            onChange={handleChange}
             error={Boolean(error)}
             helperText={error}
           />
