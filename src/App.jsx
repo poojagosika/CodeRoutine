@@ -28,6 +28,7 @@ import Premium from "./Pages/Store/Premium";
 import Resume from "./Pages/Profile/Resume/Resume";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import Jobs from "./Pages/Jobs/Jobs";
+import JobsDetails from "./Pages/Jobs/JobsDetails";
 
 TimeAgo.addDefaultLocale(en);
 TimeAgo.addLocale(ru);
@@ -53,6 +54,7 @@ const App = () => {
             <Route path="/contest" element={<Contest />} />
             <Route path="/explore" element={<Explore />} />
             <Route path="/jobs" element={<Jobs />} />
+            <Route path="/jobs/:id" element={<JobsDetails />} />
             <Route path="/store/redeem" element={<Redeem />} />
             <Route path="/store/premium" element={<Premium />} />
             <Route path="/discuss" element={<Discuss />} />
