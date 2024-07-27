@@ -101,16 +101,19 @@ const Experience = (props) => {
   };
 
   const handleSave = async () => {
+    const today = new Date();
+    const startDate = new Date(currentExperience.startDate);
+    const endDate = currentExperience.endDate
+      ? new Date(currentExperience.endDate)
+      : today;
     try {
       const experienceToSave = {
         ...currentExperience,
-        startDate: new Date(currentExperience.startDate).toISOString(),
-        endDate: currentExperience.endDate
-          ? new Date(currentExperience.endDate).toISOString()
-          : "",
+        startDate: startDate.toISOString(),
+        endDate: currentExperience.endDate ? endDate.toISOString() : "",
       };
+
       if (editIndex !== null) {
-        console.log(currentExperience)
         const response = await updateExperience(
           currentExperience?._id,
           experienceToSave
@@ -337,6 +340,7 @@ const Experience = (props) => {
                 label="Start Date"
                 InputProps={{
                   inputProps: {
+                    max: new Date().toISOString().split("T")[0],
                     min: "1970-01-01",
                   },
                 }}
@@ -355,6 +359,12 @@ const Experience = (props) => {
                 required={!currentExperience?.isCurrent}
                 label="End Date"
                 disabled={currentExperience?.isCurrent}
+                InputProps={{
+                  inputProps: {
+                    max: new Date().toISOString().split("T")[0],
+                    min: currentExperience.startDate,
+                  },
+                }}
               />
               <FormControlLabel
                 control={
