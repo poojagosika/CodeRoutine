@@ -7,8 +7,8 @@ import {
   Container,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import JobsData from "./JobsData";
 import PostJobs from "./PostJobs";
+import JobsData from "./JobsData";
 
 function Jobs() {
   const navigate = useNavigate();
@@ -26,8 +26,8 @@ function Jobs() {
       id="main-content"
     >
       <PostJobs />
-      {JobsData.map((job) => (
-        <Card key={job.id} sx={{ borderBottom: "1px solid #E5E5E5" }}>
+      {JobsData.map((job, index) => (
+        <Card key={index} sx={{ borderBottom: "1px solid #E5E5E5" }}>
           <CardContent>
             <Typography variant="h6">{job.title}</Typography>
             <Typography color="textSecondary">{job.company}</Typography>
@@ -36,7 +36,7 @@ function Jobs() {
             <Button
               variant="outlined"
               color="primary"
-              onClick={() => handleJobClick(job.id)}
+              onClick={() => handleJobClick(index)}
               style={{ marginTop: "10px" }}
             >
               View Job
