@@ -5,6 +5,7 @@ import connectDB from "./Config/DB.js";
 import userRouter from "./Routes/userRoutes.js";
 import problemRouter from "./Routes/problemRouter.js";
 import discussRouter from "./Routes/discussRoutes.js";
+import JobRouter from "./Routes/JobRoutes.js";
 dotenv.config();
 
 const app = express();
@@ -27,6 +28,7 @@ app.get("/", (req, res) => {
 app.use("/api/users", userRouter);
 app.use("/api/problem", problemRouter);
 app.use("/api/discuss", discussRouter);
+app.use("/api/job", JobRouter);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
