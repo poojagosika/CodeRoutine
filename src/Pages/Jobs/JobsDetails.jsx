@@ -1,101 +1,142 @@
-import React from "react";
-import { useParams } from "react-router-dom";
-import {
-  Container,
-  Card,
-  CardContent,
-  Typography,
-  Box,
-  Button,
-  Divider,
-} from "@mui/material";
-import JobsData from "./JobsData";
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { Container, Typography, Paper, Box, Chip, Grid, Button } from '@mui/material';
+import axios from 'axios';
+import { getJobById } from '../../Api/jobAPi';
 
-const JobsDetails = () => {
+const JobDetails = () => {
   const { id } = useParams();
-  const job = JobsData.find((job) => job.id === parseInt(id));
+  const [job, setJob] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchJob = async () => {
+      try {
+        const res = await getJobById(id);
+        setJob(res.data);
+        setLoading(false);
+      } catch (err) {
+        console.error(err.message);
+        setLoading(false);
+      }
+    };
+
+    fetchJob();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <Container maxWidth="md">
+        <Typography variant="h4" component="h1" gutterBottom>
+          Loading Job Details...
+        </Typography>
+      </Container>
+    );
+  }
+
+  if (!job) {
+    return (
+      <Container maxWidth="md">
+        <Typography variant="h4" component="h1" gutterBottom>
+          Job Not Found
+        </Typography>
+      </Container>
+    );
+  }
 
   return (
-    <Container>
-      {job ? (
-        <Card sx={{ mt: 4, p: 3 }}>
-          <CardContent>
-            <Typography variant="h4" component="h1" gutterBottom>
-              {job.title}
-            </Typography>
-            <Typography variant="h6" component="h2" gutterBottom>
-              {job.company}
-            </Typography>
-            <Typography variant="body1" color="textSecondary" gutterBottom>
-              {job.location}
-            </Typography>
-            <Box mt={2} mb={2}>
-              <Typography variant="body1">{job.description}</Typography>
-            </Box>
-            <Box mt={4} mb={2}>
-              <Button variant="contained" color="primary" sx={{ mr: 2 }}>
-                Apply Now
-              </Button>
-              <Button variant="outlined" color="primary">
-                Save Job
-              </Button>
-            </Box>
-            <Divider />
-            <Box mt={2} mb={2}>
-              <Typography variant="h5" gutterBottom>
-                About the Job
-              </Typography>
-              <Typography variant="body1">{job.introduction}</Typography>
-            </Box>
-            <Divider />
-            <Box mt={2} mb={2}>
-              <Typography variant="h5" gutterBottom>
-                Your Role and Responsibilities
-              </Typography>
-              <ul>
-                {job.responsibilities.map((resp, index) => (
-                  <li key={index}>
-                    <Typography variant="body1">{resp}</Typography>
-                  </li>
-                ))}
-              </ul>
-            </Box>
-            <Divider />
-            <Box mt={2} mb={2}>
-              <Typography variant="h5" gutterBottom>
-                Required Technical and Professional Expertise
-              </Typography>
-              <ul>
-                {job.requiredExpertise.map((exp, index) => (
-                  <li key={index}>
-                    <Typography variant="body1">{exp}</Typography>
-                  </li>
-                ))}
-              </ul>
-            </Box>
-            <Divider />
-            <Box mt={2} mb={2}>
-              <Typography variant="h5" gutterBottom>
-                Preferred Technical and Professional Expertise
-              </Typography>
-              <ul>
-                {job.preferredExpertise.map((exp, index) => (
-                  <li key={index}>
-                    <Typography variant="body1">{exp}</Typography>
-                  </li>
-                ))}
-              </ul>
-            </Box>
-            <Divider />
-          </CardContent>
-        </Card>
-      ) : (
-        <Typography variant="h6" component="p" mt={4}>
-          Job not found
+    <Container maxWidth="md">
+      <Paper elevation={3} sx={{ padding: 4, marginTop: 4 }}>
+        <Typography variant="h4" component="h1" gutterBottom>
+          {job.title}
         </Typography>
-      )}
+        <Typography variant="h6" gutterBottom>
+          {job.company}
+        </Typography>
+        <Typography color="textSecondary" gutterBottom>
+          {job.location}
+        </Typography>
+        <Box sx={{ marginBottom: 2 }}>
+          <Typography variant="body1" gutterBottom>
+            {job.description}
+          </Typography>
+        </Box>
+        <Box sx={{ marginBottom: 2 }}>
+          <Typography variant="h6" gutterBottom>
+            Skills Required
+          </Typography>
+          {job.skills.map((skill, index) => (
+            <Chip key={index} label={skill} sx={{ margin: 0.5 }} />
+          ))}
+        </Box>
+        <Box sx={{ marginBottom: 2 }}>
+          <Typography variant="h6" gutterBottom>
+            Responsibilities
+          </Typography>
+          <ul>
+            {job.responsibilities.map((responsibility, index) => (
+              <li key={index}>{responsibility}</li>
+            ))}
+          </ul>
+        </Box>
+        <Box sx={{ marginBottom: 2 }}>
+          <Typography variant="h6" gutterBottom>
+            Requirements
+          </Typography>
+          <ul>
+            {job.requirements.map((requirement, index) => (
+              <li key={index}>{requirement}</li>
+            ))}
+          </ul>
+        </Box>
+        <Box sx={{ marginBottom: 2 }}>
+          <Typography variant="h6" gutterBottom>
+            Benefits
+          </Typography>
+          <ul>
+            {job.benefits.map((benefit, index) => (
+              <li key={index}>{benefit}</li>
+            ))}
+          </ul>
+        </Box>
+        <Grid container spacing={2}>
+          <Grid item xs={6}>
+            <Typography variant="body1" gutterBottom>
+              <strong>Employment Type:</strong> {job.employmentType}
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              <strong>Job Level:</strong> {job.jobLevel}
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              <strong>Industry:</strong> {job.industry}
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              <strong>Salary:</strong> {job.salary}
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              <strong>Number of Openings:</strong> {job.numberOfOpenings}
+            </Typography>
+          </Grid>
+          <Grid item xs={6}>
+            <Typography variant="body1" gutterBottom>
+              <strong>Application Deadline:</strong> {new Date(job.applicationDeadline).toLocaleDateString()}
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              <strong>Posted By:</strong> {job.postedBy}
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              <strong>Contact Email:</strong> {job.contactEmail}
+            </Typography>
+          </Grid>
+        </Grid>
+        <Box sx={{ marginTop: 4 }}>
+          <Button variant="contained" color="primary" onClick={() => alert('Apply Now functionality not implemented')}>
+            Apply Now
+          </Button>
+        </Box>
+      </Paper>
     </Container>
   );
 };
 
-export default JobsDetails;
+export default JobDetails;
