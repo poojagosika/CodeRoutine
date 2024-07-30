@@ -92,13 +92,16 @@ const Education = (props) => {
   };
 
   const handleSave = async () => {
+    const today = new Date();
+    const startDate = new Date(currentEducation.startDate);
+    const endDate = currentEducation.endDate
+      ? new Date(currentEducation.endDate)
+      : today;
     try {
       const educationToSave = {
         ...currentEducation,
-        startDate: new Date(currentEducation.startDate).toISOString(),
-        endDate: currentEducation.endDate
-          ? new Date(currentEducation.endDate).toISOString()
-          : "",
+        startDate: startDate.toISOString(),
+        endDate: currentEducation.endDate ? endDate.toISOString() : "",
       };
       if (editIndex !== null) {
         const response = await updateEducation(
@@ -253,6 +256,7 @@ const Education = (props) => {
                 label="Start Date"
                 InputProps={{
                   inputProps: {
+                    max: new Date().toISOString().split("T")[0],
                     min: "1970-01-01",
                   },
                 }}
@@ -271,6 +275,12 @@ const Education = (props) => {
                 required={!currentEducation?.isCurrent}
                 label="End Date"
                 disabled={currentEducation?.isCurrent}
+                InputProps={{
+                  inputProps: {
+                    max: new Date().toISOString().split("T")[0],
+                    min: currentEducation.startDate,
+                  },
+                }}
               />
               <FormControlLabel
                 control={
