@@ -232,7 +232,7 @@ function NavBar() {
                   <NotificationsIcon sx={{ color: "white" }} />
                 </Badge>
 
-                <Tooltip title="Open settings">
+                <Tooltip title="Profile">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                     <Avatar alt={userData?.userName} src={userData?.profilePicture || getCuteAvatar(userData?.userName)} />
                   </IconButton>

@@ -129,9 +129,15 @@ const JobDetails = () => {
             </Typography>
           </Grid>
         </Grid>
-        <Box sx={{ marginTop: 4 }}>
-          <Button variant="contained" color="primary" onClick={() => alert('Apply Now functionality not implemented')}>
+        <Box sx={{ marginTop: 4 }} display={"flex"} gap={2}>
+          <Button variant="contained" color="primary" onClick={() => ""}>
             Apply Now
+          </Button>
+          <Button variant="contained" color='secondary' onClick={() => ""}>
+            Edit
+          </Button>
+          <Button variant="contained" color='warning' onClick={() => ""}>
+            Delete
           </Button>
         </Box>
       </Paper>
