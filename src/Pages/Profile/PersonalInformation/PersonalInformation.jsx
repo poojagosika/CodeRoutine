@@ -52,7 +52,7 @@ const PersonalInformation = (props) => {
       >
         <Avatar
           src={
-            props?.userProfile?.profile.picture ||
+            props?.userProfile?.profile?.picture ||
             getCuteAvatar(props?.userProfile?.userName)
           }
           alt={props?.userProfile?.profile?.firstName}
