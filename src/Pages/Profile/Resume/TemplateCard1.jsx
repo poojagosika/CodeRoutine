@@ -24,15 +24,15 @@ const TemplateCard1 = ({ user }) => {
             <CardContent>
                 <button onClick={handlePrint}>Print</button>
                 <div id="printableArea">
-                    <Typography variant="h5">{user.profile.firstName} {user.profile.lastName}</Typography>
-                    <Typography variant="subtitle1">{user.profile.headline}</Typography>
-                    <Typography variant="body2">{user.profile.city}, {user.profile.country}</Typography>
-                    <Typography variant="body2">{user.email}</Typography>
+                    <Typography variant="h5">{user?.profile?.firstName} {user?.profile?.lastName}</Typography>
+                    <Typography variant="subtitle1">{user?.profile?.headline}</Typography>
+                    <Typography variant="body2">{user?.profile?.city}, {user?.profile?.country}</Typography>
+                    <Typography variant="body2">{user?.email}</Typography>
 
                     <Grid container spacing={2} style={{ marginTop: '10px' }}>
                         <Grid item xs={12}>
                             <Typography variant="h6">Experience</Typography>
-                            {user.experience.map((exp, index) => (
+                            {user?.experience.map((exp, index) => (
                                 <div key={index}>
                                     <Typography variant="subtitle2">{exp.title} at {exp.company}</Typography>
                                     <Typography variant="body2">{exp.location} | {new Date(exp.startDate).toLocaleDateString()} - {exp.isCurrent ? 'Present' : new Date(exp.endDate).toLocaleDateString()}</Typography>
