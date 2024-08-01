@@ -81,13 +81,16 @@ const Project = (props) => {
   };
 
   const handleSave = async () => {
+    const today = new Date();
+    const startDate = new Date(currentProject.startDate);
+    const endDate = currentProject.endDate
+      ? new Date(currentProject.endDate)
+      : today;
     try {
       const projectToSave = {
         ...currentProject,
-        startDate: new Date(currentProject.startDate).toISOString(),
-        endDate: currentProject.endDate
-          ? new Date(currentProject.endDate).toISOString()
-          : "",
+        startDate: startDate.toISOString(),
+        endDate: currentProject.endDate ? endDate.toISOString() : "",
       };
 
       if (editIndex !== null) {
@@ -240,6 +243,7 @@ const Project = (props) => {
                 label="Start Date"
                 InputProps={{
                   inputProps: {
+                    max: new Date().toISOString().split("T")[0],
                     min: "1970-01-01",
                   },
                 }}
@@ -259,6 +263,12 @@ const Project = (props) => {
                 autoComplete="off"
                 label="End Date"
                 disabled={currentProject.isCurrent}
+                InputProps={{
+                  inputProps: {
+                    max: new Date().toISOString().split("T")[0],
+                    min: currentProject.startDate,
+                  },
+                }}
               />
               <Box>
                 <FormControlLabel
