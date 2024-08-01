@@ -89,13 +89,16 @@ const Training = (props) => {
   };
 
   const handleSave = async () => {
+    const today = new Date();
+    const startDate = new Date(currentTraining.startDate);
+    const endDate = currentTraining.endDate
+      ? new Date(currentTraining.endDate)
+      : today;
     try {
       const trainingToSave = {
         ...currentTraining,
-        startDate: new Date(currentTraining.startDate).toISOString(),
-        endDate: currentTraining.endDate
-          ? new Date(currentTraining.endDate).toISOString()
-          : "",
+        startDate: startDate.toISOString(),
+        endDate: currentTraining.endDate ? endDate.toISOString() : "",
       };
       if (editIndex !== null) {
         const response = await updateTraining(
@@ -278,6 +281,7 @@ const Training = (props) => {
                 label="Start Date"
                 InputProps={{
                   inputProps: {
+                    max: new Date().toISOString().split("T")[0],
                     min: "1970-01-01",
                   },
                 }}
@@ -297,6 +301,12 @@ const Training = (props) => {
                 autoComplete="off"
                 label="End Date"
                 disabled={currentTraining.isCurrent}
+                InputProps={{
+                  inputProps: {
+                    max: new Date().toISOString().split("T")[0],
+                    min: currentTraining.startDate,
+                  },
+                }}
               />
               <Box>
                 <FormControlLabel
