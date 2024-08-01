@@ -1,35 +1,72 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Container, Typography, Paper, Box, Chip, Grid, Button } from '@mui/material';
-import axios from 'axios';
-import { getJobById } from '../../Api/jobAPi';
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import {
+  Container,
+  Typography,
+  Paper,
+  Box,
+  Chip,
+  Grid,
+  Button,
+  CircularProgress,
+  Alert,
+} from "@mui/material";
+import { getJobById, deleteJob } from "../../Api/jobAPi";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const JobDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchJob = async () => {
       try {
         const res = await getJobById(id);
         setJob(res.data);
-        setLoading(false);
       } catch (err) {
-        console.error(err.message);
+        setError("Failed to load job details");
+        toast.error("Failed to load job details");
+      } finally {
         setLoading(false);
       }
     };
-
     fetchJob();
   }, [id]);
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteJob(id);
+      toast.success("Job deleted successfully");
+      navigate("/jobs");
+    } catch (err) {
+      setError("Failed to delete the job");
+      toast.error("Failed to delete the job");
+    }
+  };
 
   if (loading) {
     return (
       <Container maxWidth="md">
-        <Typography variant="h4" component="h1" gutterBottom>
-          Loading Job Details...
-        </Typography>
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          height="100vh"
+        >
+          <CircularProgress />
+        </Box>
+      </Container>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container maxWidth="md">
+        <Alert severity="error">{error}</Alert>
       </Container>
     );
   }
@@ -61,88 +98,86 @@ const JobDetails = () => {
             {job.description}
           </Typography>
         </Box>
-        <Box sx={{ marginBottom: 2 }}>
-          <Typography variant="h6" gutterBottom>
-            Skills Required
-          </Typography>
+        <Section title="Skills Required">
           {job.skills.map((skill, index) => (
             <Chip key={index} label={skill} sx={{ margin: 0.5 }} />
           ))}
-        </Box>
-        <Box sx={{ marginBottom: 2 }}>
-          <Typography variant="h6" gutterBottom>
-            Responsibilities
-          </Typography>
+        </Section>
+        <Section title="Responsibilities">
           <ul>
-            {job.responsibilities.map((responsibility, index) => (
-              <li key={index}>{responsibility}</li>
+            {job.responsibilities.map((item, index) => (
+              <li key={index}>{item}</li>
             ))}
           </ul>
-        </Box>
-        <Box sx={{ marginBottom: 2 }}>
-          <Typography variant="h6" gutterBottom>
-            Requirements
-          </Typography>
+        </Section>
+        <Section title="Requirements">
           <ul>
-            {job.requirements.map((requirement, index) => (
-              <li key={index}>{requirement}</li>
+            {job.requirements.map((item, index) => (
+              <li key={index}>{item}</li>
             ))}
           </ul>
-        </Box>
-        <Box sx={{ marginBottom: 2 }}>
-          <Typography variant="h6" gutterBottom>
-            Benefits
-          </Typography>
+        </Section>
+        <Section title="Benefits">
           <ul>
-            {job.benefits.map((benefit, index) => (
-              <li key={index}>{benefit}</li>
+            {job.benefits.map((item, index) => (
+              <li key={index}>{item}</li>
             ))}
           </ul>
-        </Box>
+        </Section>
         <Grid container spacing={2}>
           <Grid item xs={6}>
-            <Typography variant="body1" gutterBottom>
-              <strong>Employment Type:</strong> {job.employmentType}
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              <strong>Job Level:</strong> {job.jobLevel}
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              <strong>Industry:</strong> {job.industry}
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              <strong>Salary:</strong> {job.salary}
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              <strong>Number of Openings:</strong> {job.numberOfOpenings}
-            </Typography>
+            <JobDetail label="Employment Type" value={job.employmentType} />
+            <JobDetail label="Job Level" value={job.jobLevel} />
+            <JobDetail label="Industry" value={job.industry} />
+            <JobDetail label="Salary" value={job.salary} />
+            <JobDetail
+              label="Number of Openings"
+              value={job.numberOfOpenings}
+            />
           </Grid>
           <Grid item xs={6}>
-            <Typography variant="body1" gutterBottom>
-              <strong>Application Deadline:</strong> {new Date(job.applicationDeadline).toLocaleDateString()}
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              <strong>Posted By:</strong> {job.postedBy}
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              <strong>Contact Email:</strong> {job.contactEmail}
-            </Typography>
+            <JobDetail
+              label="Application Deadline"
+              value={new Date(job.applicationDeadline).toLocaleDateString()}
+            />
+            <JobDetail label="Posted By" value={job.postedBy} />
+            <JobDetail label="Contact Email" value={job.contactEmail} />
           </Grid>
         </Grid>
-        <Box sx={{ marginTop: 4 }} display={"flex"} gap={2}>
-          <Button variant="contained" color="primary" onClick={() => ""}>
+        <Box sx={{ marginTop: 4 }} display="flex" gap={2}>
+          <Button variant="contained" color="primary" onClick={() => {}}>
             Apply Now
           </Button>
-          <Button variant="contained" color='secondary' onClick={() => ""}>
+          <Button variant="contained" color="secondary" onClick={() => {}}>
             Edit
           </Button>
-          <Button variant="contained" color='warning' onClick={() => ""}>
+          <Button
+            variant="contained"
+            color="warning"
+            onClick={() => handleDelete(job._id)}
+          >
             Delete
           </Button>
         </Box>
       </Paper>
+      <ToastContainer />
     </Container>
   );
 };
+
+const Section = ({ title, children }) => (
+  <Box sx={{ marginBottom: 2 }}>
+    <Typography variant="h6" gutterBottom>
+      {title}
+    </Typography>
+    {children}
+  </Box>
+);
+
+const JobDetail = ({ label, value }) => (
+  <Typography variant="body1" gutterBottom>
+    <strong>{label}:</strong> {value}
+  </Typography>
+);
 
 export default JobDetails;
