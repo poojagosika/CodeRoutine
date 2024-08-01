@@ -166,7 +166,7 @@ export const deleteJob = async (req, res) => {
     }
     // Check
     if (job.user.toString() !== userId) {
-      return res.status(401).json({ message: "Unauthorized" });
+      return res.status(401).json({ message: "You are Unauthorized user" });
     }
     // Find and delete the Job
     await Job.findByIdAndDelete(jobId);
