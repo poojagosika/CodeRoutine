@@ -12,8 +12,8 @@ import {
   Alert,
 } from "@mui/material";
 import { getJobById, deleteJob } from "../../Api/jobAPi";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
+import { ContextStore } from "../../Context/ContextStore";
 
 const JobDetails = () => {
   const { id } = useParams();
@@ -21,6 +21,7 @@ const JobDetails = () => {
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const { userData } = ContextStore();
 
   useEffect(() => {
     const fetchJob = async () => {
@@ -39,12 +40,13 @@ const JobDetails = () => {
 
   const handleDelete = async (id) => {
     try {
-      await deleteJob(id);
-      toast.success("Job deleted successfully");
-      navigate("/jobs");
+      const response = await deleteJob(id);
+      if (response.data) {
+        toast.success(response.data.message);
+        navigate("/jobs");
+      }
     } catch (err) {
-      setError("Failed to delete the job");
-      toast.error("Failed to delete the job");
+      toast.error(err.response.data.message);
     }
   };
 
@@ -148,19 +150,23 @@ const JobDetails = () => {
           <Button variant="contained" color="primary" onClick={() => {}}>
             Apply Now
           </Button>
-          <Button variant="contained" color="secondary" onClick={() => {}}>
-            Edit
-          </Button>
-          <Button
-            variant="contained"
-            color="warning"
-            onClick={() => handleDelete(job._id)}
-          >
-            Delete
-          </Button>
+
+          {job.user._id === userData._id && (
+            <Button variant="contained" color="secondary" onClick={() => {}}>
+              Edit
+            </Button>
+          )}
+          {job.user._id === userData._id && (
+            <Button
+              variant="contained"
+              color="warning"
+              onClick={() => handleDelete(job._id)}
+            >
+              Delete
+            </Button>
+          )}
         </Box>
       </Paper>
-      <ToastContainer />
     </Container>
   );
 };
