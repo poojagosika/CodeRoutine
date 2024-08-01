@@ -1,4 +1,5 @@
 import Job from "../../Model/JobModel.js";
+import mongoose from "mongoose";
 
 // Create a new job
 export const createJob = async (req, res) => {
@@ -71,13 +72,13 @@ export const getJobById = async (req, res) => {
       "email",
     ]);
     if (!job) {
-      return res.status(404).json({ msg: "Job not found" });
+      return res.status(404).json({ message: "Job not found" });
     }
     res.json(job);
   } catch (err) {
     console.error(err.message);
     if (err.kind === "ObjectId") {
-      return res.status(404).json({ msg: "Job not found" });
+      return res.status(404).json({ message: "Job not found" });
     }
     res.status(500).send("Server error");
   }
@@ -129,11 +130,11 @@ export const updateJob = async (req, res) => {
   try {
     let job = await Job.findById(req.params.id);
 
-    if (!job) return res.status(404).json({ msg: "Job not found" });
+    if (!job) return res.status(404).json({ message: "Job not found" });
 
     // Make sure user owns the job
     if (job.user.toString() !== req.user.id) {
-      return res.status(401).json({ msg: "User not authorized" });
+      return res.status(401).json({ message: "User not authorized" });
     }
 
     job = await Job.findByIdAndUpdate(
@@ -152,22 +153,28 @@ export const updateJob = async (req, res) => {
 // Delete job by ID
 export const deleteJob = async (req, res) => {
   try {
-    const job = await Job.findById(req.params.id);
-
-    if (!job) return res.status(404).json({ msg: "Job not found" });
-
-    // Make sure user owns the job
-    if (job.user.toString() !== req.user.id) {
-      return res.status(401).json({ msg: "User not authorized" });
+    const { id: jobId } = req.params;
+    const userId = req.id; // Assuming req.id contains the authenticated user's ID
+    // Validate the jobId
+    if (!mongoose.Types.ObjectId.isValid(jobId)) {
+      return res.status(400).json({ message: "Invalid job ID" });
     }
-
-    await job.remove();
-
-    res.json({ msg: "Job removed" });
+    // Find the job by ID
+    const job = await Job.findById(jobId);
+    if (!job) {
+      return res.status(404).json({ message: "Job not found" });
+    }
+    // Check
+    if (job.user.toString() !== userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    // Find and delete the Job
+    await Job.findByIdAndDelete(jobId);
+    res.json({ message: "Job deleted successfully" });
   } catch (err) {
     console.error(err.message);
     if (err.kind === "ObjectId") {
-      return res.status(404).json({ msg: "Job not found" });
+      return res.status(404).json({ message: "Job not found" });
     }
     res.status(500).send("Server error");
   }
