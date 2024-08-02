@@ -9,22 +9,39 @@ import TemplateCard4 from "./TemplateCard4";
 const Resume = () => {
   const { state } = useLocation();
   const user = state?.userProfile;
+  const resumeCard = [
+    {
+      id: 1,
+      title: "Template Card 1",
+      component: TemplateCard1,
+    },
+    {
+      id: 2,
+      title: "Template Card 2",
+      component: TemplateCard2,
+    },
+    {
+      id: 3,
+      title: "Template Card 3",
+      component: TemplateCard3,
+    },
+    {
+      id: 4,
+      title: "Template Card 4",
+      component: TemplateCard4,
+    },
+  ]
   return (
-    <Container sx={{ mt: 4, mb: 4 }}>
-      <Grid container spacing={3}>
-        <Grid item xs={12} sm={6} md={3}>
-          <TemplateCard1 user={user} />
-        </Grid>
-        <Grid item>
-          <TemplateCard2 user={user} />
-        </Grid>
-        <Grid item>
-          <TemplateCard3 user={user} />
-        </Grid>
-        <Grid item>
-          <TemplateCard4 user={user} />
-        </Grid>
-      </Grid>
+    <Container sx={{ mt: 4, mb: 4 }} >
+      {
+        resumeCard.map((card) => (
+
+          <Grid item xs={12} md={6} lg={4} key={card.id} sx={{ mb: 4 }}>
+            <card.component user={user} />
+          </Grid>
+        ))
+      }
+
     </Container>
   );
 };
