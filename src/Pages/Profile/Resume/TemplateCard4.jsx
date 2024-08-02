@@ -26,10 +26,25 @@ const TemplateCard4 = ({ user }) => {
   };
 
   return (
-    <Card>
+    <Card
+      sx={{
+        backgroundColor: "#f4f4f4",
+        padding: "10px",
+        maxWidth: "800px",
+        margin: "auto",
+        borderRadius: "8px",
+        boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+      }}
+    >
       <CardContent>
         <div id="printableTemplateCard4">
-          <Box>
+          <Box
+            sx={{
+              backgroundColor: "#fff",
+              padding: "20px",
+              borderRadius: "8px 8px 0 0",
+            }}
+          >
             {user?.profile && (
               <>
                 <Box textAlign="center">
