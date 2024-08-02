@@ -32,24 +32,6 @@ const TemplateCard3 = ({ user }) => {
     return `${day}/${month}/${year}`;
   };
 
-  <style>
-    {`
-      @media print {
-        body * {
-          visibility: hidden;
-        }
-        #printableTemplateCard3, #printableTemplateCard3 * {
-          visibility: visible;
-        }
-        #printableTemplateCard3 {
-          position: absolute;
-            left: 0;
-            top: 0;
-        }
-      }
-    `}
-  </style>;
-
   return (
     <Card>
       <CardContent>
@@ -329,7 +311,7 @@ const TemplateCard3 = ({ user }) => {
                   top: 0;
               }
             }
-    `}
+          `}
         </style>
         <Button
           variant="contained"
