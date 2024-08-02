@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import {
   Card,
   CardContent,
@@ -10,9 +10,6 @@ import {
   Divider,
   Tooltip, // Import Divider
 } from "@mui/material";
-import htmlToPdfmake from "html-to-pdfmake";
-import pdfMake from "pdfmake/build/pdfmake";
-
 import {
   LinkedIn,
   GitHub,
@@ -23,23 +20,7 @@ import {
 } from "@mui/icons-material";
 
 import IconButton from "@mui/material/IconButton";
-import WebIcon from "@mui/icons-material/Web";
-import RssFeedIcon from "@mui/icons-material/RssFeed";
-
 const TemplateCard2 = ({ user }) => {
-  const resumeRef = useRef();
-
-  const handleView = async () => {
-    const { default: pdfFonts } = await import("pdfmake/build/vfs_fonts");
-    pdfMake.vfs = pdfFonts.pdfMake.vfs;
-
-    const resumeContent = resumeRef.current.innerHTML;
-    const pdfContent = htmlToPdfmake(resumeContent);
-    const documentDefinition = { content: pdfContent };
-    pdfMake.createPdf(documentDefinition).open();
-  };
-
-  console.log(user);
   const hasSocialLinks = (socialLinks) => {
     if (!socialLinks) return false;
     const { linkedin, github, x, blog, portfolio, additional } = socialLinks;
@@ -52,7 +33,14 @@ const TemplateCard2 = ({ user }) => {
       (additional && additional.length > 0)
     );
   };
-
+  const handlePrint = (areaId) => {
+    const printContents = document.getElementById(areaId).innerHTML;
+    const originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    window.print();
+    document.body.innerHTML = originalContents;
+    window.location.reload(); // Reload to restore the original state
+  };
   const hasPersonalInformation = (profile) => {
     if (!profile) return false;
     const {
@@ -80,7 +68,7 @@ const TemplateCard2 = ({ user }) => {
   return (
     <Card>
       <CardContent>
-        <div ref={resumeRef}>
+        <div id="printableTemplateCard2">
           {hasPersonalInformation(user?.profile) && (
             <Box>
               <Typography variant="h4" gutterBottom textAlign={"center"}>
@@ -392,10 +380,27 @@ const TemplateCard2 = ({ user }) => {
             </Grid>
           )}
         </div>
+        <style>
+          {`
+            @media print {
+              body * {
+                visibility: hidden;
+              }
+              #printableTemplateCard2, #printableTemplateCard2 * {
+                visibility: visible;
+              }
+              #printableTemplateCard2 {
+                position: absolute;
+                  left: 0;
+                  top: 0;
+              }
+            }
+    `}
+        </style>
         <Button
           variant="contained"
           color="primary"
-          onClick={handleView}
+          onClick={() => handlePrint("printableTemplateCard2")}
           style={{ marginTop: "20px" }}
         >
           View as PDF
