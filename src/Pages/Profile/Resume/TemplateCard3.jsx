@@ -23,7 +23,7 @@ const TemplateCard3 = ({ user }) => {
     document.body.innerHTML = originalContents;
     window.location.reload(); // Reload to restore the original state
   };
-  
+
   const formatDate = (date) => {
     const d = new Date(date);
     const day = String(d.getDate()).padStart(2, "0");
@@ -33,10 +33,25 @@ const TemplateCard3 = ({ user }) => {
   };
 
   return (
-    <Card>
+    <Card
+      sx={{
+        backgroundColor: "#f4f4f4",
+        padding: "10px",
+        maxWidth: "800px",
+        margin: "auto",
+        borderRadius: "8px",
+        boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+      }}
+    >
       <CardContent>
         <div id="printableTemplateCard3">
-          <Box>
+          <Box
+            sx={{
+              backgroundColor: "#fff",
+              padding: "20px",
+              borderRadius: "8px 8px 0 0",
+            }}
+          >
             {user?.profile && (
               <>
                 <Box display="flex" flexDirection="column" alignItems="center">
