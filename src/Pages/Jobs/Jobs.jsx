@@ -18,7 +18,6 @@ import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import ArticleIcon from "@mui/icons-material/Article";
 import ReactTimeAgo from "react-time-ago";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 const Jobs = () => {
   const [jobs, setJobs] = useState([]);
@@ -70,7 +69,6 @@ const Jobs = () => {
   };
 
   const filteredJobs = jobs.filter(filterJobs);
-  console.log(jobs);
 
   return (
     <Container maxWidth="lg">
@@ -79,68 +77,68 @@ const Jobs = () => {
       </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={12} md={4}>
-          <Paper elevation={3} sx={{ padding: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Filter Jobs
-            </Typography>
-            <Box sx={{ marginBottom: 2 }}>
-              <TextField
-                name="title"
-                label="Search by Title"
-                value={filters.title}
-                size="small"
-                onChange={handleFilterChange}
-                fullWidth
-              />
-            </Box>
-            <Box sx={{ marginBottom: 2 }}>
-              <TextField
-                name="location"
-                label="Location"
-                size="small"
-                value={filters.location}
-                onChange={handleFilterChange}
-                fullWidth
-              />
-            </Box>
-            <FormGroup>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    name="employmentTypes"
-                    value="Full-Time"
-                    checked={filters.employmentTypes.includes("Full-Time")}
-                    onChange={handleFilterChange}
-                  />
-                }
-                label="Full-Time"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    name="employmentTypes"
-                    value="Part-Time"
-                    checked={filters.employmentTypes.includes("Part-Time")}
-                    onChange={handleFilterChange}
-                  />
-                }
-                label="Part-Time"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    name="employmentTypes"
-                    value="Contract"
-                    checked={filters.employmentTypes.includes("Contract")}
-                    onChange={handleFilterChange}
-                  />
-                }
-                label="Contract"
-              />
-            </FormGroup>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} md={8}>
+          <Box mb={3}>
+            <Paper elevation={3} sx={{ padding: 2 }}>
+              <Typography variant="h6" gutterBottom>
+                Filter Jobs
+              </Typography>
+              <Box sx={{ marginBottom: 2 }}>
+                <TextField
+                  name="title"
+                  label="Search by Title"
+                  value={filters.title}
+                  size="small"
+                  onChange={handleFilterChange}
+                  fullWidth
+                />
+              </Box>
+              <Box sx={{ marginBottom: 2 }}>
+                <TextField
+                  name="location"
+                  label="Location"
+                  size="small"
+                  value={filters.location}
+                  onChange={handleFilterChange}
+                  fullWidth
+                />
+              </Box>
+              <FormGroup>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      name="employmentTypes"
+                      value="Full-Time"
+                      checked={filters.employmentTypes.includes("Full-Time")}
+                      onChange={handleFilterChange}
+                    />
+                  }
+                  label="Full-Time"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      name="employmentTypes"
+                      value="Part-Time"
+                      checked={filters.employmentTypes.includes("Part-Time")}
+                      onChange={handleFilterChange}
+                    />
+                  }
+                  label="Part-Time"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      name="employmentTypes"
+                      value="Contract"
+                      checked={filters.employmentTypes.includes("Contract")}
+                      onChange={handleFilterChange}
+                    />
+                  }
+                  label="Contract"
+                />
+              </FormGroup>
+            </Paper>
+          </Box>
           <Button
             variant="contained"
             color="primary"
@@ -150,7 +148,9 @@ const Jobs = () => {
           >
             Post a New Job
           </Button>
-          <Grid container spacing={2}>
+        </Grid>
+        <Grid item xs={12} md={8}>
+          <Grid container spacing={2} mb={2}>
             {filteredJobs.map((job) => (
               <Grid item key={job._id} xs={12} sm={12} md={12} gap={2}>
                 <Paper elevation={3} sx={{ padding: 2 }}>
@@ -171,7 +171,7 @@ const Jobs = () => {
                   >
                     <Box display="flex">
                       <WorkOutlineIcon sx={{ color: "#00000099" }} />
-                      <Typography>{job.location}</Typography>
+                      <Typography>{job.jobLevel}</Typography>
                     </Box>
                     <Box display="flex">
                       <CurrencyRupeeIcon sx={{ color: "#00000099" }} />
