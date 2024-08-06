@@ -1,13 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Container, Typography, Button, Grid, Paper, TextField, FormGroup, FormControlLabel, Checkbox, Box } from '@mui/material';
-import { getAllJobs } from '../../Api/jobAPi';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import {
+  Container,
+  Typography,
+  Button,
+  Grid,
+  Paper,
+  TextField,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
+  Box,
+} from "@mui/material";
+import { getAllJobs } from "../../Api/jobAPi";
+import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
+import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import ArticleIcon from "@mui/icons-material/Article";
+import ReactTimeAgo from "react-time-ago";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 const Jobs = () => {
   const [jobs, setJobs] = useState([]);
   const [filters, setFilters] = useState({
-    title: '',
-    location: '',
+    title: "",
+    location: "",
     employmentTypes: [],
   });
 
@@ -26,7 +43,7 @@ const Jobs = () => {
 
   const handleFilterChange = (e) => {
     const { name, value, checked } = e.target;
-    if (name === 'employmentTypes') {
+    if (name === "employmentTypes") {
       setFilters((prev) => ({
         ...prev,
         employmentTypes: checked
@@ -45,20 +62,23 @@ const Jobs = () => {
     const { title, location, employmentTypes } = filters;
     return (
       (!title || job.title.toLowerCase().includes(title.toLowerCase())) &&
-      (!location || job.location.toLowerCase().includes(location.toLowerCase())) &&
-      (employmentTypes.length === 0 || employmentTypes.includes(job.employmentType))
+      (!location ||
+        job.location.toLowerCase().includes(location.toLowerCase())) &&
+      (employmentTypes.length === 0 ||
+        employmentTypes.includes(job.employmentType))
     );
   };
 
   const filteredJobs = jobs.filter(filterJobs);
+  console.log(jobs);
 
   return (
     <Container maxWidth="lg">
-      <Typography variant="h4" component="h1" gutterBottom>
+      <Typography variant="h4" component="h1" gutterBottom mt={7}>
         Jobs
       </Typography>
       <Grid container spacing={2}>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} sm={12} md={4}>
           <Paper elevation={3} sx={{ padding: 2 }}>
             <Typography variant="h6" gutterBottom>
               Filter Jobs
@@ -68,6 +88,7 @@ const Jobs = () => {
                 name="title"
                 label="Search by Title"
                 value={filters.title}
+                size="small"
                 onChange={handleFilterChange}
                 fullWidth
               />
@@ -76,6 +97,7 @@ const Jobs = () => {
               <TextField
                 name="location"
                 label="Location"
+                size="small"
                 value={filters.location}
                 onChange={handleFilterChange}
                 fullWidth
@@ -87,7 +109,7 @@ const Jobs = () => {
                   <Checkbox
                     name="employmentTypes"
                     value="Full-Time"
-                    checked={filters.employmentTypes.includes('Full-Time')}
+                    checked={filters.employmentTypes.includes("Full-Time")}
                     onChange={handleFilterChange}
                   />
                 }
@@ -98,7 +120,7 @@ const Jobs = () => {
                   <Checkbox
                     name="employmentTypes"
                     value="Part-Time"
-                    checked={filters.employmentTypes.includes('Part-Time')}
+                    checked={filters.employmentTypes.includes("Part-Time")}
                     onChange={handleFilterChange}
                   />
                 }
@@ -109,7 +131,7 @@ const Jobs = () => {
                   <Checkbox
                     name="employmentTypes"
                     value="Contract"
-                    checked={filters.employmentTypes.includes('Contract')}
+                    checked={filters.employmentTypes.includes("Contract")}
                     onChange={handleFilterChange}
                   />
                 }
@@ -130,21 +152,75 @@ const Jobs = () => {
           </Button>
           <Grid container spacing={2}>
             {filteredJobs.map((job) => (
-              <Grid item key={job._id} xs={12} sm={6} md={4}>
+              <Grid item key={job._id} xs={12} sm={12} md={12} gap={2}>
                 <Paper elevation={3} sx={{ padding: 2 }}>
-                  <Typography variant="h6">{job.title}</Typography>
-                  <Typography>{job.company}</Typography>
-                  <Typography>{job.location}</Typography>
-                  <Typography>{job.salary ? `Salary: ${job.salary}` : 'Salary: Not specified'}</Typography>
-                  <Typography>{job.employmentType}</Typography>
-                  <Button
-                    component={Link}
-                    to={`/jobs/${job._id}`}
-                    variant="contained"
-                    color="primary"
+                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                    {job.title}
+                  </Typography>
+                  <Typography color="textSecondary" sx={{ fontWeight: 600 }}>
+                    {job.company}
+                  </Typography>
+                  <Box
+                    display="flex"
+                    spacing={2}
+                    gap={4}
+                    color="textSecondary"
+                    mt={1}
+                    mb={1}
+                    alignItems="center"
                   >
-                    View Details
-                  </Button>
+                    <Box display="flex">
+                      <WorkOutlineIcon sx={{ color: "#00000099" }} />
+                      <Typography>{job.location}</Typography>
+                    </Box>
+                    <Box display="flex">
+                      <CurrencyRupeeIcon sx={{ color: "#00000099" }} />
+                      <Typography>
+                        {job.salary ? `${job.salary}` : "Not specified"}
+                      </Typography>
+                    </Box>
+                    <Box display="flex">
+                      <LocationOnIcon sx={{ color: "#00000099" }} />
+                      <Typography>{job.location}</Typography>
+                    </Box>
+                  </Box>
+                  <Box display="flex" alignItems="center" mt={1} mb={1}>
+                    <ArticleIcon sx={{ color: "#00000099" }} />
+                    <Typography variant="body1">
+                      {job.responsibilities.join(" ").length < 100
+                        ? job.responsibilities.join(" ")
+                        : `${job.responsibilities.join(" ").slice(0, 90)}....`}
+                    </Typography>
+                  </Box>
+                  <Box display="flex" alignItems="center" mb={1}>
+                    <Typography variant="body2" color="textSecondary">
+                      {job.skills.join(" ").length < 100
+                        ? job.skills.join(" ")
+                        : `${job.skills.join(" ").slice(0, 90)}....`}
+                    </Typography>
+                  </Box>
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="space-between"
+                  >
+                    <Typography variant="body2" color="textSecondary">
+                      <ReactTimeAgo
+                        date={new Date(job?.postedOn).getTime()}
+                        locale="en-US"
+                      />
+                    </Typography>
+
+                    <Button
+                      component={Link}
+                      to={`/jobs/${job._id}`}
+                      variant="outlined"
+                      color="primary"
+                      size="small"
+                    >
+                      View Details
+                    </Button>
+                  </Box>
                 </Paper>
               </Grid>
             ))}
