@@ -29,8 +29,8 @@ const JobDetails = () => {
         const res = await getJobById(id);
         setJob(res.data);
       } catch (err) {
-        setError("Failed to load job details");
-        toast.error("Failed to load job details");
+        toast.error(error.response.data.message);
+        setError("Error updating post:", error);
       } finally {
         setLoading(false);
       }
@@ -65,14 +65,6 @@ const JobDetails = () => {
         >
           <CircularProgress />
         </Box>
-      </Container>
-    );
-  }
-
-  if (error) {
-    return (
-      <Container maxWidth="md">
-        <Alert severity="error">{error}</Alert>
       </Container>
     );
   }
