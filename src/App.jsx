@@ -30,6 +30,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import Jobs from "./Pages/Jobs/Jobs";
 import JobsDetails from "./Pages/Jobs/JobsDetails";
 import PostNewJob from "./Pages/Jobs/PostNewJob";
+import EditJob from "./Pages/Jobs/EditJob";
 
 TimeAgo.addDefaultLocale(en);
 TimeAgo.addLocale(ru);
@@ -57,6 +58,7 @@ const App = () => {
             <Route path="/jobs" element={<Jobs />} />
             <Route path="/jobs/postjobs" element={<PostNewJob />} />
             <Route path="/jobs/:id" element={<JobsDetails />} />
+            <Route path="/job/edit/:id" element={<EditJob />} />
             <Route path="/store/redeem" element={<Redeem />} />
             <Route path="/store/premium" element={<Premium />} />
             <Route path="/discuss" element={<Discuss />} />

@@ -12,8 +12,8 @@ export const getJobById = async (id) => {
   return await axiosInstance.get(`/api/job/${id}`);
 };
 
-export const updateJob = async (id) => {
-  return await axiosInstance.put(`/api/job/${id}`);
+export const updateJob = async (id, data) => {
+  return await axiosInstance.put(`/api/job/${id}`, data);
 };
 
 export const deleteJob = async (id) => {
