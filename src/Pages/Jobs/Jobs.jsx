@@ -71,10 +71,7 @@ const Jobs = () => {
   const filteredJobs = jobs.filter(filterJobs);
 
   return (
-    <Container maxWidth="lg">
-      <Typography variant="h4" component="h1" gutterBottom mt={7}>
-        Jobs
-      </Typography>
+    <Container maxWidth="lg" style={{ marginTop: "50px" }}>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={12} md={4}>
           <Box mb={3}>
