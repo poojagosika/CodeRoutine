@@ -143,7 +143,7 @@ export const updateJob = async (req, res) => {
       { new: true }
     );
 
-    res.json(job);
+    res.status(200).json({ job: job, message: "Job updated successfully" });
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");
