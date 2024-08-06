@@ -33,16 +33,14 @@ const EditJob = () => {
     contactEmail: "",
   });
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchJob = async () => {
       try {
         const res = await getJobById(id);
         setJob(res.data);
-      } catch (err) {
+      } catch (error) {
         toast.error(error.response.data.message);
-        setError("Error updating post:", error);
       } finally {
         setLoading(false);
       }
@@ -58,12 +56,10 @@ const EditJob = () => {
     e.preventDefault();
     try {
       const response = await updateJob(id, job);
-      console.log(response);
       toast.success(response.data.message);
       navigate(`/jobs`);
-    } catch (err) {
-      console.log(err);
-      toast.error(err.response.data.message);
+    } catch (error) {
+      toast.error(error.response.data.message);
     }
   };
 
@@ -82,15 +78,6 @@ const EditJob = () => {
     );
   }
 
-  if (error) {
-    return (
-      <Container maxWidth="md">
-        <Typography variant="h4" component="h1" gutterBottom>
-          {error}
-        </Typography>
-      </Container>
-    );
-  }
   return (
     <Container maxWidth="md">
       <Paper elevation={3} sx={{ padding: 4, marginTop: 4 }}>
