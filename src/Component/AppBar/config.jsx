@@ -2,8 +2,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import ImportantDevicesIcon from "@mui/icons-material/ImportantDevices";
 import LogoutIcon from "@mui/icons-material/Logout";
-import ThemeToggleButton from "./ThemeToggleButton";
-import SettingsIcon from '@mui/icons-material/Settings';
+import SettingsIcon from "@mui/icons-material/Settings";
 export const pages = [
   { name: "Explore", path: "/explore", role: "user", login: false },
   { name: "Jobs", path: "/jobs", role: "user", login: false },
@@ -31,10 +30,6 @@ export const settings = [
     name: "My Playgrounds",
     path: "/settings/playgrounds",
     icon: <ImportantDevicesIcon />,
-  },
-  {
-    name: "Appearance",
-    icon: <ThemeToggleButton />,
   },
   {
     name: "Settings",

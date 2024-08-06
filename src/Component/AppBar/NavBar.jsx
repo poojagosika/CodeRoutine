@@ -21,7 +21,13 @@ import codeRoutineLogo from "../../assets/logo.png";
 import { ContextStore } from "../../Context/ContextStore";
 import { toast } from "react-toastify";
 import getCuteAvatar from "../../Config/getCuteAvatar";
-import { pages, storeSubmenuItems, interviewSubmenuItems, settings } from "./config";
+import {
+  pages,
+  storeSubmenuItems,
+  interviewSubmenuItems,
+  settings,
+} from "./config";
+import ThemeToggleButton from "./ThemeToggleButton";
 
 function NavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -81,7 +87,12 @@ function NavBar() {
     <AppBar position="static" sx={{ backgroundColor: "#424242" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Avatar alt="codeRoutineLogo" src={codeRoutineLogo} sx={{ width: 56, height: 56 }} variant="square" />
+          <Avatar
+            alt="codeRoutineLogo"
+            src={codeRoutineLogo}
+            sx={{ width: 56, height: 56 }}
+            variant="square"
+          />
           <Typography
             component={Link}
             to="/"
@@ -99,7 +110,14 @@ function NavBar() {
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <IconButton size="large" aria-label="account of current user" aria-controls="menu-appbar" aria-haspopup="true" onClick={handleOpenNavMenu} color="inherit">
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleOpenNavMenu}
+              color="inherit"
+            >
               <MenuIcon />
             </IconButton>
             <Menu
@@ -121,20 +139,37 @@ function NavBar() {
               }}
             >
               {pages
-                .filter((page) => page.role === "user" || (page.role === "admin" && userData?.role === "admin"))
+                .filter(
+                  (page) =>
+                    page.role === "user" ||
+                    (page.role === "admin" && userData?.role === "admin")
+                )
                 .map((page) =>
                   page.name === "Store" ? (
                     <MenuItem key={page.name} onClick={handleOpenStoreMenu}>
                       <Typography textAlign="center">{page.name}</Typography>
-                      {Boolean(anchorElStore) ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                      {Boolean(anchorElStore) ? (
+                        <ExpandLessIcon />
+                      ) : (
+                        <ExpandMoreIcon />
+                      )}
                     </MenuItem>
                   ) : page.name === "Interview" ? (
                     <MenuItem key={page.name} onClick={handleOpenInterviewMenu}>
                       <Typography textAlign="center">{page.name}</Typography>
-                      {Boolean(anchorElInterview) ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                      {Boolean(anchorElInterview) ? (
+                        <ExpandLessIcon />
+                      ) : (
+                        <ExpandMoreIcon />
+                      )}
                     </MenuItem>
                   ) : (
-                    <MenuItem key={page.name} component={Link} to={page.path} onClick={handleCloseNavMenu}>
+                    <MenuItem
+                      key={page.name}
+                      component={Link}
+                      to={page.path}
+                      onClick={handleCloseNavMenu}
+                    >
                       <Typography textAlign="center">{page.name}</Typography>
                     </MenuItem>
                   )
@@ -162,13 +197,29 @@ function NavBar() {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages
-              .filter((page) => page.role === "user" || (page.role === "admin" && userData?.role === "admin"))
+              .filter(
+                (page) =>
+                  page.role === "user" ||
+                  (page.role === "admin" && userData?.role === "admin")
+              )
               .map((page) =>
                 page.name === "Store" ? (
                   <Box key={page.name} sx={{ position: "relative" }}>
-                    <Button onClick={handleOpenStoreMenu} sx={{ my: 2, color: "white", display: "flex", alignItems: "center" }}>
+                    <Button
+                      onClick={handleOpenStoreMenu}
+                      sx={{
+                        my: 2,
+                        color: "white",
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
                       {page.name}
-                      {Boolean(anchorElStore) ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                      {Boolean(anchorElStore) ? (
+                        <ExpandLessIcon />
+                      ) : (
+                        <ExpandMoreIcon />
+                      )}
                     </Button>
                     <Menu
                       anchorEl={anchorElStore}
@@ -185,7 +236,12 @@ function NavBar() {
                       onClose={handleCloseStoreMenu}
                     >
                       {storeSubmenuItems.map((item) => (
-                        <MenuItem key={item.name} component={Link} to={item.path} onClick={handleCloseStoreMenu}>
+                        <MenuItem
+                          key={item.name}
+                          component={Link}
+                          to={item.path}
+                          onClick={handleCloseStoreMenu}
+                        >
                           {item.name}
                         </MenuItem>
                       ))}
@@ -193,9 +249,21 @@ function NavBar() {
                   </Box>
                 ) : page.name === "Interview" ? (
                   <Box key={page.name} sx={{ position: "relative" }}>
-                    <Button onClick={handleOpenInterviewMenu} sx={{ my: 2, color: "white", display: "flex", alignItems: "center" }}>
+                    <Button
+                      onClick={handleOpenInterviewMenu}
+                      sx={{
+                        my: 2,
+                        color: "white",
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
                       {page.name}
-                      {Boolean(anchorElInterview) ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                      {Boolean(anchorElInterview) ? (
+                        <ExpandLessIcon />
+                      ) : (
+                        <ExpandMoreIcon />
+                      )}
                     </Button>
                     <Menu
                       anchorEl={anchorElInterview}
@@ -212,14 +280,25 @@ function NavBar() {
                       onClose={handleCloseInterviewMenu}
                     >
                       {interviewSubmenuItems.map((item) => (
-                        <MenuItem key={item.name} component={Link} to={item.path} onClick={handleCloseInterviewMenu}>
+                        <MenuItem
+                          key={item.name}
+                          component={Link}
+                          to={item.path}
+                          onClick={handleCloseInterviewMenu}
+                        >
                           {item.name}
                         </MenuItem>
                       ))}
                     </Menu>
                   </Box>
                 ) : (
-                  <Button key={page.name} component={Link} to={page.path} onClick={handleCloseNavMenu} sx={{ my: 2, color: "white", display: "block" }}>
+                  <Button
+                    key={page.name}
+                    component={Link}
+                    to={page.path}
+                    onClick={handleCloseNavMenu}
+                    sx={{ my: 2, color: "white", display: "block" }}
+                  >
                     {page.name}
                   </Button>
                 )
@@ -228,13 +307,25 @@ function NavBar() {
           {userData?.userName ? (
             <Box sx={{ flexGrow: 0 }}>
               <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                <Badge color="error" variant="dot" overlap="circular" sx={{ "& .MuiBadge-dot": { border: "2px solid white" } }}>
+                <Badge
+                  color="error"
+                  variant="dot"
+                  overlap="circular"
+                  sx={{ "& .MuiBadge-dot": { border: "2px solid white" } }}
+                >
                   <NotificationsIcon sx={{ color: "white" }} />
                 </Badge>
+                <ThemeToggleButton />
 
                 <Tooltip title="Profile">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt={userData?.userName} src={userData?.profilePicture || getCuteAvatar(userData?.userName)} />
+                    <Avatar
+                      alt={userData?.userName}
+                      src={
+                        userData?.profilePicture ||
+                        getCuteAvatar(userData?.userName)
+                      }
+                    />
                   </IconButton>
                 </Tooltip>
               </Box>
@@ -255,10 +346,33 @@ function NavBar() {
                 onClose={handleCloseUserMenu}
               >
                 {settings.map((setting) => (
-                  <MenuItem key={setting.name} onClick={setting?.name === "Sign Out" ? handleLogout : () => handleProfileNavigation(setting.name === "Profile" ? `${setting.path}/${userData.userName}` : setting.path)}>
+                  <MenuItem
+                    key={setting.name}
+                    onClick={
+                      setting?.name === "Sign Out"
+                        ? handleLogout
+                        : () =>
+                            handleProfileNavigation(
+                              setting.name === "Profile"
+                                ? `${setting.path}/${userData.userName}`
+                                : setting.path
+                            )
+                    }
+                  >
                     <Typography textAlign="center">
-                      <Button component={Link} to={setting.name === "Profile" ? `${setting.path}/${userData.userName}` : setting.path}>
-                        {setting?.icon && <span style={{ marginRight: "8px" }}>{setting.icon}</span>}
+                      <Button
+                        component={Link}
+                        to={
+                          setting.name === "Profile"
+                            ? `${setting.path}/${userData.userName}`
+                            : setting.path
+                        }
+                      >
+                        {setting?.icon && (
+                          <span style={{ marginRight: "8px" }}>
+                            {setting.icon}
+                          </span>
+                        )}
                         {setting?.name}
                       </Button>
                     </Typography>
@@ -268,11 +382,21 @@ function NavBar() {
             </Box>
           ) : (
             <>
-              <Button component={Link} to={"/signup"} variant="contained" sx={{ margin: "8px" }}>
+              <Button
+                component={Link}
+                to={"/signup"}
+                variant="contained"
+                sx={{ margin: "8px" }}
+              >
                 SignUp
               </Button>
               <Typography>or</Typography>
-              <Button component={Link} to={"/login"} variant="contained" sx={{ margin: "8px" }}>
+              <Button
+                component={Link}
+                to={"/login"}
+                variant="contained"
+                sx={{ margin: "8px" }}
+              >
                 Login
               </Button>
             </>
