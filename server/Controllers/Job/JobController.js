@@ -133,7 +133,7 @@ export const updateJob = async (req, res) => {
     if (!job) return res.status(404).json({ message: "Job not found" });
 
     // Make sure user owns the job
-    if (job.user.toString() !== req.user.id) {
+    if (job.user.toString() !== req.id) {
       return res.status(401).json({ message: "User not authorized" });
     }
 

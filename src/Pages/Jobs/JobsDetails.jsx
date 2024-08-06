@@ -46,8 +46,12 @@ const JobDetails = () => {
         navigate("/jobs");
       }
     } catch (err) {
-      toast.error(err.response.data.message);
+      toast.error(err.response?.data?.message || "Failed to delete job");
     }
+  };
+
+  const handleEdit = () => {
+    navigate(`/job/edit/${id}`);
   };
 
   if (loading) {
@@ -150,9 +154,12 @@ const JobDetails = () => {
           <Button variant="contained" color="primary" onClick={() => {}}>
             Apply Now
           </Button>
-
           {job.user._id === userData._id && (
-            <Button variant="contained" color="secondary" onClick={() => {}}>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => handleEdit(job._id)}
+            >
               Edit
             </Button>
           )}
