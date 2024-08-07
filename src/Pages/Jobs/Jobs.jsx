@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Container,
   Typography,
@@ -28,6 +28,7 @@ const Jobs = () => {
     location: "",
     employmentTypes: [],
   });
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -157,7 +158,18 @@ const Jobs = () => {
             <Grid container spacing={2} mb={2}>
               {filteredJobs.map((job) => (
                 <Grid item key={job._id} xs={12} sm={12} md={12} gap={2}>
-                  <Paper elevation={3} sx={{ padding: 2 }}>
+                  <Paper
+                    elevation={3}
+                    sx={{
+                      padding: "16px 16px 16px 21px",
+                      "&:hover": {
+                        padding: "16px",
+                        borderLeft: "5px solid green",
+                        cursor: "pointer",
+                      },
+                    }}
+                    onClick={() => navigate(`/jobs/${job._id}`)}
+                  >
                     <Typography variant="h6" sx={{ fontWeight: 600 }}>
                       {job.title}
                     </Typography>
@@ -193,7 +205,9 @@ const Jobs = () => {
                       <Typography variant="body1">
                         {job.responsibilities.join(" ").length < 100
                           ? job.responsibilities.join(" ")
-                          : `${job.responsibilities.join(" ").slice(0, 90)}....`}
+                          : `${job.responsibilities
+                              .join(" ")
+                              .slice(0, 90)}....`}
                       </Typography>
                     </Box>
                     <Box display="flex" alignItems="center" mb={1}>
