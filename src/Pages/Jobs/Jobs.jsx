@@ -78,6 +78,7 @@ const Jobs = () => {
   };
 
   const filteredJobs = jobs.filter(filterJobs);
+  console.log(jobs);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -183,10 +184,11 @@ const Jobs = () => {
                     <Paper
                       elevation={3}
                       sx={{
-                        padding: "16px 16px 16px 21px",
+                        padding: 2,
+                        borderLeft: "5px solid transparent",
+                        transition: "all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1)",
                         "&:hover": {
-                          padding: "16px",
-                          borderLeft: "5px solid green",
+                          borderColor: "green",
                           cursor: "pointer",
                         },
                       }}
