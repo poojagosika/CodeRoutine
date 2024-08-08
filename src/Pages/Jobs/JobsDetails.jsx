@@ -9,7 +9,11 @@ import {
   Grid,
   Button,
   CircularProgress,
-  Alert,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
 import { getJobById, deleteJob } from "../../Api/jobAPi";
 import { toast } from "react-toastify";
@@ -22,6 +26,8 @@ const JobDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const { userData } = ContextStore();
+  const [open, setOpen] = useState(false);
+  const [jobIdToDelete, setJobIdToDelete] = useState(null);
 
   useEffect(() => {
     const fetchJob = async () => {
@@ -38,15 +44,22 @@ const JobDetails = () => {
     fetchJob();
   }, [id]);
 
-  const handleDelete = async (id) => {
+  const handleDelete = (id) => {
+    setJobIdToDelete(id);
+    setOpen(true);
+  };
+
+  const confirmDelete = async () => {
     try {
-      const response = await deleteJob(id);
+      const response = await deleteJob(jobIdToDelete);
       if (response.data) {
         toast.success(response.data.message);
         navigate("/jobs");
       }
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to delete job");
+    } finally {
+      setOpen(false);
     }
   };
 
@@ -149,7 +162,7 @@ const JobDetails = () => {
           {job.user._id === userData._id && (
             <Button
               variant="contained"
-              color="secondary"
+              color="success"
               onClick={() => handleEdit(job._id)}
             >
               Edit
@@ -158,7 +171,7 @@ const JobDetails = () => {
           {job.user._id === userData._id && (
             <Button
               variant="contained"
-              color="warning"
+              color="error"
               onClick={() => handleDelete(job._id)}
             >
               Delete
@@ -166,6 +179,43 @@ const JobDetails = () => {
           )}
         </Box>
       </Paper>
+
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle id="alert-dialog-title">Delete Job</DialogTitle>
+        <DialogContent>
+          <DialogContentText
+            id="alert-dialog-description"
+            style={{ color: "#000000" }}
+          >
+            Do you really want to delete this job listing? Once deleted, it
+            cannot be recovered.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => setOpen(false)}
+            variant="contained"
+            color="inherit"
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={confirmDelete}
+            variant="contained"
+            color="error"
+            autoFocus
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };
