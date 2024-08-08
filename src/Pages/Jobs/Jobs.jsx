@@ -11,6 +11,8 @@ import {
   FormControlLabel,
   Checkbox,
   Box,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { getAllJobs } from "../../Api/jobAPi";
 import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
@@ -28,6 +30,8 @@ const Jobs = () => {
     location: "",
     employmentTypes: [],
   });
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -75,14 +79,30 @@ const Jobs = () => {
 
   const filteredJobs = jobs.filter(filterJobs);
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const currentPageJobs = filteredJobs.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
+
   const JobExpiry = (applicationDeadline) => {
     const currentDate = new Date();
     return new Date(applicationDeadline) > currentDate;
   }
 
-
   return (
-    <Container maxWidth="lg" style={{ marginTop: "50px" }}>
+    <Container
+      maxWidth="lg"
+      style={{ marginTop: "50px", marginBottom: "50px" }}
+    >
       <Grid container spacing={2}>
         <Grid item xs={12} sm={12} md={4}>
           <Box mb={3}>
@@ -161,95 +181,142 @@ const Jobs = () => {
           {loading ? (
             <JobsLoader />
           ) : (
-            <Grid container spacing={2} mb={2}>
-              {filteredJobs.map((job) => (
-                <Grid item key={job._id} xs={12} sm={12} md={12} gap={2}>
-                  <Paper
-                    elevation={3}
-                    sx={{
-                      padding:2,
-                      borderLeft: "5px solid transparent",
-                      transition: "all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1)",
-                      "&:hover": {
-                        borderColor:JobExpiry(job?.applicationDeadline) ? "green" : "red",
-                        cursor: "pointer",
-                      },
-                    }}
-                    onClick={() => navigate(`/jobs/${job._id}`)}
-                  >
-                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                      {job.title}
-                    </Typography>
-                    <Typography color="textSecondary" sx={{ fontWeight: 600 }}>
-                      {job.company}
-                    </Typography>
-                    <Box
-                      display="flex"
-                      spacing={2}
-                      gap={4}
-                      color="textSecondary"
-                      mt={1}
-                      mb={1}
-                      alignItems="center"
+            <>
+              <Grid container spacing={2} mb={2}>
+                {currentPageJobs.map((job) => (
+                  <Grid item key={job._id} xs={12} sm={12} md={12} gap={2}>
+                    <Paper
+                      elevation={3}
+                      sx={{
+                        padding: 2,
+                        borderLeft: "5px solid transparent",
+                        transition: "all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1)",
+                        "&:hover": {
+                          borderColor: JobExpiry(job?.applicationDeadline) ? "green" : "red",
+                          cursor: "pointer",
+                        },
+                      }}
+                      onClick={() => navigate(`/jobs/${job._id}`)}
                     >
-                      <Box display="flex">
-                        <WorkOutlineIcon sx={{ color: "#00000099" }} />
-                        <Typography>{job.jobLevel}</Typography>
+                      <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                        {job.title}
+                      </Typography>
+                      <Typography
+                        color="textSecondary"
+                        sx={{ fontWeight: 600 }}
+                      >
+                        {job.company}
+                      </Typography>
+                      <Box
+                        display="flex"
+                        spacing={2}
+                        gap={4}
+                        color="textSecondary"
+                        mt={1}
+                        mb={1}
+                        alignItems="center"
+                      >
+                        <Box display="flex">
+                          <WorkOutlineIcon sx={{ color: "#00000099" }} />
+                          <Typography>{job.jobLevel}</Typography>
+                        </Box>
+                        <Box display="flex">
+                          <CurrencyRupeeIcon sx={{ color: "#00000099" }} />
+                          <Typography>
+                            {job.salary ? `${job.salary}` : "Not specified"}
+                          </Typography>
+                        </Box>
+                        <Box display="flex">
+                          <LocationOnIcon sx={{ color: "#00000099" }} />
+                          <Typography>{job.location}</Typography>
+                        </Box>
                       </Box>
-                      <Box display="flex">
-                        <CurrencyRupeeIcon sx={{ color: "#00000099" }} />
-                        <Typography>
-                          {job.salary ? `${job.salary}` : "Not specified"}
+                      <Box display="flex" alignItems="center" mt={1} mb={1}>
+                        <ArticleIcon sx={{ color: "#00000099" }} />
+                        <Typography variant="body1">
+                          {job.responsibilities.join(" ").length < 100
+                            ? job.responsibilities.join(" ")
+                            : `${job.responsibilities
+                                .join(" ")
+                                .slice(0, 90)}....`}
                         </Typography>
                       </Box>
-                      <Box display="flex">
-                        <LocationOnIcon sx={{ color: "#00000099" }} />
-                        <Typography>{job.location}</Typography>
+                      <Box display="flex" alignItems="center" mb={1}>
+                        <Typography variant="body2" color="textSecondary">
+                          {job.skills.join(" ").length < 100
+                            ? job.skills.join(" ")
+                            : `${job.skills.join(" ").slice(0, 90)}....`}
+                        </Typography>
                       </Box>
-                    </Box>
-                    <Box display="flex" alignItems="center" mt={1} mb={1}>
-                      <ArticleIcon sx={{ color: "#00000099" }} />
-                      <Typography variant="body1">
-                        {job.responsibilities.join(" ").length < 100
-                          ? job.responsibilities.join(" ")
-                          : `${job.responsibilities
-                              .join(" ")
-                              .slice(0, 90)}....`}
-                      </Typography>
-                    </Box>
-                    <Box display="flex" alignItems="center" mb={1}>
-                      <Typography variant="body2" color="textSecondary">
-                        {job.skills.join(" ").length < 100
-                          ? job.skills.join(" ")
-                          : `${job.skills.join(" ").slice(0, 90)}....`}
-                      </Typography>
-                    </Box>
-                    <Box
-                      display="flex"
-                      alignItems="center"
-                      justifyContent="space-between"
-                    >
-                      <Typography variant="body2" color="textSecondary">
-                        <ReactTimeAgo
-                          date={new Date(job?.postedOn).getTime()}
-                          locale="en-US"
-                        />
-                      </Typography>
-
-                      <Button
-                        component={Link}
-                        to={`/jobs/${job._id}`}
-                        variant="outlined"
-                        color="primary"
-                        size="small"
+                      <Box
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="space-between"
                       >
-                        View Details
-                      </Button>
-                    </Box>
-                  </Paper>
-                </Grid>
-              ))}
-            </Grid>
+                        <Typography variant="body2" color="textSecondary">
+                          <ReactTimeAgo
+                            date={new Date(job?.postedOn).getTime()}
+                            locale="en-US"
+                          />
+                        </Typography>
+
+                        <Button
+                          component={Link}
+                          to={`/jobs/${job._id}`}
+                          variant="outlined"
+                          color="primary"
+                          size="small"
+                        >
+                          View Details
+                        </Button>
+                      </Box>
+                    </Paper>
+                  </Grid>
+                ))}
+              </Grid>
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <Typography variant="body2">
+                  Page: {page + 1} of{" "}
+                  {Math.ceil(filteredJobs.length / rowsPerPage)}
+                </Typography>
+                <Box display="flex" alignItems="center">
+                  <Typography variant="body2" mr={1}>
+                    Rows per page:
+                  </Typography>
+                  <Select
+                    value={rowsPerPage}
+                    onChange={handleChangeRowsPerPage}
+                    size="small"
+                  >
+                    {[5, 10, 25, 50].map((rows) => (
+                      <MenuItem key={rows} value={rows}>
+                        {rows}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </Box>
+                <Box>
+                  <Button
+                    onClick={(e) => handleChangePage(e, page - 1)}
+                    disabled={page === 0}
+                  >
+                    Previous
+                  </Button>
+                  <Button
+                    onClick={(e) => handleChangePage(e, page + 1)}
+                    disabled={
+                      page >= Math.ceil(filteredJobs.length / rowsPerPage) - 1
+                    }
+                  >
+                    Next
+                  </Button>
+                </Box>
+              </Box>
+            </>
           )}
         </Grid>
       </Grid>
