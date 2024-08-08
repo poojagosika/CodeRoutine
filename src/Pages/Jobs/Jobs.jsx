@@ -74,7 +74,12 @@ const Jobs = () => {
   };
 
   const filteredJobs = jobs.filter(filterJobs);
-  console.log(jobs)
+
+  const JobExpiry = (applicationDeadline) => {
+    const currentDate = new Date();
+    return new Date(applicationDeadline) > currentDate;
+  }
+
 
   return (
     <Container maxWidth="lg" style={{ marginTop: "50px" }}>
@@ -166,7 +171,7 @@ const Jobs = () => {
                       borderLeft: "5px solid transparent",
                       transition: "all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1)",
                       "&:hover": {
-                        borderColor:"green",
+                        borderColor:JobExpiry(job?.applicationDeadline) ? "green" : "red",
                         cursor: "pointer",
                       },
                     }}
