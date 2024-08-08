@@ -18,6 +18,7 @@ import {
 import { getJobById, deleteJob } from "../../Api/jobAPi";
 import { toast } from "react-toastify";
 import { ContextStore } from "../../Context/ContextStore";
+import ErrorIcon from "@mui/icons-material/Error";
 
 const JobDetails = () => {
   const { id } = useParams();
@@ -92,12 +93,30 @@ const JobDetails = () => {
     );
   }
 
+  const JobExpiry = (applicationDeadline) => {
+    const currentDate = new Date();
+    return new Date(applicationDeadline) > currentDate;
+  }
+
   return (
     <Container maxWidth="md">
       <Paper elevation={3} sx={{ padding: 4, marginTop: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom>
           {job.title}
         </Typography>
+        {!JobExpiry(job?.applicationDeadline) && (
+          <Box
+            display="flex"
+            gap={1}
+            style={{ color: "red" }}
+            alignItems="center"
+          >
+            <ErrorIcon style={{ fontSize: 22 }} />
+            <Typography variant="body1">
+              No longer accepting applications
+            </Typography>
+          </Box>
+        )}
         <Typography variant="h6" gutterBottom>
           {job.company}
         </Typography>
