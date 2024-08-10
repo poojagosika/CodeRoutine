@@ -28,7 +28,8 @@ export const getJobById = async (req, res) => {
           applicantId.equals(new mongoose.Types.ObjectId(userId))
         )
       : false;
-
+    // Remove the 'applicants' field before sending the response
+    delete job.applicants;
     // Return job details along with applied status
     res.json({
       job,
