@@ -104,7 +104,7 @@ const JobDetails = () => {
         <Typography variant="h4" component="h1" gutterBottom>
           {job?.title}
         </Typography>
-        {!JobExpiry(job?.applicationDeadline) && (
+        {!JobExpiry(job?.applicationDeadline) || job?.applicationDeadline === null && (
           <Box
             display="flex"
             gap={1}
