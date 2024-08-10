@@ -34,7 +34,7 @@ const JobDetails = () => {
     const fetchJob = async () => {
       try {
         const res = await getJobById(id);
-        setJob(res?.data?.job);
+        setJob(res?.data);
       } catch (err) {
         toast.error(err?.response?.data?.message);
         setError(err?.response?.data?.message);
@@ -117,19 +117,20 @@ const JobDetails = () => {
         <Typography variant="h4" component="h1" gutterBottom>
           {job?.title}
         </Typography>
-        {!JobExpiry(job?.applicationDeadline) || job?.applicationDeadline === null && (
-          <Box
-            display="flex"
-            gap={1}
-            style={{ color: "red" }}
-            alignItems="center"
-          >
-            <ErrorIcon style={{ fontSize: 22 }} />
-            <Typography variant="body1">
-              No longer accepting applications
-            </Typography>
-          </Box>
-        )}
+        {!JobExpiry(job?.applicationDeadline) ||
+          (job?.applicationDeadline === null && (
+            <Box
+              display="flex"
+              gap={1}
+              style={{ color: "red" }}
+              alignItems="center"
+            >
+              <ErrorIcon style={{ fontSize: 22 }} />
+              <Typography variant="body1">
+                No longer accepting applications
+              </Typography>
+            </Box>
+          ))}
         <Typography variant="h6" gutterBottom>
           {job?.company}
         </Typography>
@@ -196,9 +197,16 @@ const JobDetails = () => {
             <JobDetail label="Posted By" value={job?.postedBy} />
           </Grid>
         </Grid>
-        <Box sx={{ marginTop: 4 }} display="flex" gap={2}>
-          <Button variant="contained" color="primary" onClick={() => {handleApply(job?._id)}}>
-            Apply Now
+        <Box sx={{ marginTop: 2 }} display="flex" gap={2}>
+          <Button
+            variant="contained"
+            color="primary"
+            disabled={job?.applied}
+            onClick={() => {
+              handleApply(job?._id);
+            }}
+          >
+            {job?.applied ? "Applied" : "Apply Now"}
           </Button>
           {job?.user?._id === userData?._id && (
             <Button
