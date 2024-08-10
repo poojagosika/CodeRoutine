@@ -250,7 +250,7 @@ const Jobs = () => {
                             transition:
                               "all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1)",
                             "&:hover": {
-                              borderColor: JobExpiry(job?.applicationDeadline)
+                              borderColor: JobExpiry(job?.applicationDeadline) || job?.applicationDeadline === null
                                 ? "green"
                                 : "red",
                               cursor: "pointer",
