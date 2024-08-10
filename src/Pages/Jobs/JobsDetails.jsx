@@ -25,7 +25,7 @@ const JobDetails = () => {
   const navigate = useNavigate();
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(null);
   const { userData } = ContextStore();
   const [open, setOpen] = useState(false);
   const [jobIdToDelete, setJobIdToDelete] = useState(null);
@@ -36,8 +36,8 @@ const JobDetails = () => {
         const res = await getJobById(id);
         setJob(res.data);
       } catch (err) {
-        toast.error(error.response.data.message);
-        setError("Error updating post:", error);
+        toast.error(err.response.data.message);
+        setError(err.response.data.message);
       } finally {
         setLoading(false);
       }
@@ -83,11 +83,11 @@ const JobDetails = () => {
     );
   }
 
-  if (!job) {
+  if (error) {
     return (
       <Container maxWidth="md">
         <Typography variant="h4" component="h1" gutterBottom>
-          Job Not Found
+          {error}
         </Typography>
       </Container>
     );
@@ -102,7 +102,7 @@ const JobDetails = () => {
     <Container maxWidth="md">
       <Paper elevation={3} sx={{ padding: 4, marginTop: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom>
-          {job.title}
+          {job?.title}
         </Typography>
         {!JobExpiry(job?.applicationDeadline) && (
           <Box
@@ -118,67 +118,67 @@ const JobDetails = () => {
           </Box>
         )}
         <Typography variant="h6" gutterBottom>
-          {job.company}
+          {job?.company}
         </Typography>
         <Typography color="textSecondary" gutterBottom>
-          {job.location}
+          {job?.location}
         </Typography>
         <Box sx={{ marginBottom: 2 }}>
           <Typography variant="body1" gutterBottom>
-            {job.description}
+            {job?.description}
           </Typography>
         </Box>
         <Section title="Skills Required">
-          {job.skills.map((skill, index) => (
+          {job?.skills?.map((skill, index) => (
             <Chip key={index} label={skill} sx={{ margin: 0.5 }} />
           ))}
         </Section>
         <Section title="Responsibilities">
           <ul>
-            {job.responsibilities.map((item, index) => (
+            {job?.responsibilities?.map((item, index) => (
               <li key={index}>{item}</li>
             ))}
           </ul>
         </Section>
         <Section title="Requirements">
           <ul>
-            {job.requirements.map((item, index) => (
+            {job?.requirements?.map((item, index) => (
               <li key={index}>{item}</li>
             ))}
           </ul>
         </Section>
         <Section title="Benefits">
           <ul>
-            {job.benefits.map((item, index) => (
+            {job?.benefits?.map((item, index) => (
               <li key={index}>{item}</li>
             ))}
           </ul>
         </Section>
         <Grid container spacing={2}>
           <Grid item xs={6}>
-            <JobDetail label="Employment Type" value={job.employmentType} />
-            <JobDetail label="Job Level" value={job.jobLevel} />
-            <JobDetail label="Industry" value={job.industry} />
-            <JobDetail label="Salary" value={job.salary} />
+            <JobDetail label="Employment Type" value={job?.employmentType} />
+            <JobDetail label="Job Level" value={job?.jobLevel} />
+            <JobDetail label="Industry" value={job?.industry} />
+            <JobDetail label="Salary" value={job?.salary} />
             <JobDetail
               label="Number of Openings"
-              value={job.numberOfOpenings}
+              value={job?.numberOfOpenings}
             />
           </Grid>
           <Grid item xs={6}>
             <JobDetail
               label="Application Deadline"
-              value={new Date(job.applicationDeadline).toLocaleDateString()}
+              value={new Date(job?.applicationDeadline).toLocaleDateString()}
             />
-            <JobDetail label="Posted By" value={job.postedBy} />
-            <JobDetail label="Contact Email" value={job.contactEmail} />
+            <JobDetail label="Posted By" value={job?.postedBy} />
+            <JobDetail label="Contact Email" value={job?.contactEmail} />
           </Grid>
         </Grid>
         <Box sx={{ marginTop: 4 }} display="flex" gap={2}>
           <Button variant="contained" color="primary" onClick={() => {}}>
             Apply Now
           </Button>
-          {job.user._id === userData._id && (
+          {job?.user?._id === userData?._id && (
             <Button
               variant="contained"
               color="success"
@@ -187,11 +187,11 @@ const JobDetails = () => {
               Edit
             </Button>
           )}
-          {job.user._id === userData._id && (
+          {job?.user?._id === userData?._id && (
             <Button
               variant="contained"
               color="error"
-              onClick={() => handleDelete(job._id)}
+              onClick={() => handleDelete(job?._id)}
             >
               Delete
             </Button>
