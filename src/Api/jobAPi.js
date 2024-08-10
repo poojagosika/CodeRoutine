@@ -21,5 +21,5 @@ export const deleteJob = async (id) => {
 };
 
 export const applyForJob = async (id) => {
-  return await axiosInstance.get(`/api/job/apply/${id}`);
+  return await axiosInstance.put(`/api/job/apply/${id}`);
 };

@@ -15,7 +15,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import { getJobById, deleteJob } from "../../Api/jobAPi";
+import { getJobById, deleteJob, applyForJob } from "../../Api/jobAPi";
 import { toast } from "react-toastify";
 import { ContextStore } from "../../Context/ContextStore";
 import ErrorIcon from "@mui/icons-material/Error";
@@ -34,10 +34,10 @@ const JobDetails = () => {
     const fetchJob = async () => {
       try {
         const res = await getJobById(id);
-        setJob(res.data);
+        setJob(res?.data?.job);
       } catch (err) {
-        toast.error(err.response.data.message);
-        setError(err.response.data.message);
+        toast.error(err?.response?.data?.message);
+        setError(err?.response?.data?.message);
       } finally {
         setLoading(false);
       }
@@ -59,6 +59,19 @@ const JobDetails = () => {
       }
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to delete job");
+    } finally {
+      setOpen(false);
+    }
+  };
+
+  const handleApply = async (id) => {
+    try {
+      const response = await applyForJob(id);
+      if (response.data) {
+        toast.success(response?.data?.message);
+      }
+    } catch (err) {
+      toast.error(err?.response?.data?.message || "Failed to Apply job");
     } finally {
       setOpen(false);
     }
@@ -184,7 +197,7 @@ const JobDetails = () => {
           </Grid>
         </Grid>
         <Box sx={{ marginTop: 4 }} display="flex" gap={2}>
-          <Button variant="contained" color="primary" onClick={() => {}}>
+          <Button variant="contained" color="primary" onClick={() => {handleApply(job?._id)}}>
             Apply Now
           </Button>
           {job?.user?._id === userData?._id && (
