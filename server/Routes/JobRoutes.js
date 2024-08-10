@@ -3,11 +3,11 @@ import { tokenVerify } from "../Middleware/tokenVerify.js";
 import {
   createJob,
   deleteJob,
-  getAllJobs,
   updateJob,
 } from "../Controllers/Job/JobController.js";
 import { getJobById } from "../Controllers/Job/getJobById.js";
 import { applyForJob } from "../Controllers/Job/applyForJob.js";
+import { getAllJobs } from "../Controllers/Job/getAllJobs.js";
 const JobRouter = express.Router();
 
 JobRouter.post("/", tokenVerify, createJob);

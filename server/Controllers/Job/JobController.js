@@ -53,17 +53,6 @@ export const createJob = async (req, res) => {
   }
 };
 
-// Get all jobs
-export const getAllJobs = async (req, res) => {
-  try {
-    const jobs = await Job.find();
-    res.json(jobs);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server error");
-  }
-};
-
 // Update job by ID
 export const updateJob = async (req, res) => {
   const {
