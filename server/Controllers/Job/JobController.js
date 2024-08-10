@@ -102,7 +102,7 @@ export const updateJob = async (req, res) => {
     if (!job) return res.status(404).json({ message: "Job not found" });
 
     // Make sure user owns the job
-    if (job.user.toString() !== req.id) {
+    if (job.createdBy.toString() !== req.id) {
       return res.status(401).json({ message: "User not authorized" });
     }
 
@@ -134,7 +134,7 @@ export const deleteJob = async (req, res) => {
       return res.status(404).json({ message: "Job not found" });
     }
     // Check
-    if (job.user.toString() !== userId) {
+    if (job.createdBy.toString() !== userId) {
       return res.status(401).json({ message: "You are Unauthorized user" });
     }
     // Find and delete the Job

@@ -208,7 +208,7 @@ const JobDetails = () => {
           >
             {job?.applied ? "Applied" : "Apply Now"}
           </Button>
-          {job?.user?._id === userData?._id && (
+          {job?.createdBy === userData?._id && (
             <Button
               variant="contained"
               color="success"
@@ -217,7 +217,7 @@ const JobDetails = () => {
               Edit
             </Button>
           )}
-          {job?.user?._id === userData?._id && (
+          {job?.createdBy === userData?._id && (
             <Button
               variant="contained"
               color="error"
