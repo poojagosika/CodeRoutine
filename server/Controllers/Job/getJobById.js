@@ -15,7 +15,7 @@ export const getJobById = async (req, res) => {
 
     // Find the job by ID, excluding contactEmail and user fields
     const job = await Job.findById(req.params.id)
-      .select("-contactEmail -user")
+      .select("-contactEmail")
       .lean(); // Convert to plain JavaScript object for easier manipulation
 
     if (!job) {

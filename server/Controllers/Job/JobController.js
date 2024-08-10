@@ -42,7 +42,7 @@ export const createJob = async (req, res) => {
       numberOfOpenings,
       applicationInstructions,
       contactEmail,
-      user: req.id,
+      createdBy: req.id,
     });
 
     const job = await newJob.save();
