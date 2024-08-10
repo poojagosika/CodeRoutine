@@ -112,7 +112,7 @@ const JobDetails = () => {
   };
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="md" style={{ marginBottom: "40px" }}>
       <Paper elevation={3} sx={{ padding: 4, marginTop: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom>
           {job?.title}
