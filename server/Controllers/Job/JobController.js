@@ -56,30 +56,10 @@ export const createJob = async (req, res) => {
 // Get all jobs
 export const getAllJobs = async (req, res) => {
   try {
-    const jobs = await Job.find().populate("user", ["name", "email"]);
+    const jobs = await Job.find();
     res.json(jobs);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send("Server error");
-  }
-};
-
-// Get job by ID
-export const getJobById = async (req, res) => {
-  try {
-    const job = await Job.findById(req.params.id).populate("user", [
-      "name",
-      "email",
-    ]);
-    if (!job) {
-      return res.status(404).json({ message: "Job not found" });
-    }
-    res.json(job);
-  } catch (err) {
-    console.error(err.message);
-    if (err.kind === "ObjectId") {
-      return res.status(404).json({ message: "Job not found" });
-    }
     res.status(500).send("Server error");
   }
 };

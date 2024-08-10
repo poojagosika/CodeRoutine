@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+
 const Schema = mongoose.Schema;
 
 const jobSchema = new Schema({
@@ -19,7 +20,7 @@ const jobSchema = new Schema({
     required: true,
   },
   skills: {
-    type: Array,
+    type: [String], // Explicitly defining the array type as an array of strings
     required: true,
   },
   salary: {
@@ -55,14 +56,14 @@ const jobSchema = new Schema({
     enum: ["Open", "Closed"],
     default: "Open",
   },
-  user: {
+  createdBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "user",
+    ref: "user", // Reference to the User model by its name as a string
   },
   applicants: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "user",
+      ref: "user", // Reference to the User model by its name as a string
     },
   ],
   applicationDeadline: {

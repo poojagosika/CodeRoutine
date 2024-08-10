@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import Job from "./JobModel.js";
 const { Schema } = mongoose;
 
 // User Profile Details Schema
@@ -304,6 +305,12 @@ const userSchema = new Schema({
   project: [projectSchema],
   socialLinks: socialLinksSchema,
   skills: [skillSchema],
+  appliedJobs: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: Job,
+    },
+  ],
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });

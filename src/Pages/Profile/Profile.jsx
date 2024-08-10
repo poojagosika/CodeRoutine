@@ -99,18 +99,38 @@ const Profile = () => {
             }}
           >
             {isLogin() &&
-              <Button
-                variant="contained"
-                color="primary"
-                style={{ marginTop: "20px" }}
-                onClick={() =>
-                  navigate(`/resume/${userProfile?.userName}`, {
-                    state: { userProfile },
-                  })
-                }
+              <Box
+                display="flex"
+                gap={2}
+                alignItems="center"
+                justifyContent="center"
+                flexWrap="wrap"
               >
-                Resume
-              </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  style={{ marginTop: "20px" }}
+                  onClick={() =>
+                    navigate(`/profile/resume/${userProfile?.userName}`, {
+                      state: { userProfile },
+                    })
+                  }
+                >
+                  Resume
+                </Button>
+                {/* <Button
+                  variant="contained"
+                  color="primary"
+                  style={{ marginTop: "20px" }}
+                  onClick={() =>
+                    navigate(`/resume/${userProfile?.userName}`, {
+                      state: { userProfile },
+                    })
+                  }
+                >
+                  Custom Resume
+                </Button> */}
+              </Box>
             }
           </Box>
           <Container>

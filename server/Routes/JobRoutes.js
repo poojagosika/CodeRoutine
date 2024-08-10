@@ -4,9 +4,10 @@ import {
   createJob,
   deleteJob,
   getAllJobs,
-  getJobById,
   updateJob,
 } from "../Controllers/Job/JobController.js";
+import { getJobById } from "../Controllers/Job/getJobById.js";
+import { applyForJob } from "../Controllers/Job/applyForJob.js";
 const JobRouter = express.Router();
 
 JobRouter.post("/", tokenVerify, createJob);
@@ -14,5 +15,6 @@ JobRouter.get("/", getAllJobs);
 JobRouter.get("/:id", getJobById);
 JobRouter.put("/:id", tokenVerify, updateJob);
 JobRouter.delete("/:id", tokenVerify, deleteJob);
+JobRouter.put("/apply/:id", tokenVerify, applyForJob);
 
 export default JobRouter;

@@ -19,3 +19,7 @@ export const updateJob = async (id, data) => {
 export const deleteJob = async (id) => {
   return await axiosInstance.delete(`/api/job/${id}`);
 };
+
+export const applyForJob = async (id) => {
+  return await axiosInstance.get(`/api/job/apply/${id}`);
+};
