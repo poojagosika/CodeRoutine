@@ -20,7 +20,7 @@ import { Avatar, IconButton, Skeleton } from "@mui/material";
 import { ContextStore } from "../../Context/ContextStore";
 import CircularProgress from "@mui/material/CircularProgress";
 import { googleLogin, loginUser } from "../../Api/userApi";
-import { GoogleLogin } from '@react-oauth/google';
+import { GoogleLogin } from "@react-oauth/google";
 
 const defaultTheme = createTheme();
 
@@ -85,15 +85,14 @@ export default function SignIn() {
         navigate("/");
       } catch (err) {
         toast.error(err?.response?.data?.message);
-        console.error('Error fetching user info:', error);
       }
     } else {
-      console.error('No credential received');
+      console.error("No credential received");
     }
   };
 
   const handleLoginFailure = (error) => {
-    console.log('Login Failed:', error);
+    console.log("Login Failed:", error);
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -181,7 +180,11 @@ export default function SignIn() {
                   type="submit"
                   fullWidth
                   variant="contained"
-                  style={{ backgroundColor: "#424242", padding: "8px", color: "white" }}
+                  style={{
+                    backgroundColor: "#424242",
+                    padding: "8px",
+                    color: "white",
+                  }}
                   sx={{ mt: 3, mb: 2 }}
                   disabled={!(data.email && data.password)}
                 >
