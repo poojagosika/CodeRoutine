@@ -32,8 +32,8 @@ export const getJobById = async (req, res) => {
     delete job.applicants;
     // Return job details along with applied status
     res.json({
-      job,
-      applied,
+      ...job,
+      applied: applied,
     });
   } catch (err) {
     console.error(err.message);
