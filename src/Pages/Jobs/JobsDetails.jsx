@@ -96,7 +96,7 @@ const JobDetails = () => {
   const JobExpiry = (applicationDeadline) => {
     const currentDate = new Date();
     return new Date(applicationDeadline) > currentDate;
-  }
+  };
 
   return (
     <Container maxWidth="md">
@@ -156,14 +156,24 @@ const JobDetails = () => {
         </Section>
         <Grid container spacing={2}>
           <Grid item xs={6}>
-            <JobDetail label="Employment Type" value={job?.employmentType} />
-            <JobDetail label="Job Level" value={job?.jobLevel} />
-            <JobDetail label="Industry" value={job?.industry} />
-            <JobDetail label="Salary" value={job?.salary} />
-            <JobDetail
-              label="Number of Openings"
-              value={job?.numberOfOpenings}
-            />
+            {job?.employmentType && (
+              <JobDetail label="Employment Type" value={job?.employmentType} />
+            )}
+            {job?.jobLevel && (
+              <JobDetail label="Job Level" value={job?.jobLevel} />
+            )}
+            {job?.industry && (
+              <JobDetail label="Industry" value={job?.industry} />
+            )}
+
+            {job?.salary && <JobDetail label="Salary" value={job?.salary} />}
+
+            {job?.numberOfOpenings && (
+              <JobDetail
+                label="Number of Openings"
+                value={job.numberOfOpenings}
+              />
+            )}
           </Grid>
           <Grid item xs={6}>
             <JobDetail
@@ -171,7 +181,6 @@ const JobDetails = () => {
               value={new Date(job?.applicationDeadline).toLocaleDateString()}
             />
             <JobDetail label="Posted By" value={job?.postedBy} />
-            <JobDetail label="Contact Email" value={job?.contactEmail} />
           </Grid>
         </Grid>
         <Box sx={{ marginTop: 4 }} display="flex" gap={2}>
