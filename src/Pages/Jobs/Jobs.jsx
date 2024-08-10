@@ -23,6 +23,7 @@ import ArticleIcon from "@mui/icons-material/Article";
 import ReactTimeAgo from "react-time-ago";
 import JobsLoader from "./Loading/JobsLoading";
 import SearchIcon from "@mui/icons-material/Search";
+import WorkIcon from "@mui/icons-material/Work";
 
 const Jobs = () => {
   const [jobs, setJobs] = useState([]);
@@ -160,6 +161,16 @@ const Jobs = () => {
             <Grid item xs={12} sm={12} md={4}>
               <Box mb={3}>
                 <Paper elevation={3} sx={{ padding: 2 }}>
+                  <Typography
+                    variant="h6"
+                    gutterBottom
+                    display={"flex"}
+                    alignItems={"center"}
+                    gap={1}
+                  >
+                    <WorkIcon />
+                    My Jobs
+                  </Typography>
                   <Typography variant="h6" gutterBottom>
                     Filter Jobs
                   </Typography>
@@ -250,9 +261,11 @@ const Jobs = () => {
                             transition:
                               "all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1)",
                             "&:hover": {
-                              borderColor: JobExpiry(job?.applicationDeadline) || job?.applicationDeadline === null
-                                ? "green"
-                                : "red",
+                              borderColor:
+                                JobExpiry(job?.applicationDeadline) ||
+                                job?.applicationDeadline === null
+                                  ? "green"
+                                  : "red",
                               cursor: "pointer",
                             },
                           }}
