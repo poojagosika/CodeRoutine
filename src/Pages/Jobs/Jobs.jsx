@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   Container,
   Typography,
@@ -11,16 +11,10 @@ import {
   FormControlLabel,
   Checkbox,
   Box,
-  Select,
-  MenuItem,
   CircularProgress,
+  TablePagination,
 } from "@mui/material";
 import { getAllJobs } from "../../Api/jobAPi";
-import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
-import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import ArticleIcon from "@mui/icons-material/Article";
-import ReactTimeAgo from "react-time-ago";
 import JobsLoader from "./Loading/JobsLoading";
 import SearchIcon from "@mui/icons-material/Search";
 import WorkIcon from "@mui/icons-material/Work";
@@ -36,7 +30,6 @@ const Jobs = () => {
   });
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -97,10 +90,6 @@ const Jobs = () => {
     page * rowsPerPage + rowsPerPage
   );
 
-  const JobExpiry = (applicationDeadline) => {
-    const currentDate = new Date();
-    return new Date(applicationDeadline) > currentDate;
-  };
 
   if (loading) {
     return (
@@ -259,49 +248,15 @@ const Jobs = () => {
                     ))}
                   </Grid>
                   {jobs.length > 5 && (
-                    <Box
-                      display="flex"
-                      justifyContent="space-between"
-                      alignItems="center"
-                    >
-                      <Typography variant="body2">
-                        Page: {page + 1} of{" "}
-                        {Math.ceil(filteredJobs.length / rowsPerPage)}
-                      </Typography>
-                      <Box display="flex" alignItems="center">
-                        <Typography variant="body2" mr={1}>
-                          Rows per page:
-                        </Typography>
-                        <Select
-                          value={rowsPerPage}
-                          onChange={handleChangeRowsPerPage}
-                          size="small"
-                        >
-                          {[5, 10, 25, 50].map((rows) => (
-                            <MenuItem key={rows} value={rows}>
-                              {rows}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </Box>
-                      <Box>
-                        <Button
-                          onClick={(e) => handleChangePage(e, page - 1)}
-                          disabled={page === 0}
-                        >
-                          Previous
-                        </Button>
-                        <Button
-                          onClick={(e) => handleChangePage(e, page + 1)}
-                          disabled={
-                            page >=
-                            Math.ceil(filteredJobs.length / rowsPerPage) - 1
-                          }
-                        >
-                          Next
-                        </Button>
-                      </Box>
-                    </Box>
+                    <TablePagination
+                      rowsPerPageOptions={[5, 10, 25]}
+                      component="div"
+                      count={jobs.length}
+                      rowsPerPage={rowsPerPage}
+                      page={page}
+                      onPageChange={handleChangePage}
+                      onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
                   )}
                 </>
               )}
