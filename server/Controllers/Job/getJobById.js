@@ -9,8 +9,17 @@ export const getJobById = async (req, res) => {
     const token = req.header("Authorization")?.replace("Bearer ", "");
 
     if (token) {
-      const decoded = Jwt.verify(token, process.env.JWT_SECRET);
-      userId = decoded._id;
+      try {
+        const decoded = Jwt.verify(token, process.env.JWT_SECRET);
+        userId = decoded._id;
+      } catch (error) {
+        if (error.name === "TokenExpiredError") {
+          // Token is expired, continue with userId as undefined
+          console.warn("Token expired");
+        } else {
+          throw error; // If it's another kind of error, rethrow it
+        }
+      }
     }
 
     // Find the job by ID, excluding contactEmail and user fields
@@ -28,8 +37,10 @@ export const getJobById = async (req, res) => {
           applicantId.equals(new mongoose.Types.ObjectId(userId))
         )
       : false;
+
     // Remove the 'applicants' field before sending the response
     delete job.applicants;
+
     // Return job details along with applied status
     res.json({
       ...job,
