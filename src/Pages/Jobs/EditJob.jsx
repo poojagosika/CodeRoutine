@@ -6,6 +6,8 @@ import {
   Box,
   Paper,
   Typography,
+  CircularProgress,
+  Grid,
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { getJobById, updateJob } from "../../Api/jobAPi";
@@ -72,7 +74,7 @@ const EditJob = () => {
           alignItems="center"
           height="100vh"
         >
-          Loading...
+          <CircularProgress />
         </Box>
       </Container>
     );
@@ -80,149 +82,229 @@ const EditJob = () => {
 
   return (
     <Container maxWidth="md">
-      <Paper elevation={3} sx={{ padding: 4, marginTop: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
+      <Paper elevation={4} sx={{ padding: 4, marginTop: 5, marginBottom: 5 }}>
+        <Typography variant="h5" component="h1" gutterBottom>
           Edit Job
         </Typography>
 
         <form onSubmit={handleSubmit}>
-          <TextField
-            name="title"
-            label="Title"
-            value={job.title || ""}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            name="company"
-            label="Company"
-            value={job.company || ""}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            name="description"
-            label="Description"
-            value={job.description || ""}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-            multiline
-            rows={4}
-          />
-          <TextField
-            name="location"
-            label="Location"
-            value={job.location || ""}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            name="skills"
-            label="Skills"
-            value={job.skills.join(", ") || ""}
-            onChange={(e) =>
-              setJob({ ...job, skills: e.target.value.split(", ") })
-            }
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            name="salary"
-            label="Salary"
-            value={job.salary || ""}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            name="employmentType"
-            label="Employment Type"
-            value={job.employmentType || ""}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            name="requirements"
-            label="Requirements"
-            value={job.requirements.join(", ") || ""}
-            onChange={(e) =>
-              setJob({ ...job, requirements: e.target.value.split(", ") })
-            }
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            name="responsibilities"
-            label="Responsibilities"
-            value={job.responsibilities.join(", ") || ""}
-            onChange={(e) =>
-              setJob({ ...job, responsibilities: e.target.value.split(", ") })
-            }
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            name="benefits"
-            label="Benefits"
-            value={job.benefits.join(", ") || ""}
-            onChange={(e) =>
-              setJob({ ...job, benefits: e.target.value.split(", ") })
-            }
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            name="applicationDeadline"
-            label="Application Deadline"
-            type="date"
-            value={formatDateWithYearMonth(job.applicationDeadline) || ""}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-            InputLabelProps={{ shrink: true }}
-          />
-          <TextField
-            name="jobLevel"
-            label="Job Level"
-            value={job.jobLevel || ""}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            name="industry"
-            label="Industry"
-            value={job.industry || ""}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            name="numberOfOpenings"
-            label="Number of Openings"
-            value={job.numberOfOpenings || ""}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            name="contactEmail"
-            label="Contact Email"
-            value={job.contactEmail || ""}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
-          <Box mt={2}>
-            <Button type="submit" variant="contained" color="primary">
-              Update Job
-            </Button>
-          </Box>
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <Typography variant="h6">
+                Basic Information
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                name="title"
+                label="Title"
+                value={job.title || ""}
+                onChange={handleChange}
+                fullWidth
+                variant="outlined"
+                size="small"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                name="company"
+                label="Company"
+                value={job.company || ""}
+                onChange={handleChange}
+                fullWidth
+                variant="outlined"
+                size="small"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                name="description"
+                label="Description"
+                value={job.description || ""}
+                onChange={handleChange}
+                fullWidth
+                multiline
+                rows={4}
+                variant="outlined"
+                size="small"
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <Typography variant="h6">
+                Job Details
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                name="location"
+                label="Location"
+                value={job.location || ""}
+                onChange={handleChange}
+                fullWidth
+                variant="outlined"
+                size="small"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                name="salary"
+                label="Salary"
+                value={job.salary || ""}
+                onChange={handleChange}
+                fullWidth
+                variant="outlined"
+                size="small"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                name="employmentType"
+                label="Employment Type"
+                value={job.employmentType || ""}
+                onChange={handleChange}
+                fullWidth
+                variant="outlined"
+                size="small"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                name="jobLevel"
+                label="Job Level"
+                value={job.jobLevel || ""}
+                onChange={handleChange}
+                fullWidth
+                variant="outlined"
+                size="small"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                name="industry"
+                label="Industry"
+                value={job.industry || ""}
+                onChange={handleChange}
+                fullWidth
+                variant="outlined"
+                size="small"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                name="numberOfOpenings"
+                label="Number of Openings"
+                value={job.numberOfOpenings || ""}
+                onChange={handleChange}
+                fullWidth
+                variant="outlined"
+                size="small"
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <Typography variant="h6">
+                Requirements & Responsibilities
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                name="skills"
+                label="Skills"
+                value={job.skills.join(", ") || ""}
+                onChange={(e) =>
+                  setJob({ ...job, skills: e.target.value.split(", ") })
+                }
+                fullWidth
+                variant="outlined"
+                size="small"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                name="requirements"
+                label="Requirements"
+                value={job.requirements.join(", ") || ""}
+                onChange={(e) =>
+                  setJob({ ...job, requirements: e.target.value.split(", ") })
+                }
+                fullWidth
+                variant="outlined"
+                size="small"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                name="responsibilities"
+                label="Responsibilities"
+                value={job.responsibilities.join(", ") || ""}
+                onChange={(e) =>
+                  setJob({
+                    ...job,
+                    responsibilities: e.target.value.split(", "),
+                  })
+                }
+                fullWidth
+                variant="outlined"
+                size="small"
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <Typography variant="h6">
+                Benefits & Contact
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                name="benefits"
+                label="Benefits"
+                value={job.benefits.join(", ") || ""}
+                onChange={(e) =>
+                  setJob({ ...job, benefits: e.target.value.split(", ") })
+                }
+                fullWidth
+                variant="outlined"
+                size="small"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                name="applicationDeadline"
+                label="Application Deadline"
+                type="date"
+                value={formatDateWithYearMonth(job.applicationDeadline) || ""}
+                onChange={handleChange}
+                fullWidth
+                variant="outlined"
+                size="small"
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                name="contactEmail"
+                label="Contact Email"
+                value={job.contactEmail || ""}
+                onChange={handleChange}
+                fullWidth
+                variant="outlined"
+                size="small"
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <Box mt={2} display="flex" justifyContent="flex-start">
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                >
+                  Update Job
+                </Button>
+              </Box>
+            </Grid>
+          </Grid>
         </form>
       </Paper>
     </Container>
