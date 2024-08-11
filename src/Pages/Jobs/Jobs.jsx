@@ -17,7 +17,6 @@ import {
 } from "@mui/material";
 import { getAllJobs } from "../../Api/jobAPi";
 import JobsLoader from "./Loading/JobsLoading";
-import WorkIcon from "@mui/icons-material/Work";
 import JobCard from "./JobCard";
 
 const Jobs = () => {
@@ -71,16 +70,13 @@ const Jobs = () => {
   const filterJobs = (job) => {
     const { title, location, employmentTypes } = filters;
 
-    // Example categorization, you can customize this logic
-    const isSaved = job.status === "saved";
-    const isInProgress = job.status === "inProgress";
-    const isApplied = job.status === "applied";
+    const isSaved = job.saved;
+    const isApplied = job.applied;
 
     const isTabMatch =
       selectedTab === 0 || // All Jobs
-      (selectedTab === 1 && isSaved) ||
-      (selectedTab === 2 && isInProgress) ||
-      (selectedTab === 3 && isApplied);
+      (selectedTab === 1 && isSaved) || // Saved Jobs
+      (selectedTab === 2 && isApplied)  // Applied Jobs
 
     return (
       isTabMatch &&
@@ -91,6 +87,7 @@ const Jobs = () => {
         employmentTypes.includes(job.employmentType))
     );
   };
+
 
   const filteredJobs = jobs.filter(filterJobs);
 
@@ -196,7 +193,6 @@ const Jobs = () => {
           <Tabs value={selectedTab} style={{ paddingBottom: '16px' }} onChange={handleTabChange} aria-label="job categories">
             <Tab label="All Jobs" />
             <Tab label="Saved Jobs" />
-            <Tab label="In Progress Jobs" />
             <Tab label="Applied Jobs" />
           </Tabs>
 
@@ -220,11 +216,11 @@ const Jobs = () => {
               </Grid>
             ))}
           </Grid>
-          {currentPageJobs.length > 5 && (
+          {filteredJobs.length > rowsPerPage && (
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={jobs.length}
+              count={filteredJobs.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}
