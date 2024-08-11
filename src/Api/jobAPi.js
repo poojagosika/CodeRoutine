@@ -23,3 +23,7 @@ export const deleteJob = async (id) => {
 export const applyForJob = async (id) => {
   return await axiosInstance.put(`/api/job/apply/${id}`);
 };
+
+export const savedJob = async (id) => {
+  return await axiosInstance.put(`/api/job/saved/${id}`);
+};

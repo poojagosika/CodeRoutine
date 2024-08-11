@@ -311,6 +311,12 @@ const userSchema = new Schema({
       ref: Job,
     },
   ],
+  savedJobs: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: Job,
+    },
+  ],
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });
