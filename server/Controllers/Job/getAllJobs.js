@@ -47,7 +47,7 @@ export const getAllJobs = async (req, res) => {
     }));
 
     // Send the response
-    res.json(jobsWithStatus);
+    res.json(jobsWithStatus.reverse());
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");

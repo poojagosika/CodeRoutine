@@ -25,6 +25,7 @@
     "date-fns": "^3.6.0",
     "dotenv": "^16.4.5",
     "formik": "^2.4.6",
+    "framer-motion": "^11.3.24",
     "html-to-pdfmake": "^2.5.12",
     "javascript-time-ago": "^2.5.10",
     "pdfmake": "^0.2.10",
