@@ -1,17 +1,22 @@
-import { Box, Button, Grid, Paper, Typography, Chip } from '@mui/material';
-import React, { useEffect, useMemo, useRef } from 'react';
+import { Box, Button, Grid, Paper, Typography, Chip, IconButton } from '@mui/material';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import ArticleIcon from "@mui/icons-material/Article";
 import PsychologyIcon from '@mui/icons-material/Psychology';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import ReactTimeAgo from "react-time-ago";
 import { Link, useNavigate } from 'react-router-dom';
+import { savedJob } from '../../Api/jobAPi';
+import { toast } from 'react-toastify';
 
 const JobCard = ({ job, index }) => {
     const navigate = useNavigate();
     const cardRef = useRef(null);
+    const [isSaved, setIsSaved] = useState(job.saved);
 
     const jobExpiry = useMemo(() => {
         const currentDate = new Date();
@@ -21,6 +26,20 @@ const JobCard = ({ job, index }) => {
     const handleClick = () => {
         navigate(`/jobs/${job._id}`);
     };
+
+    const toggleSaveStatus = async (e) => {
+        e.stopPropagation(); // Prevent triggering card click event
+        try {
+            const res = await savedJob(job._id);
+            if (res.status === 200) {
+                setIsSaved(!isSaved);
+                toast.success(res.data.message);
+            }
+        } catch (error) {
+            toast.error(error.response.data.message);
+        }
+    };
+
     useEffect(() => {
         const card = cardRef.current;
         if (card) {
@@ -28,6 +47,7 @@ const JobCard = ({ job, index }) => {
             card.classList.add('card-animation');
         }
     }, [index]);
+
     return (
         <Paper
             ref={cardRef}
@@ -40,6 +60,7 @@ const JobCard = ({ job, index }) => {
                     borderColor: jobExpiry || !job?.applicationDeadline ? "green" : "red",
                     cursor: "pointer",
                 },
+                position: 'relative',
             }}
             onClick={handleClick}
         >
@@ -110,6 +131,20 @@ const JobCard = ({ job, index }) => {
                     </Button>
                 </Box>
             </Box>
+
+            {/* Save icon button */}
+            <IconButton
+                onClick={toggleSaveStatus}
+                sx={{
+                    position: 'absolute',
+                    top: 10,
+                    right: 10,
+                    color: isSaved ? 'blue' : 'grey',
+                }}
+                aria-label="Save Job"
+            >
+                {isSaved ? <BookmarkIcon /> : <BookmarkBorderIcon />}
+            </IconButton>
         </Paper>
     );
 };

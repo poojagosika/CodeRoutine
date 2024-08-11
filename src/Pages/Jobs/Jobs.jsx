@@ -44,7 +44,7 @@ const Jobs = () => {
     };
 
     fetchJobs();
-  }, []);
+  }, [selectedTab]);
 
   const handleFilterChange = (e) => {
     const { name, value, checked } = e.target;
