@@ -14,6 +14,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Divider,
 } from "@mui/material";
 import { getJobById, deleteJob, applyForJob } from "../../Api/jobAPi";
 import { toast } from "react-toastify";
@@ -112,39 +113,52 @@ const JobDetails = () => {
   };
 
   return (
-    <Container maxWidth="md" style={{ marginBottom: "40px" }}>
-      <Paper elevation={3} sx={{ padding: 4, marginTop: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
+    <Container maxWidth="md" sx={{ marginBottom: 6, padding: 2 }}>
+      <Paper elevation={3} sx={{ padding: 4, marginTop: 4, borderRadius: 3 }}>
+        <Typography
+          variant="h4"
+          component="h1"
+          gutterBottom
+          sx={{ fontWeight: "bold" }}
+        >
           {job?.title}
         </Typography>
-        {!JobExpiry(job?.applicationDeadline) ||
-          (job?.applicationDeadline === null && (
-            <Box
-              display="flex"
-              gap={1}
-              style={{ color: "red" }}
-              alignItems="center"
-            >
-              <ErrorIcon style={{ fontSize: 22 }} />
-              <Typography variant="body1">
-                No longer accepting applications
-              </Typography>
-            </Box>
-          ))}
-        <Typography variant="h6" gutterBottom>
+        {(!JobExpiry(job?.applicationDeadline) ||
+          job?.applicationDeadline === null) && (
+          <Box display="flex" gap={1} color="error.main" alignItems="center">
+            <ErrorIcon sx={{ fontSize: 22 }} />
+            <Typography variant="body1">
+              No longer accepting applications
+            </Typography>
+          </Box>
+        )}
+        <Typography
+          variant="h6"
+          gutterBottom
+          sx={{ color: "primary.main", fontWeight: "medium" }}
+        >
           {job?.company}
         </Typography>
         <Typography color="textSecondary" gutterBottom>
           {job?.location}
         </Typography>
-        <Box sx={{ marginBottom: 2 }}>
+        <Divider sx={{ my: 2, backgroundColor: "primary.light" }} />
+        <Box sx={{ marginBottom: 3 }}>
           <Typography variant="body1" gutterBottom>
             {job?.description}
           </Typography>
         </Box>
         <Section title="Skills Required">
           {job?.skills?.map((skill, index) => (
-            <Chip key={index} label={skill} sx={{ margin: 0.5 }} />
+            <Chip
+              key={index}
+              label={skill}
+              sx={{
+                margin: 0.5,
+                backgroundColor: "primary.light",
+                color: "primary.contrastText",
+              }}
+            />
           ))}
         </Section>
         <Section title="Responsibilities">
@@ -179,9 +193,7 @@ const JobDetails = () => {
             {job?.industry && (
               <JobDetail label="Industry" value={job?.industry} />
             )}
-
             {job?.salary && <JobDetail label="Salary" value={job?.salary} />}
-
             {job?.numberOfOpenings && (
               <JobDetail
                 label="Number of Openings"
@@ -197,7 +209,7 @@ const JobDetails = () => {
             <JobDetail label="Posted By" value={job?.postedBy} />
           </Grid>
         </Grid>
-        <Box sx={{ marginTop: 2 }} display="flex" gap={2}>
+        <Box sx={{ marginTop: 4 }} display="flex" gap={2}>
           <Button
             variant="contained"
             color="primary"
@@ -205,26 +217,29 @@ const JobDetails = () => {
             onClick={() => {
               handleApply(job?._id);
             }}
+            sx={{ fontWeight: "bold" }}
           >
             {job?.applied ? "Applied" : "Apply Now"}
           </Button>
           {job?.createdBy === userData?._id && (
-            <Button
-              variant="contained"
-              color="success"
-              onClick={() => handleEdit(job._id)}
-            >
-              Edit
-            </Button>
-          )}
-          {job?.createdBy === userData?._id && (
-            <Button
-              variant="contained"
-              color="error"
-              onClick={() => handleDelete(job?._id)}
-            >
-              Delete
-            </Button>
+            <>
+              <Button
+                variant="contained"
+                color="success"
+                onClick={() => handleEdit(job._id)}
+                sx={{ fontWeight: "bold" }}
+              >
+                Edit
+              </Button>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={() => handleDelete(job?._id)}
+                sx={{ fontWeight: "bold" }}
+              >
+                Delete
+              </Button>
+            </>
           )}
         </Box>
       </Paper>
@@ -237,12 +252,11 @@ const JobDetails = () => {
         maxWidth="sm"
         fullWidth
       >
-        <DialogTitle id="alert-dialog-title">Delete Job</DialogTitle>
+        <DialogTitle id="alert-dialog-title" sx={{ fontWeight: "bold" }}>
+          Delete Job
+        </DialogTitle>
         <DialogContent>
-          <DialogContentText
-            id="alert-dialog-description"
-            style={{ color: "#000000" }}
-          >
+          <DialogContentText id="alert-dialog-description">
             Do you really want to delete this job listing? Once deleted, it
             cannot be recovered.
           </DialogContentText>
@@ -270,8 +284,12 @@ const JobDetails = () => {
 };
 
 const Section = ({ title, children }) => (
-  <Box sx={{ marginBottom: 2 }}>
-    <Typography variant="h6" gutterBottom>
+  <Box sx={{ marginBottom: 3 }}>
+    <Typography
+      variant="h6"
+      gutterBottom
+      sx={{ fontWeight: "medium", color: "primary.main" }}
+    >
       {title}
     </Typography>
     {children}
