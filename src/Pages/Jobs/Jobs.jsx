@@ -214,9 +214,9 @@ const Jobs = () => {
                 </Typography>
               </Box>
             )}
-            {currentPageJobs.map((job) => (
+            {currentPageJobs.map((job, index) => (
               <Grid item key={job._id} xs={12} sm={12} md={12} gap={2}>
-                <JobCard job={job} />
+                <JobCard job={job} index={index} />
               </Grid>
             ))}
           </Grid>
