@@ -105,7 +105,7 @@ const JobCard = ({ job, index }) => {
                     ))}
                 </Box>
 
-                <Box display="flex" alignItems="center" justifyContent="space-between" mt={2}>
+                <Box display="flex" alignItems="center" justifyContent="space-between" >
                     <Typography variant="body2" color="textSecondary">
                         <ReactTimeAgo date={new Date(job?.postedOn).getTime()} locale="en-US" />
                     </Typography>
