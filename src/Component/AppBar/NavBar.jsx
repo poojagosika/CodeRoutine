@@ -382,23 +382,21 @@ function NavBar() {
             </Box>
           ) : (
             <>
-              <Button
+              <Typography
                 component={Link}
                 to={"/signup"}
-                variant="contained"
-                sx={{ margin: "8px" }}
+                sx={{ margin: "8px", color: "white", textDecoration: "none" }}
               >
-                SignUp
-              </Button>
-              <Typography>or</Typography>
-              <Button
+                SIGNUP
+              </Typography>
+              <Typography sx={{ color: "white" }}>or</Typography>
+              <Typography
                 component={Link}
                 to={"/login"}
-                variant="contained"
-                sx={{ margin: "8px" }}
+                sx={{ margin: "8px", color: "white", textDecoration: "none" }}
               >
-                Login
-              </Button>
+                LOGIN
+              </Typography>
             </>
           )}
         </Toolbar>
