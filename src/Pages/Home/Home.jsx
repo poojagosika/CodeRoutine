@@ -15,6 +15,7 @@ import {
   Stack,
   TextField,
   Typography,
+  Link,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { Link as RouterLink } from "react-router-dom";
@@ -25,6 +26,10 @@ import CopyRight from "../../Component/CopyRight/CopyRight";
 function Home() {
   const { userData } = ContextStore();
   const [searchQuery, setSearchQuery] = useState("");
+
+  const CombinedLink = React.forwardRef(function CombinedLink(props, ref) {
+    return <RouterLink ref={ref} {...props} />;
+  });
 
   const handleSearch = (event) => {
     setSearchQuery(event.target.value);
@@ -129,24 +134,26 @@ function Home() {
           <Grid container spacing={4} justifyContent="center">
             {cards.map((card) => (
               <Grid item key={card.id} xs={12} sm={6} md={3}>
-                <Card>
-                  <CardActionArea>
-                    <CardMedia
-                      component="img"
-                      sx={{ height: "130px", width: "350px" }}
-                      image={card.image}
-                      alt={card.title}
-                    />
-                    <CardContent>
-                      <Typography gutterBottom variant="h5" component="div">
-                        {card.title}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {card.description}
-                      </Typography>
-                    </CardContent>
-                  </CardActionArea>
-                </Card>
+                <Link component={CombinedLink} to="/underconstruction" underline="none">
+                  <Card>
+                    <CardActionArea>
+                      <CardMedia
+                        component="img"
+                        sx={{ height: "130px", width: "350px" }}
+                        image={card.image}
+                        alt={card.title}
+                      />
+                      <CardContent>
+                        <Typography gutterBottom variant="h5" component="div">
+                          {card.title}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {card.description}
+                        </Typography>
+                      </CardContent>
+                    </CardActionArea>
+                  </Card>
+                </Link>
               </Grid>
             ))}
           </Grid>
