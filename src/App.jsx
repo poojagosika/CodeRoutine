@@ -31,6 +31,7 @@ import Jobs from "./Pages/Jobs/Jobs";
 import JobsDetails from "./Pages/Jobs/JobsDetails";
 import PostNewJob from "./Pages/Jobs/PostNewJob";
 import EditJob from "./Pages/Jobs/EditJob";
+import UnderConstruction from "./Component/UnderConstruction";
 
 TimeAgo.addDefaultLocale(en);
 TimeAgo.addLocale(ru);
@@ -44,6 +45,7 @@ const App = () => {
           <ToastContainer position="top-right" theme="light" />
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/underconstruction" element={<UnderConstruction />} />
             <Route path="/problems" element={<Problems />} />
             <Route path="/problems/:id" element={<Problem />} />
             <Route path="/login" element={<SignIn />} />

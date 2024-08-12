@@ -9,14 +9,20 @@ import {
   CardMedia,
   CardContent,
   Container,
+  Link,
 } from "@mui/material";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
 import MediaControlCard from "./MediaControlCard"; // Assuming you have this component defined
 import { data } from "./Config"; // Assuming you have data imported or fetched from a source
 import CopyRight from "../../Component/CopyRight/CopyRight";
+import { Link as RouterLink } from "react-router-dom";
 
 function Explore() {
+  const CombinedLink = React.forwardRef(function CombinedLink(props, ref) {
+    return <RouterLink ref={ref} {...props} />;
+  });
+  
   return (
     <>
       <Container
@@ -60,20 +66,22 @@ function Explore() {
             {data.map((product) => (
               <Grid key={product.id} item xs={12} md={6} lg={4}>
                 <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
-                  <CardMedia
-                    component="img"
-                    height="200px"
-                    image={product.image}
-                    alt={product.biggerText}
-                  />
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography gutterBottom variant="h6">
-                      {product.biggerText}
-                    </Typography>
-                    <Typography color="text.secondary" variant="body2">
-                      {product.smallerText}
-                    </Typography>
-                  </CardContent>
+                  <Link component={CombinedLink} to="/underconstruction" underline="none">
+                    <CardMedia
+                      component="img"
+                      height="200px"
+                      image={product.image}
+                      alt={product.biggerText}
+                    />
+                    <CardContent sx={{ flexGrow: 1 }}>
+                      <Typography gutterBottom variant="h6">
+                        {product.biggerText}
+                      </Typography>
+                      <Typography color="text.secondary" variant="body2">
+                        {product.smallerText}
+                      </Typography>
+                    </CardContent>
+                  </Link>
                   <Box sx={{ display: "flex", justifyContent: 'flex-end', p: 2 }}>
                     <Button size="small" color="primary" variant="contained">
                       <StarBorderIcon sx={{ mr: 1 }} />
