@@ -78,7 +78,6 @@ const jobSchema = new Schema({
   },
   numberOfOpenings: {
     type: Number,
-    default: 1,
   },
   applicationInstructions: {
     type: String,
