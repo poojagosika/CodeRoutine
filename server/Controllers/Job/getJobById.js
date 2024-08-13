@@ -45,7 +45,6 @@ export const getJobById = async (req, res) => {
     res.json({
       ...job,
       applied: applied,
-      externalLink: true,
     });
   } catch (err) {
     console.error(err.message);

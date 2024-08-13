@@ -21,6 +21,7 @@ export const createJob = async (req, res) => {
     numberOfOpenings,
     applicationInstructions,
     contactEmail,
+    externalLink,
   } = req.body;
 
   try {
@@ -42,6 +43,7 @@ export const createJob = async (req, res) => {
       numberOfOpenings,
       applicationInstructions,
       contactEmail,
+      externalLink,
       createdBy: req.id,
     });
 

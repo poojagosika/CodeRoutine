@@ -82,6 +82,9 @@ const jobSchema = new Schema({
   applicationInstructions: {
     type: String,
   },
+  externalLink: {
+    type: String,
+  },
   contactEmail: {
     type: String,
     required: true,
