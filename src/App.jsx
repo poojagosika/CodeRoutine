@@ -32,6 +32,9 @@ import JobsDetails from "./Pages/Jobs/JobsDetails";
 import PostNewJob from "./Pages/Jobs/PostNewJob";
 import EditJob from "./Pages/Jobs/EditJob";
 import UnderConstruction from "./Component/UnderConstruction";
+import CoursesPage from "./Pages/Courses/CoursesPage";
+import CourseDetailPage from "./Pages/Courses/CourseDetailPage";
+import ProgressPage from "./Pages/Courses/ProgressPage";
 
 TimeAgo.addDefaultLocale(en);
 TimeAgo.addLocale(ru);
@@ -73,6 +76,10 @@ const App = () => {
               path="/interview/onlineinterview"
               element={<InterviewOnline />}
             />
+            <Route path="/courses" element={<CoursesPage />} />
+            <Route path="/courses/:id" element={<CourseDetailPage />} />
+            <Route path="/progress" element={<ProgressPage />} />
+
           </Routes>
         </BrowserRouter>
       </Store>

@@ -8,9 +8,13 @@ import {
   Box,
   Paper,
   Grid,
+  Chip,
 } from "@mui/material";
 import { createJob } from "../../Api/jobAPi";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import CloseIcon from "@mui/icons-material/Close";
+import IconButton from "@mui/material/IconButton";
 
 const employmentTypes = ["Full-Time", "Part-Time", "Contract"];
 const jobLevels = ["Entry-Level", "Mid-Level", "Senior-Level"];
@@ -21,11 +25,11 @@ const PostNewJob = () => {
     company: "",
     description: "",
     location: "",
-    skills: "",
+    skills: [],
     salary: "",
     employmentType: "",
-    requirements: "",
-    responsibilities: "",
+    requirements: [],
+    responsibilities: [],
     benefits: "",
     postedBy: "",
     applicationDeadline: "",
@@ -36,40 +40,121 @@ const PostNewJob = () => {
     contactEmail: "",
   });
 
-  const {
-    title,
-    company,
-    description,
-    location,
-    skills,
-    salary,
-    employmentType,
-    requirements,
-    responsibilities,
-    benefits,
-    postedBy,
-    applicationDeadline,
-    jobLevel,
-    industry,
-    numberOfOpenings,
-    applicationInstructions,
-    contactEmail,
-  } = formData;
+  const [currentSkill, setCurrentSkill] = useState("");
+  const [currentRequirement, setCurrentRequirement] = useState("");
+  const [currentResponsibility, setCurrentResponsibility] = useState("");
+  const [skillError, setSkillError] = useState("");
+  const [requirementError, setRequirementError] = useState("");
+  const [responsibilityError, setResponsibilityError] = useState("");
   const navigate = useNavigate();
 
-  const onChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const onChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleChangeSkill = (e) => {
+    setCurrentSkill(e.target.value);
+    setSkillError("");
+  };
+
+  const handleChangeRequirement = (e) => {
+    setCurrentRequirement(e.target.value);
+    setRequirementError("");
+  };
+
+  const handleChangeResponsibility = (e) => {
+    setCurrentResponsibility(e.target.value);
+    setResponsibilityError("");
+  };
+
+  const handleAddSkill = () => {
+    const trimmedSkill = currentSkill.trim().toLowerCase();
+    if (!trimmedSkill) {
+      setSkillError("Skill cannot be empty");
+      return;
+    }
+    if (formData.skills.some((skill) => skill.toLowerCase() === trimmedSkill)) {
+      setSkillError("This skill is already added");
+      return;
+    }
+    setFormData((prevState) => ({
+      ...prevState,
+      skills: [...prevState.skills, currentSkill.trim()],
+    }));
+    setCurrentSkill("");
+  };
+
+  const handleAddRequirement = () => {
+    const trimmedRequirement = currentRequirement.trim();
+    if (!trimmedRequirement) {
+      setRequirementError("Requirement cannot be empty");
+      return;
+    }
+    if (formData.requirements.includes(trimmedRequirement)) {
+      setRequirementError("This requirement is already added");
+      return;
+    }
+    setFormData((prevState) => ({
+      ...prevState,
+      requirements: [...prevState.requirements, trimmedRequirement],
+    }));
+    setCurrentRequirement("");
+  };
+
+  const handleAddResponsibility = () => {
+    const trimmedResponsibility = currentResponsibility.trim();
+    if (!trimmedResponsibility) {
+      setResponsibilityError("Responsibility cannot be empty");
+      return;
+    }
+    if (formData.responsibilities.includes(trimmedResponsibility)) {
+      setResponsibilityError("This responsibility is already added");
+      return;
+    }
+    setFormData((prevState) => ({
+      ...prevState,
+      responsibilities: [...prevState.responsibilities, trimmedResponsibility],
+    }));
+    setCurrentResponsibility("");
+  };
+
+  const handleRemoveSkill = (skillToRemove) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      skills: prevState.skills.filter((skill) => skill !== skillToRemove),
+    }));
+  };
+
+  const handleRemoveRequirement = (requirementToRemove) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      requirements: prevState.requirements.filter(
+        (req) => req !== requirementToRemove
+      ),
+    }));
+  };
+
+  const handleRemoveResponsibility = (responsibilityToRemove) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      responsibilities: prevState.responsibilities.filter(
+        (resp) => resp !== responsibilityToRemove
+      ),
+    }));
+  };
 
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await createJob(formData);
-      console.log(response.data);
-      // Handle success (e.g., show success message, redirect)
+      toast.success(response.data.message);
       navigate("/jobs");
     } catch (err) {
-      console.error(err.response.data);
-      // Handle error (e.g., show error message)
+      toast.error(err.response?.data || "An error occurred");
     }
   };
 
@@ -89,7 +174,7 @@ const PostNewJob = () => {
               <TextField
                 name="title"
                 label="Job Title"
-                value={title}
+                value={formData.title}
                 onChange={onChange}
                 fullWidth
                 variant="outlined"
@@ -102,7 +187,7 @@ const PostNewJob = () => {
                 fullWidth
                 label="Company"
                 name="company"
-                value={company}
+                value={formData.company}
                 onChange={onChange}
                 required
                 size="small"
@@ -113,7 +198,7 @@ const PostNewJob = () => {
                 fullWidth
                 label="Description"
                 name="description"
-                value={description}
+                value={formData.description}
                 onChange={onChange}
                 multiline
                 rows={4}
@@ -129,7 +214,7 @@ const PostNewJob = () => {
                 fullWidth
                 label="Location"
                 name="location"
-                value={location}
+                value={formData.location}
                 onChange={onChange}
                 required
                 size="small"
@@ -140,9 +225,10 @@ const PostNewJob = () => {
                 fullWidth
                 label="Salary"
                 name="salary"
-                value={salary}
+                value={formData.salary}
                 onChange={onChange}
                 size="small"
+                type="number"
               />
             </Grid>
 
@@ -152,7 +238,7 @@ const PostNewJob = () => {
                 fullWidth
                 label="Employment Type"
                 name="employmentType"
-                value={employmentType}
+                value={formData.employmentType}
                 onChange={onChange}
                 required
                 size="small"
@@ -170,7 +256,7 @@ const PostNewJob = () => {
                 fullWidth
                 label="Job Level"
                 name="jobLevel"
-                value={jobLevel}
+                value={formData.jobLevel}
                 onChange={onChange}
                 size="small"
               >
@@ -186,7 +272,7 @@ const PostNewJob = () => {
                 fullWidth
                 label="Industry"
                 name="industry"
-                value={industry}
+                value={formData.industry}
                 onChange={onChange}
                 size="small"
               />
@@ -197,48 +283,167 @@ const PostNewJob = () => {
                 label="Number of Openings"
                 name="numberOfOpenings"
                 type="number"
-                value={numberOfOpenings}
+                value={formData.numberOfOpenings}
                 onChange={onChange}
                 size="small"
               />
             </Grid>
             <Grid item xs={12}>
-              <Typography variant="h6">
-                Requirements & Responsibilities
-              </Typography>
+              <Typography variant="h6">Skills</Typography>
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Skills (comma separated)"
-                name="skills"
-                value={skills}
-                onChange={onChange}
-                required
-                size="small"
-              />
+              <Box display="flex" alignItems="start" mb={1}>
+                <TextField
+                  fullWidth
+                  label="Add a Skill"
+                  value={currentSkill}
+                  onChange={handleChangeSkill}
+                  size="small"
+                  error={Boolean(skillError)}
+                  helperText={skillError}
+                />
+                <Button
+                  variant="outlined"
+                  type="button"
+                  color="primary"
+                  onClick={handleAddSkill}
+                  style={{
+                    borderRadius: "10px",
+                    marginLeft: "10px",
+                    padding: "7px",
+                  }}
+                  size="small"
+                >
+                  Add
+                </Button>
+              </Box>
+              {formData.skills.map((skill, index) => (
+                <Chip
+                  key={index}
+                  label={
+                    <Box display="flex" alignItems="center">
+                      <Typography variant="body2" component="span">
+                        {skill}
+                      </Typography>
+                    </Box>
+                  }
+                  sx={{ mb: 1, mr: 1 }}
+                  variant="outlined"
+                  onDelete={() => handleRemoveSkill(skill)}
+                />
+              ))}
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Requirements (comma separated)"
-                name="requirements"
-                value={requirements}
-                onChange={onChange}
-                required
-                size="small"
-              />
+              <Typography variant="h6">Requirements</Typography>
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Responsibilities (comma separated)"
-                name="responsibilities"
-                value={responsibilities}
-                onChange={onChange}
-                required
-                size="small"
-              />
+              <Box display="flex" alignItems="start">
+                <TextField
+                  fullWidth
+                  label="Add a Requirement"
+                  value={currentRequirement}
+                  onChange={handleChangeRequirement}
+                  size="small"
+                  error={Boolean(requirementError)}
+                  helperText={requirementError}
+                />
+                <Button
+                  variant="outlined"
+                  type="button"
+                  color="primary"
+                  onClick={handleAddRequirement}
+                  style={{
+                    borderRadius: "10px",
+                    marginLeft: "10px",
+                    padding: "7px",
+                  }}
+                  size="small"
+                >
+                  Add
+                </Button>
+              </Box>
+              <Box
+                component="ul"
+                sx={{ listStyleType: "disc", paddingLeft: 2 }}
+              >
+                {formData.requirements.map((req, index) => (
+                  <Box
+                    key={index}
+                    sx={{ display: "flex", alignItems: "center" }}
+                  >
+                    <Typography
+                      component="li"
+                      variant="body2"
+                      sx={{ flexGrow: 1 }}
+                    >
+                      {req}
+                    </Typography>
+                    <IconButton
+                      edge="end"
+                      aria-label="delete"
+                      onClick={() => handleRemoveRequirement(req)}
+                    >
+                      <CloseIcon />
+                    </IconButton>
+                  </Box>
+                ))}
+              </Box>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="h6">Responsibilities</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Box display="flex" alignItems="start" mb={1}>
+                <TextField
+                  fullWidth
+                  label="Add a Responsibility"
+                  value={currentResponsibility}
+                  onChange={handleChangeResponsibility}
+                  size="small"
+                  error={Boolean(responsibilityError)}
+                  helperText={responsibilityError}
+                />
+                <Button
+                  variant="outlined"
+                  type="button"
+                  color="primary"
+                  onClick={handleAddResponsibility}
+                  style={{
+                    borderRadius: "10px",
+                    marginLeft: "10px",
+                    padding: "7px",
+                  }}
+                  size="small"
+                >
+                  Add
+                </Button>
+              </Box>
+              <Box
+                component="ul"
+                sx={{ listStyleType: "disc", paddingLeft: 2 }}
+              >
+                {formData.responsibilities.map((resp, index) => (
+                  <Box
+                    key={index}
+                    sx={{ display: "flex", alignItems: "center" }}
+                  >
+                    <Typography
+                      component="li"
+                      variant="body2"
+                      sx={{ flexGrow: 1 }}
+                    >
+                      {resp}
+                    </Typography>
+                    <IconButton
+                      edge="end"
+                      aria-label="delete"
+                      onClick={() => handleRemoveResponsibility(resp)}
+                    >
+                      <CloseIcon />
+                    </IconButton>
+                  </Box>
+                ))}
+              </Box>
             </Grid>
             <Grid item xs={12}>
               <Typography variant="h6">Benefits & Contact</Typography>
@@ -248,7 +453,7 @@ const PostNewJob = () => {
                 fullWidth
                 label="Benefits (comma separated)"
                 name="benefits"
-                value={benefits}
+                value={formData.benefits}
                 onChange={onChange}
                 required
                 size="small"
@@ -259,7 +464,7 @@ const PostNewJob = () => {
                 fullWidth
                 label="Posted By"
                 name="postedBy"
-                value={postedBy}
+                value={formData.postedBy}
                 onChange={onChange}
                 required
                 size="small"
@@ -271,7 +476,7 @@ const PostNewJob = () => {
                 label="Application Deadline"
                 name="applicationDeadline"
                 type="date"
-                value={applicationDeadline}
+                value={formData.applicationDeadline}
                 onChange={onChange}
                 InputLabelProps={{ shrink: true }}
                 size="small"
@@ -283,7 +488,7 @@ const PostNewJob = () => {
                 fullWidth
                 label="Application Instructions"
                 name="applicationInstructions"
-                value={applicationInstructions}
+                value={formData.applicationInstructions}
                 onChange={onChange}
                 size="small"
               />
@@ -294,7 +499,7 @@ const PostNewJob = () => {
                 label="Contact Email"
                 name="contactEmail"
                 type="email"
-                value={contactEmail}
+                value={formData.contactEmail}
                 onChange={onChange}
                 required
                 size="small"
