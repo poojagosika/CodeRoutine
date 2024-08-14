@@ -6,6 +6,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 export const pages = [
   { name: "Explore", path: "/explore", role: "user", login: false },
   { name: "Jobs", path: "/jobs", role: "user", login: false },
+  { name: "Courses", path: "/courses", role: "user", login: false },
   { name: "Problems", path: "/problems", role: "user", login: false },
   { name: "Add Problems", path: "/addProblems", role: "admin", login: true },
   { name: "Contest", path: "/contest", role: "user", login: false },

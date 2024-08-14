@@ -109,10 +109,14 @@ const JobDetails = () => {
   }
 
   const JobExpiry = (applicationDeadline) => {
+    if (applicationDeadline === null) {
+      return false;
+    }
     const currentDate = new Date();
-    return new Date(applicationDeadline) > currentDate;
+    return new Date(applicationDeadline) < currentDate;
   };
 
+  console.log(job)
   return (
     <Container maxWidth="md" sx={{ marginBottom: 6, padding: 2 }}>
       <motion.div
@@ -151,15 +155,14 @@ const JobDetails = () => {
           >
             {job?.title}
           </Typography>
-          {(!JobExpiry(job?.applicationDeadline) ||
-            job?.applicationDeadline === null) && (
-              <Box display="flex" gap={1} color="error.main" alignItems="center">
-                <ErrorIcon sx={{ fontSize: 22 }} />
-                <Typography variant="body1">
-                  No longer accepting applications
-                </Typography>
-              </Box>
-            )}
+          {JobExpiry(job?.applicationDeadline) && (
+            <Box display="flex" gap={1} color="error.main" alignItems="center">
+              <ErrorIcon sx={{ fontSize: 22 }} />
+              <Typography variant="body1">
+                No longer accepting applications
+              </Typography>
+            </Box>
+          )}
           <Typography
             variant="h6"
             gutterBottom
@@ -232,10 +235,12 @@ const JobDetails = () => {
               )}
             </Grid>
             <Grid item xs={6}>
-              <JobDetail
-                label="Application Deadline"
-                value={new Date(job?.applicationDeadline).toLocaleDateString()}
-              />
+              {
+                JobExpiry(job?.applicationDeadline) &&
+                <JobDetail
+                  label="Application Deadline"
+                  value={new Date(job?.applicationDeadline).toLocaleDateString()}
+                />}
               <JobDetail label="Posted By" value={job?.postedBy} />
             </Grid>
           </Grid>
