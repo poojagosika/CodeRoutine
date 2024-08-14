@@ -35,6 +35,7 @@ import UnderConstruction from "./Component/UnderConstruction";
 import CoursesPage from "./Pages/Courses/CoursesPage";
 import CourseDetailPage from "./Pages/Courses/CourseDetailPage";
 import ProgressPage from "./Pages/Courses/ProgressPage";
+import CreateCourse from "./Pages/Courses/CreateCourse";
 
 TimeAgo.addDefaultLocale(en);
 TimeAgo.addLocale(ru);
@@ -77,6 +78,7 @@ const App = () => {
               element={<InterviewOnline />}
             />
             <Route path="/courses" element={<CoursesPage />} />
+            <Route path="/courses/add" element={<CreateCourse />} />
             <Route path="/courses/:id" element={<CourseDetailPage />} />
             <Route path="/progress" element={<ProgressPage />} />
 
