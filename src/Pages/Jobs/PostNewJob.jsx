@@ -30,7 +30,7 @@ const PostNewJob = () => {
     employmentType: "",
     requirements: [],
     responsibilities: [],
-    benefits: "",
+    benefits: [],
     postedBy: "",
     applicationDeadline: "",
     jobLevel: "",
@@ -38,14 +38,17 @@ const PostNewJob = () => {
     numberOfOpenings: "",
     applicationInstructions: "",
     contactEmail: "",
+    externalLink: "",
   });
 
   const [currentSkill, setCurrentSkill] = useState("");
   const [currentRequirement, setCurrentRequirement] = useState("");
   const [currentResponsibility, setCurrentResponsibility] = useState("");
+  const [currentBenefit, setCurrentBenefit] = useState("");
   const [skillError, setSkillError] = useState("");
   const [requirementError, setRequirementError] = useState("");
   const [responsibilityError, setResponsibilityError] = useState("");
+  const [benefitError, setBenefitError] = useState("");
   const navigate = useNavigate();
 
   const onChange = (e) => {
@@ -69,6 +72,11 @@ const PostNewJob = () => {
   const handleChangeResponsibility = (e) => {
     setCurrentResponsibility(e.target.value);
     setResponsibilityError("");
+  };
+
+  const handleChangeBenefit = (e) => {
+    setCurrentBenefit(e.target.value);
+    setBenefitError("");
   };
 
   const handleAddSkill = () => {
@@ -122,6 +130,23 @@ const PostNewJob = () => {
     setCurrentResponsibility("");
   };
 
+  const handleAddBenefit = () => {
+    const trimmedBenefit = currentBenefit.trim();
+    if (!trimmedBenefit) {
+      setBenefitError("Benefit cannot be empty");
+      return;
+    }
+    if (formData.benefits.includes(trimmedBenefit)) {
+      setBenefitError("This Benefit is already added");
+      return;
+    }
+    setFormData((prevState) => ({
+      ...prevState,
+      benefits: [...prevState.benefits, trimmedBenefit],
+    }));
+    setCurrentBenefit("");
+  };
+
   const handleRemoveSkill = (skillToRemove) => {
     setFormData((prevState) => ({
       ...prevState,
@@ -147,6 +172,13 @@ const PostNewJob = () => {
     }));
   };
 
+  const handleRemoveBenefit = (benefitToRemove) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      benefits: prevState.benefits.filter((ben) => ben !== benefitToRemove),
+    }));
+  };
+
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -165,7 +197,7 @@ const PostNewJob = () => {
           Post a New Job
         </Typography>
         <form onSubmit={onSubmit}>
-          <Grid container spacing={3}>
+          <Grid container spacing={2}>
             <Grid item xs={12}>
               <Typography variant="h6">Basic Information</Typography>
             </Grid>
@@ -381,6 +413,7 @@ const PostNewJob = () => {
                     <IconButton
                       edge="end"
                       aria-label="delete"
+                      size="small"
                       onClick={() => handleRemoveRequirement(req)}
                     >
                       <CloseIcon />
@@ -393,7 +426,7 @@ const PostNewJob = () => {
               <Typography variant="h6">Responsibilities</Typography>
             </Grid>
             <Grid item xs={12}>
-              <Box display="flex" alignItems="start" mb={1}>
+              <Box display="flex" alignItems="start">
                 <TextField
                   fullWidth
                   label="Add a Responsibility"
@@ -437,6 +470,7 @@ const PostNewJob = () => {
                     <IconButton
                       edge="end"
                       aria-label="delete"
+                      size="small"
                       onClick={() => handleRemoveResponsibility(resp)}
                     >
                       <CloseIcon />
@@ -446,18 +480,64 @@ const PostNewJob = () => {
               </Box>
             </Grid>
             <Grid item xs={12}>
-              <Typography variant="h6">Benefits & Contact</Typography>
+              <Typography variant="h6">Benefits</Typography>
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Benefits (comma separated)"
-                name="benefits"
-                value={formData.benefits}
-                onChange={onChange}
-                required
-                size="small"
-              />
+              <Box display="flex" alignItems="start">
+                <TextField
+                  fullWidth
+                  label="Add a Benefits"
+                  value={currentBenefit}
+                  onChange={handleChangeBenefit}
+                  size="small"
+                  error={Boolean(benefitError)}
+                  helperText={benefitError}
+                />
+                <Button
+                  variant="outlined"
+                  type="button"
+                  color="primary"
+                  onClick={handleAddBenefit}
+                  style={{
+                    borderRadius: "10px",
+                    marginLeft: "10px",
+                    padding: "7px",
+                  }}
+                  size="small"
+                >
+                  Add
+                </Button>
+              </Box>
+              <Box
+                component="ul"
+                sx={{ listStyleType: "disc", paddingLeft: 2 }}
+              >
+                {formData.benefits.map((benefit, index) => (
+                  <Box
+                    key={index}
+                    sx={{ display: "flex", alignItems: "center" }}
+                  >
+                    <Typography
+                      component="li"
+                      variant="body2"
+                      sx={{ flexGrow: 1 }}
+                    >
+                      {benefit}
+                    </Typography>
+                    <IconButton
+                      edge="end"
+                      aria-label="delete"
+                      size="small"
+                      onClick={() => handleRemoveBenefit(benefit)}
+                    >
+                      <CloseIcon />
+                    </IconButton>
+                  </Box>
+                ))}
+              </Box>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="h6">Other Information</Typography>
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -502,6 +582,16 @@ const PostNewJob = () => {
                 value={formData.contactEmail}
                 onChange={onChange}
                 required
+                size="small"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Job Link (If any)"
+                name="externalLink"
+                value={formData.externalLink}
+                onChange={onChange}
                 size="small"
               />
             </Grid>
