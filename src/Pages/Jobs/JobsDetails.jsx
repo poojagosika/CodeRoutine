@@ -16,6 +16,7 @@ import {
   DialogTitle,
   Divider,
 } from "@mui/material";
+import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
 import { getJobById, deleteJob, applyForJob } from "../../Api/jobAPi";
 import { toast } from "react-toastify";
 import { ContextStore } from "../../Context/ContextStore";
@@ -155,14 +156,15 @@ const JobDetails = () => {
           >
             {job?.title}
           </Typography>
-          {JobExpiry(job?.applicationDeadline) && (
-            <Box display="flex" gap={1} color="error.main" alignItems="center">
-              <ErrorIcon sx={{ fontSize: 22 }} />
-              <Typography variant="body1">
-                No longer accepting applications
-              </Typography>
-            </Box>
-          )}
+          {(!JobExpiry(job?.applicationDeadline) ||
+            job?.applicationDeadline === null) && (
+              <Box display="flex" gap={1} color="error.main" alignItems="center">
+                <ErrorIcon sx={{ fontSize: 22 }} />
+                <Typography variant="body1">
+                  No longer accepting applications
+                </Typography>
+              </Box>
+            )}
           <Typography
             variant="h6"
             gutterBottom
@@ -216,7 +218,10 @@ const JobDetails = () => {
           <Grid container spacing={2}>
             <Grid item xs={6}>
               {job?.employmentType && (
-                <JobDetail label="Employment Type" value={job?.employmentType} />
+                <JobDetail
+                  label="Employment Type"
+                  value={job?.employmentType}
+                />
               )}
               {job?.jobLevel && (
                 <JobDetail label="Job Level" value={job?.jobLevel} />
@@ -224,9 +229,7 @@ const JobDetails = () => {
               {job?.industry && (
                 <JobDetail label="Industry" value={job?.industry} />
               )}
-              {job?.salary && (
-                <JobDetail label="Salary" value={job?.salary} />
-              )}
+              {job?.salary && <JobDetail label="Salary" value={job?.salary} />}
               {job?.numberOfOpenings && (
                 <JobDetail
                   label="Number of Openings"
@@ -245,21 +248,40 @@ const JobDetails = () => {
             </Grid>
           </Grid>
           <Box sx={{ marginTop: 4 }} display="flex" gap={2}>
-            <Button
-              variant="contained"
-              color="primary"
-              disabled={job?.applied}
-              onClick={() => {
-                handleApply(job?._id);
-              }}
-              sx={{
-                "&:hover": {
-                  backgroundColor: "primary.dark",
-                },
-              }}
-            >
-              {job?.applied ? "Applied" : "Apply Now"}
-            </Button>
+            {job?.externalLink ? (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => {
+                  window.open(job?.externalLink, "_blank");
+                }}
+                sx={{
+                  "&:hover": {
+                    backgroundColor: "primary.dark",
+                  },
+                }}
+                endIcon={<ArrowOutwardIcon />}
+              >
+                Apply
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                color="primary"
+                disabled={job?.applied}
+                onClick={() => {
+                  handleApply(job?._id);
+                }}
+                sx={{
+                  "&:hover": {
+                    backgroundColor: "primary.dark",
+                  },
+                }}
+              >
+                {job?.applied ? "Applied" : "Apply Now"}
+              </Button>
+            )}
+
             {job?.createdBy === userData?._id && (
               <>
                 <Button
