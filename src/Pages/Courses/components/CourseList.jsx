@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Grid, Typography } from "@mui/material";
+import { Grid, Typography, CircularProgress } from "@mui/material";
 import CourseCard from "./CourseCard";
 import { getAllCourses } from "../../../Api/CoursesApi";
 
@@ -19,8 +19,26 @@ const CourseList = () => {
       });
   }, []);
 
+  if (loading) {
+    return (
+      <Grid
+        container
+        justifyContent="center"
+        alignItems="center"
+        style={{ height: "100vh" }}
+      >
+        <CircularProgress />
+      </Grid>
+    );
+  }
 
-  if (loading) return <Typography>Loading...</Typography>;
+  if (courses.length === 0) {
+    return (
+      <Typography variant="h6" align="center">
+        No courses available
+      </Typography>
+    );
+  }
 
   return (
     <Grid container spacing={3}>
