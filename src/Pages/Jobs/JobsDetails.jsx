@@ -88,7 +88,10 @@ const JobDetails = () => {
   };
 
   return (
-    <Container maxWidth="md" sx={{ marginBottom: 6, padding: 2, maxWidth:"auto 100vh" }}>
+    <Container
+      maxWidth="md"
+      sx={{ marginBottom: 6, padding: 2, maxWidth: "auto 100vh" }}
+    >
       <Paper
         elevation={3}
         sx={{
@@ -162,21 +165,27 @@ const JobDetails = () => {
         <Section title="Responsibilities">
           <ul>
             {job?.responsibilities?.map((item, index) => (
-              <li key={index}>{item}</li>
+              <li style={{ marginLeft: "30px" }} key={index}>
+                {item}
+              </li>
             ))}
           </ul>
         </Section>
         <Section title="Requirements">
           <ul>
             {job?.requirements?.map((item, index) => (
-              <li key={index}>{item}</li>
+              <li style={{ marginLeft: "30px" }} key={index}>
+                {item}
+              </li>
             ))}
           </ul>
         </Section>
         <Section title="Benefits">
           <ul>
             {job?.benefits?.map((item, index) => (
-              <li key={index}>{item}</li>
+              <li style={{ marginLeft: "30px" }} key={index}>
+                {item}
+              </li>
             ))}
           </ul>
         </Section>
