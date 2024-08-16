@@ -22,7 +22,9 @@ function Explore() {
   const CombinedLink = React.forwardRef(function CombinedLink(props, ref) {
     return <RouterLink ref={ref} {...props} />;
   });
-  
+  React.useEffect(() => {
+    document.title = "CodeRoutine | Explore";
+  }, []);
   return (
     <>
       <Container
@@ -41,13 +43,15 @@ function Explore() {
             justifyContent: "space-between",
           }}
         >
-          <Box sx={{ display: "flex", gap: 2, justifyContent: "space-between" }}>
+          <Box
+            sx={{ display: "flex", gap: 2, justifyContent: "space-between" }}
+          >
             <Box>
               <Typography variant="h6">Welcome to</Typography>
               <Typography variant="h4">CodeRoutine Explore</Typography>
             </Box>
             <Box sx={{ display: "flex", gap: 1 }}>
-              <IconButton color="primary" aria-label="home" >
+              <IconButton color="primary" aria-label="home">
                 <StarBorderIcon />
               </IconButton>
               <IconButton color="primary" aria-label="settings">
@@ -65,8 +69,18 @@ function Explore() {
           <Grid container spacing={2} mt={2}>
             {data.map((product) => (
               <Grid key={product.id} item xs={12} md={6} lg={4}>
-                <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
-                  <Link component={CombinedLink} to="/underconstruction" underline="none">
+                <Card
+                  sx={{
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                >
+                  <Link
+                    component={CombinedLink}
+                    to="/underconstruction"
+                    underline="none"
+                  >
                     <CardMedia
                       component="img"
                       height="200px"
@@ -82,7 +96,9 @@ function Explore() {
                       </Typography>
                     </CardContent>
                   </Link>
-                  <Box sx={{ display: "flex", justifyContent: 'flex-end', p: 2 }}>
+                  <Box
+                    sx={{ display: "flex", justifyContent: "flex-end", p: 2 }}
+                  >
                     <Button size="small" color="primary" variant="contained">
                       <StarBorderIcon sx={{ mr: 1 }} />
                       {product.coins}

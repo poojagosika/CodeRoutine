@@ -5,6 +5,9 @@ import { useNavigate } from "react-router-dom";
 
 const CoursesPage = () => {
   const navigate = useNavigate();
+  React.useEffect(() => {
+    document.title = "CodeRoutine | Courses";
+  }, []);
 
   return (
     <Container sx={{ mt: 4, p: 2 }}>

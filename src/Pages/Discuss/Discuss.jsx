@@ -32,6 +32,9 @@ const Discuss = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
+  React.useEffect(() => {
+    document.title = "CodeRoutine | Discuss";
+  }, []);
   const fetchDiscussions = useCallback(async () => {
     setLoading(true);
     try {

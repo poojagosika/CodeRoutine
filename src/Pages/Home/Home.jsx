@@ -26,7 +26,9 @@ import CopyRight from "../../Component/CopyRight/CopyRight";
 function Home() {
   const { userData } = ContextStore();
   const [searchQuery, setSearchQuery] = useState("");
-
+  React.useEffect(() => {
+    document.title = "CodeRoutine | Home";
+  }, []);
   const CombinedLink = React.forwardRef(function CombinedLink(props, ref) {
     return <RouterLink ref={ref} {...props} />;
   });
@@ -134,7 +136,11 @@ function Home() {
           <Grid container spacing={4} justifyContent="center">
             {cards.map((card) => (
               <Grid item key={card.id} xs={12} sm={6} md={3}>
-                <Link component={CombinedLink} to="/underconstruction" underline="none">
+                <Link
+                  component={CombinedLink}
+                  to="/underconstruction"
+                  underline="none"
+                >
                   <Card>
                     <CardActionArea>
                       <CardMedia

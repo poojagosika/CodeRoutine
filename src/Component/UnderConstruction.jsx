@@ -4,6 +4,9 @@ import ConstructionIcon from "@mui/icons-material/Construction";
 import CopyRight from "./CopyRight/CopyRight";
 
 function UnderConstruction() {
+  React.useEffect(() => {
+    document.title = "CodeRoutine | Under Construction";
+  }, []);
   return (
     <React.Fragment>
       <Container maxWidth="lg">
