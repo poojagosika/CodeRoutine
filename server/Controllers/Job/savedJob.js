@@ -35,12 +35,16 @@ export const savedJob = async (req, res) => {
         (savedJobId) => !savedJobId.equals(jobId)
       );
       await user.save();
-      return res.status(200).json({ message: "Job unsaved successfully" });
+      return res
+        .status(200)
+        .json({ saved: false, message: "Job unsaved successfully" });
     } else {
       // If the job is not saved, add it to savedJobs
       user.savedJobs.push(jobId);
       await user.save();
-      return res.status(200).json({ message: "Job saved successfully" });
+      return res
+        .status(200)
+        .json({ saved: true, message: "Job saved successfully" });
     }
   } catch (err) {
     console.error(err.message);

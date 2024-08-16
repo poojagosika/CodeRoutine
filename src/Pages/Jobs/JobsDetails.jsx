@@ -17,70 +17,31 @@ import {
   Divider,
 } from "@mui/material";
 import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
-import { getJobById, deleteJob, applyForJob } from "../../Api/jobAPi";
-import { toast } from "react-toastify";
-import { ContextStore } from "../../Context/ContextStore";
 import ErrorIcon from "@mui/icons-material/Error";
+import { useDispatch, useSelector } from "react-redux";
+import { ContextStore } from "../../Context/ContextStore";
+import { selectJobById, selectLoading, selectError } from "../../features/jobs/jobSlice";
+import { applyForJob, fetchJobById, removeJob } from "../../features/jobs/jobActions";
 
 const JobDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [job, setJob] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const dispatch = useDispatch();
   const { userData } = ContextStore();
+
+  const job = useSelector((state) => selectJobById(state, id));
+  const loading = useSelector(selectLoading);
+  const error = useSelector(selectError);
   const [open, setOpen] = useState(false);
-  const [jobIdToDelete, setJobIdToDelete] = useState(null);
 
   useEffect(() => {
-    const fetchJob = async () => {
-      try {
-        const res = await getJobById(id);
-        setJob(res?.data);
-      } catch (err) {
-        toast.error(err?.response?.data?.message);
-        setError(err?.response?.data?.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchJob();
-  }, [id]);
+    dispatch(fetchJobById(id)); // Fetch job details using Redux
+  }, [dispatch, id]);
 
-  const handleDelete = (id) => {
-    setJobIdToDelete(id);
-    setOpen(true);
-  };
-
-  const confirmDelete = async () => {
-    try {
-      const response = await deleteJob(jobIdToDelete);
-      if (response.data) {
-        toast.success(response.data.message);
-        navigate("/jobs");
-      }
-    } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to delete job");
-    } finally {
-      setOpen(false);
-    }
-  };
-
-  const handleApply = async (id) => {
-    try {
-      const response = await applyForJob(id);
-      if (response.data) {
-        toast.success(response?.data?.message);
-      }
-    } catch (err) {
-      toast.error(err?.response?.data?.message || "Failed to Apply job");
-    } finally {
-      setOpen(false);
-    }
-  };
-
-  const handleEdit = () => {
-    navigate(`/job/edit/${id}`);
+  const confirmDelete = () => {
+    dispatch(removeJob(id));
+    navigate(`/jobs`);
+    setOpen(false);
   };
 
   if (loading) {
@@ -259,7 +220,7 @@ const JobDetails = () => {
               color="primary"
               disabled={job?.applied}
               onClick={() => {
-                handleApply(job?._id);
+                dispatch(applyForJob(job?._id))
               }}
               sx={{
                 "&:hover": {
@@ -276,7 +237,7 @@ const JobDetails = () => {
               <Button
                 variant="contained"
                 color="success"
-                onClick={() => handleEdit(job._id)}
+                onClick={() => navigate(`/job/edit/${job._id}`)}
                 sx={{
                   "&:hover": {
                     backgroundColor: "success.dark",
@@ -288,7 +249,7 @@ const JobDetails = () => {
               <Button
                 variant="contained"
                 color="error"
-                onClick={() => handleDelete(job?._id)}
+                onClick={() => setOpen(true)}
                 sx={{
                   "&:hover": {
                     backgroundColor: "error.dark",

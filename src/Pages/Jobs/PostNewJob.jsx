@@ -10,16 +10,18 @@ import {
   Grid,
   Chip,
 } from "@mui/material";
-import { createJob } from "../../Api/jobAPi";
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
+import { postNewJob } from "../../features/jobs/jobActions";
 
 const employmentTypes = ["Full-Time", "Part-Time", "Contract"];
 const jobLevels = ["Entry-Level", "Mid-Level", "Senior-Level"];
 
 const PostNewJob = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     title: "",
     company: "",
@@ -49,7 +51,6 @@ const PostNewJob = () => {
   const [requirementError, setRequirementError] = useState("");
   const [responsibilityError, setResponsibilityError] = useState("");
   const [benefitError, setBenefitError] = useState("");
-  const navigate = useNavigate();
 
   const onChange = (e) => {
     const { name, value } = e.target;
@@ -179,15 +180,10 @@ const PostNewJob = () => {
     }));
   };
 
-  const onSubmit = async (e) => {
+  const onSubmit = (e) => {
     e.preventDefault();
-    try {
-      const response = await createJob(formData);
-      toast.success(response.data.message);
-      navigate("/jobs");
-    } catch (err) {
-      toast.error(err.response?.data || "An error occurred");
-    }
+    dispatch(postNewJob(formData));
+    navigate('/jobs');
   };
 
   return (

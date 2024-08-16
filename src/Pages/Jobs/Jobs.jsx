@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   Container,
   Typography,
@@ -15,56 +15,58 @@ import {
   Tab,
   TablePagination,
 } from "@mui/material";
-import { getAllJobs } from "../../Api/jobAPi";
+import {
+  selectJobs,
+  selectLoading,
+  selectError,
+  setFilters,
+  setSelectedTab,
+  selectFilters,
+  selectSelectedTab,
+} from "../../features/jobs/jobSlice";
 import JobsLoader from "./Loading/JobsLoading";
 import JobCard from "./JobCard";
+import { Link } from "react-router-dom";
+import { fetchJobs } from "../../features/jobs/jobActions";
 
 const Jobs = () => {
-  const [jobs, setJobs] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [filters, setFilters] = useState({
-    title: "",
-    location: "",
-    employmentTypes: [],
-  });
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [selectedTab, setSelectedTab] = useState(0);
+  const dispatch = useDispatch();
+  const jobs = useSelector(selectJobs);
+  const loading = useSelector(selectLoading);
+  const error = useSelector(selectError);
+  const filters = useSelector(selectFilters);
+  const selectedTab = useSelector(selectSelectedTab);
+
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   useEffect(() => {
-    const fetchJobs = async () => {
-      try {
-        const res = await getAllJobs();
-        setJobs(res.data);
-        setLoading(false);
-      } catch (err) {
-        console.error(err.message);
-        setLoading(false);
-      }
-    };
-
-    fetchJobs();
-  }, [selectedTab]);
+    dispatch(fetchJobs());
+  }, [dispatch, selectedTab]);
 
   const handleFilterChange = (e) => {
     const { name, value, checked } = e.target;
+    let newFilters = { ...filters };
+
     if (name === "employmentTypes") {
-      setFilters((prev) => ({
-        ...prev,
+      newFilters = {
+        ...newFilters,
         employmentTypes: checked
-          ? [...prev.employmentTypes, value]
-          : prev.employmentTypes.filter((type) => type !== value),
-      }));
+          ? [...newFilters.employmentTypes, value]
+          : newFilters.employmentTypes.filter((type) => type !== value),
+      };
     } else {
-      setFilters({
-        ...filters,
+      newFilters = {
+        ...newFilters,
         [name]: value,
-      });
+      };
     }
+
+    dispatch(setFilters(newFilters));
   };
 
   const handleTabChange = (event, newValue) => {
-    setSelectedTab(newValue);
+    dispatch(setSelectedTab(newValue));
   };
 
   const filterJobs = (job) => {
@@ -76,18 +78,15 @@ const Jobs = () => {
     const isTabMatch =
       selectedTab === 0 || // All Jobs
       (selectedTab === 1 && isSaved) || // Saved Jobs
-      (selectedTab === 2 && isApplied)  // Applied Jobs
+      (selectedTab === 2 && isApplied); // Applied Jobs
 
     return (
       isTabMatch &&
       (!title || job.title.toLowerCase().includes(title.toLowerCase())) &&
-      (!location ||
-        job.location.toLowerCase().includes(location.toLowerCase())) &&
-      (employmentTypes.length === 0 ||
-        employmentTypes.includes(job.employmentType))
+      (!location || job.location.toLowerCase().includes(location.toLowerCase())) &&
+      (employmentTypes.length === 0 || employmentTypes.includes(job.employmentType))
     );
   };
-
 
   const filteredJobs = jobs.filter(filterJobs);
 
@@ -100,15 +99,20 @@ const Jobs = () => {
     setPage(0);
   };
 
-  const currentPageJobs = filteredJobs.slice(
-    page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
-  );
-
   if (loading) {
     return (
       <Container maxWidth="md" style={{ marginTop: "50px", marginBottom: "50px" }}>
         <JobsLoader />
+      </Container>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container maxWidth="md" style={{ marginTop: "50px", marginBottom: "50px" }}>
+        <Typography variant="h6" color="error" gutterBottom>
+          {error}
+        </Typography>
       </Container>
     );
   }
@@ -197,7 +201,7 @@ const Jobs = () => {
           </Tabs>
 
           <Grid container spacing={2} mb={2}>
-            {currentPageJobs.length === 0 && (
+            {filteredJobs.length === 0 && (
               <Box
                 display="flex"
                 justifyContent="center"
@@ -210,8 +214,8 @@ const Jobs = () => {
                 </Typography>
               </Box>
             )}
-            {currentPageJobs.map((job, index) => (
-              <Grid item key={job._id} xs={12} sm={12} md={12} gap={2}>
+            {filteredJobs.map((job, index) => (
+              <Grid item key={index} xs={12} sm={12} md={12} gap={2}>
                 <JobCard job={job} index={index} />
               </Grid>
             ))}

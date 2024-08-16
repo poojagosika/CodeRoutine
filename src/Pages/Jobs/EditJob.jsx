@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   TextField,
@@ -10,14 +10,20 @@ import {
   Grid,
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
-import { getJobById, updateJob } from "../../Api/jobAPi";
-import { toast } from "react-toastify";
+import { useSelector, useDispatch } from "react-redux";
 import { formatDateWithYearMonth } from "../../Config/FormatDate";
+import { editJob } from "../../features/jobs/jobActions";
+import { selectJobById, selectLoading } from "../../features/jobs/jobSlice";
 
 const EditJob = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [job, setJob] = useState({
+  const dispatch = useDispatch();
+
+  const job = useSelector((state) => selectJobById(state, id));
+  const loading = useSelector(selectLoading);
+
+  const [formData, setFormData] = useState({
     title: "",
     company: "",
     description: "",
@@ -34,35 +40,45 @@ const EditJob = () => {
     numberOfOpenings: "",
     contactEmail: "",
   });
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchJob = async () => {
-      try {
-        const res = await getJobById(id);
-        setJob(res.data);
-      } catch (error) {
-        toast.error(error.response.data.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchJob();
-  }, [id]);
+    if (job) {
+      setFormData({
+        ...job,
+        skills: job.skills.join(", "),
+        requirements: job.requirements.join(", "),
+        responsibilities: job.responsibilities.join(", "),
+        benefits: job.benefits.join(", "),
+        applicationDeadline: formatDateWithYearMonth(job.applicationDeadline),
+      });
+    }
+  }, [job]);
 
   const handleChange = (e) => {
-    setJob({ ...job, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      const response = await updateJob(id, job);
-      toast.success(response.data.message);
-      navigate(`/jobs`);
-    } catch (error) {
-      toast.error(error.response.data.message);
-    }
+    const updatedJob = {
+      ...formData,
+      skills: formData.skills.split(",").map((skill) => skill.trim()),
+      requirements: formData.requirements
+        .split(",")
+        .map((req) => req.trim()),
+      responsibilities: formData.responsibilities
+        .split(",")
+        .map((resp) => resp.trim()),
+      benefits: formData.benefits.split(",").map((benefit) => benefit.trim()),
+    };
+
+    dispatch(editJob({ id, job: updatedJob })).then(() => {
+      navigate(`/jobs/${id}`);
+    });
   };
 
   if (loading) {
@@ -90,15 +106,13 @@ const EditJob = () => {
         <form onSubmit={handleSubmit}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
-              <Typography variant="h6">
-                Basic Information
-              </Typography>
+              <Typography variant="h6">Basic Information</Typography>
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
                 name="title"
                 label="Title"
-                value={job.title || ""}
+                value={formData.title || ""}
                 onChange={handleChange}
                 fullWidth
                 variant="outlined"
@@ -109,7 +123,7 @@ const EditJob = () => {
               <TextField
                 name="company"
                 label="Company"
-                value={job.company || ""}
+                value={formData.company || ""}
                 onChange={handleChange}
                 fullWidth
                 variant="outlined"
@@ -120,7 +134,7 @@ const EditJob = () => {
               <TextField
                 name="description"
                 label="Description"
-                value={job.description || ""}
+                value={formData.description || ""}
                 onChange={handleChange}
                 fullWidth
                 multiline
@@ -131,15 +145,13 @@ const EditJob = () => {
             </Grid>
 
             <Grid item xs={12}>
-              <Typography variant="h6">
-                Job Details
-              </Typography>
+              <Typography variant="h6">Job Details</Typography>
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
                 name="location"
                 label="Location"
-                value={job.location || ""}
+                value={formData.location || ""}
                 onChange={handleChange}
                 fullWidth
                 variant="outlined"
@@ -150,7 +162,7 @@ const EditJob = () => {
               <TextField
                 name="salary"
                 label="Salary"
-                value={job.salary || ""}
+                value={formData.salary || ""}
                 onChange={handleChange}
                 fullWidth
                 variant="outlined"
@@ -161,7 +173,7 @@ const EditJob = () => {
               <TextField
                 name="employmentType"
                 label="Employment Type"
-                value={job.employmentType || ""}
+                value={formData.employmentType || ""}
                 onChange={handleChange}
                 fullWidth
                 variant="outlined"
@@ -172,7 +184,7 @@ const EditJob = () => {
               <TextField
                 name="jobLevel"
                 label="Job Level"
-                value={job.jobLevel || ""}
+                value={formData.jobLevel || ""}
                 onChange={handleChange}
                 fullWidth
                 variant="outlined"
@@ -183,7 +195,7 @@ const EditJob = () => {
               <TextField
                 name="industry"
                 label="Industry"
-                value={job.industry || ""}
+                value={formData.industry || ""}
                 onChange={handleChange}
                 fullWidth
                 variant="outlined"
@@ -194,7 +206,7 @@ const EditJob = () => {
               <TextField
                 name="numberOfOpenings"
                 label="Number of Openings"
-                value={job.numberOfOpenings || ""}
+                value={formData.numberOfOpenings || ""}
                 onChange={handleChange}
                 fullWidth
                 variant="outlined"
@@ -211,10 +223,8 @@ const EditJob = () => {
               <TextField
                 name="skills"
                 label="Skills"
-                value={job.skills.join(", ") || ""}
-                onChange={(e) =>
-                  setJob({ ...job, skills: e.target.value.split(", ") })
-                }
+                value={formData.skills || ""}
+                onChange={handleChange}
                 fullWidth
                 variant="outlined"
                 size="small"
@@ -224,10 +234,8 @@ const EditJob = () => {
               <TextField
                 name="requirements"
                 label="Requirements"
-                value={job.requirements.join(", ") || ""}
-                onChange={(e) =>
-                  setJob({ ...job, requirements: e.target.value.split(", ") })
-                }
+                value={formData.requirements || ""}
+                onChange={handleChange}
                 fullWidth
                 variant="outlined"
                 size="small"
@@ -237,13 +245,8 @@ const EditJob = () => {
               <TextField
                 name="responsibilities"
                 label="Responsibilities"
-                value={job.responsibilities.join(", ") || ""}
-                onChange={(e) =>
-                  setJob({
-                    ...job,
-                    responsibilities: e.target.value.split(", "),
-                  })
-                }
+                value={formData.responsibilities || ""}
+                onChange={handleChange}
                 fullWidth
                 variant="outlined"
                 size="small"
@@ -251,18 +254,14 @@ const EditJob = () => {
             </Grid>
 
             <Grid item xs={12}>
-              <Typography variant="h6">
-                Benefits & Contact
-              </Typography>
+              <Typography variant="h6">Benefits & Contact</Typography>
             </Grid>
             <Grid item xs={12}>
               <TextField
                 name="benefits"
                 label="Benefits"
-                value={job.benefits.join(", ") || ""}
-                onChange={(e) =>
-                  setJob({ ...job, benefits: e.target.value.split(", ") })
-                }
+                value={formData.benefits || ""}
+                onChange={handleChange}
                 fullWidth
                 variant="outlined"
                 size="small"
@@ -273,7 +272,7 @@ const EditJob = () => {
                 name="applicationDeadline"
                 label="Application Deadline"
                 type="date"
-                value={formatDateWithYearMonth(job.applicationDeadline) || ""}
+                value={formData.applicationDeadline || ""}
                 onChange={handleChange}
                 fullWidth
                 variant="outlined"
@@ -285,7 +284,7 @@ const EditJob = () => {
               <TextField
                 name="contactEmail"
                 label="Contact Email"
-                value={job.contactEmail || ""}
+                value={formData.contactEmail || ""}
                 onChange={handleChange}
                 fullWidth
                 variant="outlined"
@@ -295,11 +294,7 @@ const EditJob = () => {
 
             <Grid item xs={12}>
               <Box mt={2} display="flex" justifyContent="flex-start">
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                >
+                <Button type="submit" variant="contained" color="primary">
                   Update Job
                 </Button>
               </Box>

@@ -1,5 +1,6 @@
-import { Box, Button, Grid, Paper, Typography, Chip, IconButton } from '@mui/material';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Box, Button, Paper, Typography, Chip, IconButton } from '@mui/material';
 import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -10,13 +11,15 @@ import BookmarkIcon from '@mui/icons-material/Bookmark';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import ReactTimeAgo from "react-time-ago";
 import { Link, useNavigate } from 'react-router-dom';
-import { savedJob } from '../../Api/jobAPi';
 import { toast } from 'react-toastify';
+import { toggleSavedJob } from '../../features/jobs/jobActions';
 
 const JobCard = ({ job, index }) => {
     const navigate = useNavigate();
-    const cardRef = useRef(null);
-    const [isSaved, setIsSaved] = useState(job.saved);
+    const dispatch = useDispatch();
+    const isSaved = useSelector((state) =>
+        state.jobs.jobs.find((j) => j._id === job._id)?.saved
+    );
 
     const jobExpiry = useMemo(() => {
         const currentDate = new Date();
@@ -30,33 +33,40 @@ const JobCard = ({ job, index }) => {
     const toggleSaveStatus = async (e) => {
         e.stopPropagation(); // Prevent triggering card click event
         try {
-            const res = await savedJob(job._id);
-            if (res.status === 200) {
-                setIsSaved(!isSaved);
-                toast.success(res.data.message);
+            const resultAction = await dispatch(toggleSavedJob(job._id));
+            if (toggleSavedJob.fulfilled.match(resultAction)) {
+                toast.success(resultAction.payload.saved ? 'Job saved!' : 'Job unsaved!');
+            } else {
+                toast.error(resultAction.payload || 'Failed to update save status');
             }
         } catch (error) {
-            toast.error(error.response.data.message);
+            toast.error(error.message);
         }
     };
 
     useEffect(() => {
-        const card = cardRef.current;
-        if (card) {
-            card.style.animationDelay = `${index * 0.1}s`; // Stagger animation based on index
-            card.classList.add('card-animation');
-        }
+        const timer = setTimeout(() => {
+            const card = document.getElementById(`job-card-${index}`);
+            if (card) {
+                card.style.opacity = 1;
+                card.style.transform = 'translateY(0)';
+            }
+        }, index * 100); // Stagger animation based on index
+
+        return () => clearTimeout(timer);
     }, [index]);
 
     return (
         <Paper
-            ref={cardRef}
+            id={`job-card-${index}`}
             elevation={3}
             sx={{
                 padding: 2,
                 borderLeft: "5px solid transparent",
                 transition: "all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1)",
-                "&:hover": {
+                opacity: 0,
+                transform: 'translateY(20px)',
+                '&:hover': {
                     borderColor: jobExpiry || !job?.applicationDeadline ? "green" : "red",
                     cursor: "pointer",
                 },
@@ -92,20 +102,20 @@ const JobCard = ({ job, index }) => {
                 <Box display="flex" alignItems="center" gap={1} mt={1}>
                     <ArticleIcon sx={{ color: "#00000099" }} aria-label="Responsibilities" />
                     <Typography variant="body1" noWrap>
-                        {job.responsibilities.join(" ").length < 100
-                            ? job.responsibilities.join(" ")
-                            : `${job.responsibilities.join(" ").slice(0, 90)}....`}
+                        {job.description?.length < 100
+                            ? job?.description
+                            : `${job?.description?.slice(0, 90)}...`}
                     </Typography>
                 </Box>
 
                 <Box display="flex" alignItems="center" gap={1} mt={1} flexWrap="wrap">
                     <PsychologyIcon sx={{ color: "#00000099" }} aria-label="Skills" />
-                    {job.skills.slice(0, 5).map((skill, index) => (
+                    {job?.skills?.slice(0, 5).map((skill, index) => (
                         <Chip key={index} label={skill} size="small" sx={{ marginRight: 0.5 }} />
                     ))}
                 </Box>
 
-                <Box display="flex" alignItems="center" justifyContent="space-between" >
+                <Box display="flex" alignItems="center" justifyContent="space-between" mt={2}>
                     <Typography variant="body2" color="textSecondary">
                         <ReactTimeAgo date={new Date(job?.postedOn).getTime()} locale="en-US" />
                     </Typography>
@@ -118,13 +128,10 @@ const JobCard = ({ job, index }) => {
                         size="small"
                         endIcon={<ArrowForwardIcon />}
                         sx={{
-                            mt: 1,
                             transition: "all 0.3s ease-in-out",
-                            "&:hover": {
+                            '&:hover': {
                                 backgroundColor: "primary.dark",
                             },
-                            position: "relative",
-                            right: 0,
                         }}
                     >
                         View Job

@@ -35,7 +35,7 @@ export const getAllJobs = async (req, res) => {
     // Fetch all jobs, selecting only the specified fields
     const jobs = await Job.find()
       .select(
-        "title company jobLevel salary location responsibilities skills postedOn applicationDeadline"
+        "title company jobLevel description employmentType salary location skills postedOn applicationDeadline"
       )
       .lean(); // Convert to plain JavaScript objects
 
