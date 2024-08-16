@@ -36,6 +36,7 @@ import CoursesPage from "./Pages/Courses/CoursesPage";
 import CourseDetailPage from "./Pages/Courses/CourseDetailPage";
 import ProgressPage from "./Pages/Courses/ProgressPage";
 import CreateCourse from "./Pages/Courses/CreateCourse";
+import CopyRight from "./Component/CopyRight/CopyRight";
 
 TimeAgo.addDefaultLocale(en);
 TimeAgo.addLocale(ru);
@@ -83,6 +84,7 @@ const App = () => {
             <Route path="/progress" element={<ProgressPage />} />
 
           </Routes>
+          <CopyRight />
         </BrowserRouter>
       </Store>
     </GoogleOAuthProvider>

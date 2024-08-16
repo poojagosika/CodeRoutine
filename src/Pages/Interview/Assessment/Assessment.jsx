@@ -13,7 +13,7 @@ import { data } from "./data.js";
 
 const Assessment = () => {
   return (
-    <Container sx={{ mt: 5, backgroundColor: "#fafafa", p: 3 }}>
+    <Container sx={{ mt: 5, backgroundColor: "#fafafa", p: 3, minHeight:"100vh"}}>
       <Typography variant="h3" component="h1" sx={{ mt: 8 }}>
         Mock Assessment
       </Typography>

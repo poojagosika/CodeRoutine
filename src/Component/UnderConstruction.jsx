@@ -1,7 +1,6 @@
 import React from "react";
 import { Container, Box, Typography, Grid } from "@mui/material";
 import ConstructionIcon from "@mui/icons-material/Construction";
-import CopyRight from "./CopyRight/CopyRight";
 
 function UnderConstruction() {
   return (
@@ -28,7 +27,6 @@ function UnderConstruction() {
           </Grid>
         </Grid>
       </Container>
-      <CopyRight />
     </React.Fragment>
   );
 }

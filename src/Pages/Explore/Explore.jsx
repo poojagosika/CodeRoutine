@@ -27,7 +27,7 @@ function Explore() {
     <>
       <Container
         maxWidth="lg"
-        style={{ overflow: "auto", marginTop: "50px" }}
+        style={{ overflow: "auto", marginTop: "50px", minHeight:"100vh" }}
         component="main"
         id="main-explore"
       >
@@ -94,9 +94,6 @@ function Explore() {
           </Grid>
         </Box>
       </Container>
-
-      {/* Footer Section */}
-      <CopyRight />
     </>
   );
 }

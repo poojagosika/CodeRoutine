@@ -21,7 +21,6 @@ import SearchIcon from "@mui/icons-material/Search";
 import { Link as RouterLink } from "react-router-dom";
 import { ContextStore } from "../../Context/ContextStore";
 import { cards } from "./Config.js";
-import CopyRight from "../../Component/CopyRight/CopyRight";
 
 function Home() {
   const { userData } = ContextStore();
@@ -37,7 +36,7 @@ function Home() {
   };
 
   return (
-    <>
+    <Box sx={{ minHeight:"100vh" }}>
       <CssBaseline />
       <main>
         <Box
@@ -159,8 +158,7 @@ function Home() {
           </Grid>
         </Container>
       </main>
-      <CopyRight />
-    </>
+    </Box>
   );
 }
 

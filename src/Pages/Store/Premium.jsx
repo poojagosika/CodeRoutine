@@ -48,6 +48,7 @@ const Premium = () => {
           minHeight: "100vh",
           padding: 4,
           color: "white",
+          minHeight:"100vh"
         }}
       >
         <Container>
@@ -217,7 +218,6 @@ const Premium = () => {
           </Box>
         </Container>
       </Box>
-      <CopyRight />
     </>
   );
 };

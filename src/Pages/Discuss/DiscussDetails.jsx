@@ -149,7 +149,7 @@ const DiscussDetails = () => {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 5 }}>
+    <Container maxWidth="lg" sx={{ mt: 5, minHeight:"100vh"}} >
       {!topic ? (
         <TopicLoadig />
       ) : (

@@ -76,7 +76,7 @@ const JobDetails = () => {
   };
 
   return (
-    <Container maxWidth="md" sx={{ marginBottom: 6, padding: 2 }}>
+    <Container maxWidth="md" sx={{ marginBottom: 6, padding: 2, maxWidth:"auto 100vh" }}>
       <Paper
         elevation={3}
         sx={{

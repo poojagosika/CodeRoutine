@@ -7,7 +7,7 @@ const CoursesPage = () => {
   const navigate = useNavigate();
 
   return (
-    <Container sx={{ mt: 4, p: 2 }}>
+    <Container sx={{ mt: 4, p: 2, minHeight:"100vh"}}>
       <Box
         display="flex"
         justifyContent="space-between"
