@@ -105,17 +105,6 @@ const Jobs = () => {
     setPage(0);
   };
 
-  if (loading) {
-    return (
-      <Container
-        maxWidth="md"
-        style={{ marginTop: "50px", marginBottom: "50px" }}
-      >
-        <JobsLoader />
-      </Container>
-    );
-  }
-
   if (error) {
     return (
       <Container
@@ -220,26 +209,36 @@ const Jobs = () => {
             <Tab label="Applied Jobs" />
           </Tabs>
 
-          <Grid container spacing={2} mb={2}>
-            {filteredJobs.length === 0 && (
-              <Box
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                height="100%"
-                width="100%"
+          {
+            loading ?
+              <Container
+                maxWidth="md"
+                style={{ marginTop: "50px", marginBottom: "50px" }}
               >
-                <Typography variant="h6" gutterBottom>
-                  No Jobs Found!
-                </Typography>
-              </Box>
-            )}
-            {filteredJobs.map((job, index) => (
-              <Grid item key={index} xs={12} sm={12} md={12} gap={2}>
-                <JobCard job={job} index={index} />
+                <JobsLoader />
+              </Container>
+              :
+              <Grid container spacing={2} mb={2}>
+                {filteredJobs.length === 0 && (
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    height="100%"
+                    width="100%"
+                  >
+                    <Typography variant="h6" gutterBottom>
+                      No Jobs Found!
+                    </Typography>
+                  </Box>
+                )}
+                {filteredJobs.map((job, index) => (
+                  <Grid item key={index} xs={12} sm={12} md={12} gap={2}>
+                    <JobCard job={job} index={index} />
+                  </Grid>
+                ))}
               </Grid>
-            ))}
-          </Grid>
+          }
           {filteredJobs.length >= 10 && (
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}

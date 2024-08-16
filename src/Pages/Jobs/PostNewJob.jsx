@@ -10,7 +10,7 @@ import {
   Grid,
   Chip,
 } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
@@ -190,7 +190,7 @@ const PostNewJob = () => {
   };
 
   return (
-    <Container maxWidth="md" sx={{ minHeight:"100vh" }}>
+    <Container maxWidth="md" sx={{ minHeight: "100vh" }}>
       <Paper elevation={4} sx={{ padding: 4, marginTop: 5, marginBottom: 5 }}>
         <Typography variant="h5" component="h1" gutterBottom>
           Post a New Job
