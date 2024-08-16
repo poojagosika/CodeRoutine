@@ -98,7 +98,7 @@ const AddProblem = () => {
   };
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="md" sx={{ minHeight:"100vh" }}>
       <Box sx={{ mt: 4 }}>
         <Typography variant="h4" gutterBottom>
           Add a New Problem

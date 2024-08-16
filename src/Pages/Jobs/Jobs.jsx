@@ -132,7 +132,7 @@ const Jobs = () => {
   return (
     <Container
       maxWidth="lg"
-      style={{ marginTop: "50px", marginBottom: "50px" }}
+      style={{ marginTop: "50px", marginBottom: "50px", minHeight: "100vh" }}
     >
       <Grid container spacing={2}>
         <Grid item xs={12} sm={12} md={4}>

@@ -211,7 +211,7 @@ export default function Problems() {
   return (
     <Container
       maxWidth="lg"
-      style={{ overflow: "auto", marginTop: "50px" }}
+      style={{ overflow: "auto", marginTop: "50px", minHeight: "100vh" }}
       component="main"
       id="main-content"
     >

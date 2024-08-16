@@ -23,6 +23,7 @@ export default function Redeem() {
         display: "flex",
         flexDirection: "column",
         flexWrap: "wrap",
+        minHeight:"100vh"
       }}
     >
       <CssBaseline />

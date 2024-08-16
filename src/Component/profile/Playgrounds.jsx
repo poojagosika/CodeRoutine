@@ -15,6 +15,7 @@ export default function Playgrounds() {
         display: "flex",
         flexDirection: "column",
         flexWrap: "wrap",
+        minHeight:"100vh"
       }}
     >
       <Box

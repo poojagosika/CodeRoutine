@@ -35,7 +35,7 @@ const Resume = () => {
     document.title = "CodeRoutine | Resume";
   }, []);
   return (
-    <Container sx={{ mt: 4, mb: 4 }}>
+    <Container sx={{ mt: 4, mb: 4, minHeight: "100vh" }}>
       {resumeCard.map((card) => (
         <Grid item xs={12} md={6} lg={4} key={card.id} sx={{ mb: 4 }}>
           <card.component user={user} />

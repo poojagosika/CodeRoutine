@@ -87,7 +87,7 @@ const Profile = () => {
     <>
       <Container
         maxWidth="lg"
-        style={{ marginTop: "40px", marginBottom: "80px" }}
+        style={{ marginTop: "40px", marginBottom: "80px", minHeight:"100vh" }}
       >
         <Paper elevation={3} sx={{ borderRadius: "10px", overflow: "hidden" }}>
           <Box
@@ -149,7 +149,6 @@ const Profile = () => {
           </Container>
         </Paper>
       </Container>
-      <CopyRight />
     </>
   );
 };
