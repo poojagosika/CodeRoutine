@@ -33,19 +33,15 @@ const jobSchema = new Schema({
   },
   requirements: {
     type: [String], // Array of strings
-    required: true,
   },
   responsibilities: {
     type: [String], // Array of strings
-    required: true,
   },
   benefits: {
     type: [String], // Array of strings
-    required: true,
   },
   postedBy: {
     type: String,
-    required: true,
   },
   postedOn: {
     type: Date,
@@ -87,7 +83,6 @@ const jobSchema = new Schema({
   },
   contactEmail: {
     type: String,
-    required: true,
   },
 });
 

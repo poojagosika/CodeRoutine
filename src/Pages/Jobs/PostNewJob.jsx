@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   TextField,
@@ -9,11 +9,11 @@ import {
   Paper,
   Grid,
   Chip,
+  IconButton,
 } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
-import IconButton from "@mui/material/IconButton";
 import { postNewJob } from "../../features/jobs/jobActions";
 
 const employmentTypes = ["Full-Time", "Part-Time", "Contract"];
@@ -22,6 +22,7 @@ const jobLevels = ["Entry-Level", "Mid-Level", "Senior-Level"];
 const PostNewJob = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     title: "",
     company: "",
@@ -52,9 +53,10 @@ const PostNewJob = () => {
   const [responsibilityError, setResponsibilityError] = useState("");
   const [benefitError, setBenefitError] = useState("");
 
-  React.useEffect(() => {
+  useEffect(() => {
     document.title = "CodeRoutine | Post New Job";
   }, []);
+
   const onChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
@@ -63,125 +65,46 @@ const PostNewJob = () => {
     }));
   };
 
-  const handleChangeSkill = (e) => {
-    setCurrentSkill(e.target.value);
-    setSkillError("");
+  // Generalized handleChange function
+  const handleChange = (setter, setError) => (e) => {
+    setter(e.target.value);
+    setError("");
   };
 
-  const handleChangeRequirement = (e) => {
-    setCurrentRequirement(e.target.value);
-    setRequirementError("");
-  };
-
-  const handleChangeResponsibility = (e) => {
-    setCurrentResponsibility(e.target.value);
-    setResponsibilityError("");
-  };
-
-  const handleChangeBenefit = (e) => {
-    setCurrentBenefit(e.target.value);
-    setBenefitError("");
-  };
-
-  const handleAddSkill = () => {
-    const trimmedSkill = currentSkill.trim().toLowerCase();
-    if (!trimmedSkill) {
-      setSkillError("Skill cannot be empty");
+  // Generalized handleAdd function
+  const handleAdd = (type, currentItem, setCurrentItem, setError, errorText) => {
+    const trimmedItem = currentItem.trim().toLowerCase();
+    if (!trimmedItem) {
+      setError(errorText);
       return;
     }
-    if (formData.skills.some((skill) => skill.toLowerCase() === trimmedSkill)) {
-      setSkillError("This skill is already added");
+    if (formData[type].some((item) => item.toLowerCase() === trimmedItem)) {
+      setError(`This ${type.slice(0, -1)} is already added`);
       return;
     }
     setFormData((prevState) => ({
       ...prevState,
-      skills: [...prevState.skills, currentSkill.trim()],
+      [type]: [...prevState[type], currentItem.trim()],
     }));
-    setCurrentSkill("");
+    setCurrentItem("");
   };
 
-  const handleAddRequirement = () => {
-    const trimmedRequirement = currentRequirement.trim();
-    if (!trimmedRequirement) {
-      setRequirementError("Requirement cannot be empty");
-      return;
+  // Generalized handleRemove function
+  const handleRemove = (type, itemToRemove) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      [type]: prevState[type].filter((item) => item !== itemToRemove),
+    }));
+  };
+  const isValidURL = (string) => {
+    try {
+      new URL(string);
+      return true;
+    } catch (_) {
+      return false;
     }
-    if (formData.requirements.includes(trimmedRequirement)) {
-      setRequirementError("This requirement is already added");
-      return;
-    }
-    setFormData((prevState) => ({
-      ...prevState,
-      requirements: [...prevState.requirements, trimmedRequirement],
-    }));
-    setCurrentRequirement("");
   };
 
-  const handleAddResponsibility = () => {
-    const trimmedResponsibility = currentResponsibility.trim();
-    if (!trimmedResponsibility) {
-      setResponsibilityError("Responsibility cannot be empty");
-      return;
-    }
-    if (formData.responsibilities.includes(trimmedResponsibility)) {
-      setResponsibilityError("This responsibility is already added");
-      return;
-    }
-    setFormData((prevState) => ({
-      ...prevState,
-      responsibilities: [...prevState.responsibilities, trimmedResponsibility],
-    }));
-    setCurrentResponsibility("");
-  };
-
-  const handleAddBenefit = () => {
-    const trimmedBenefit = currentBenefit.trim();
-    if (!trimmedBenefit) {
-      setBenefitError("Benefit cannot be empty");
-      return;
-    }
-    if (formData.benefits.includes(trimmedBenefit)) {
-      setBenefitError("This Benefit is already added");
-      return;
-    }
-    setFormData((prevState) => ({
-      ...prevState,
-      benefits: [...prevState.benefits, trimmedBenefit],
-    }));
-    setCurrentBenefit("");
-  };
-
-  const handleRemoveSkill = (skillToRemove) => {
-    setFormData((prevState) => ({
-      ...prevState,
-      skills: prevState.skills.filter((skill) => skill !== skillToRemove),
-    }));
-  };
-
-  const handleRemoveRequirement = (requirementToRemove) => {
-    setFormData((prevState) => ({
-      ...prevState,
-      requirements: prevState.requirements.filter(
-        (req) => req !== requirementToRemove
-      ),
-    }));
-  };
-
-  const handleRemoveResponsibility = (responsibilityToRemove) => {
-    setFormData((prevState) => ({
-      ...prevState,
-      responsibilities: prevState.responsibilities.filter(
-        (resp) => resp !== responsibilityToRemove
-      ),
-    }));
-  };
-
-  const handleRemoveBenefit = (benefitToRemove) => {
-    setFormData((prevState) => ({
-      ...prevState,
-      benefits: prevState.benefits.filter((ben) => ben !== benefitToRemove),
-    }));
-  };
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -197,10 +120,10 @@ const PostNewJob = () => {
         </Typography>
         <form onSubmit={onSubmit}>
           <Grid container spacing={2}>
+            {/* Basic Information */}
             <Grid item xs={12}>
               <Typography variant="h6">Basic Information</Typography>
             </Grid>
-
             <Grid item xs={12} sm={6}>
               <TextField
                 name="title"
@@ -215,64 +138,65 @@ const PostNewJob = () => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
-                fullWidth
-                label="Company"
                 name="company"
+                label="Company"
                 value={formData.company}
                 onChange={onChange}
-                required
+                fullWidth
                 size="small"
+                required
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
-                fullWidth
-                label="Description"
                 name="description"
+                label="Description"
                 value={formData.description}
                 onChange={onChange}
                 multiline
                 rows={4}
-                required
+                fullWidth
                 size="small"
+                required
               />
             </Grid>
+
+            {/* Job Details */}
             <Grid item xs={12}>
               <Typography variant="h6">Job Details</Typography>
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
-                fullWidth
-                label="Location"
                 name="location"
+                label="Location"
                 value={formData.location}
                 onChange={onChange}
-                required
+                fullWidth
                 size="small"
+                required
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
-                fullWidth
-                label="Salary"
                 name="salary"
+                label="Salary"
                 value={formData.salary}
                 onChange={onChange}
+                fullWidth
                 size="small"
                 type="number"
               />
             </Grid>
-
             <Grid item xs={12} sm={6}>
               <TextField
                 select
-                fullWidth
-                label="Employment Type"
                 name="employmentType"
+                label="Employment Type"
                 value={formData.employmentType}
                 onChange={onChange}
-                required
+                fullWidth
                 size="small"
+                required
               >
                 {employmentTypes.map((type) => (
                   <MenuItem key={type} value={type}>
@@ -284,11 +208,11 @@ const PostNewJob = () => {
             <Grid item xs={12} sm={6}>
               <TextField
                 select
-                fullWidth
-                label="Job Level"
                 name="jobLevel"
+                label="Job Level"
                 value={formData.jobLevel}
                 onChange={onChange}
+                fullWidth
                 size="small"
               >
                 {jobLevels.map((level) => (
@@ -300,25 +224,27 @@ const PostNewJob = () => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
-                fullWidth
-                label="Industry"
                 name="industry"
+                label="Industry"
                 value={formData.industry}
                 onChange={onChange}
+                fullWidth
                 size="small"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
-                fullWidth
-                label="Number of Openings"
                 name="numberOfOpenings"
-                type="number"
+                label="Number of Openings"
                 value={formData.numberOfOpenings}
                 onChange={onChange}
+                fullWidth
                 size="small"
+                type="number"
               />
             </Grid>
+
+            {/* Skills */}
             <Grid item xs={12}>
               <Typography variant="h6">Skills</Typography>
             </Grid>
@@ -328,7 +254,7 @@ const PostNewJob = () => {
                   fullWidth
                   label="Add a Skill"
                   value={currentSkill}
-                  onChange={handleChangeSkill}
+                  onChange={handleChange(setCurrentSkill, setSkillError)}
                   size="small"
                   error={Boolean(skillError)}
                   helperText={skillError}
@@ -337,12 +263,10 @@ const PostNewJob = () => {
                   variant="outlined"
                   type="button"
                   color="primary"
-                  onClick={handleAddSkill}
-                  style={{
-                    borderRadius: "10px",
-                    marginLeft: "10px",
-                    padding: "7px",
-                  }}
+                  onClick={() =>
+                    handleAdd("skills", currentSkill, setCurrentSkill, setSkillError, "Skill cannot be empty")
+                  }
+                  style={{ borderRadius: "10px", marginLeft: "10px", padding: "7px" }}
                   size="small"
                 >
                   Add
@@ -351,19 +275,15 @@ const PostNewJob = () => {
               {formData.skills.map((skill, index) => (
                 <Chip
                   key={index}
-                  label={
-                    <Box display="flex" alignItems="center">
-                      <Typography variant="body2" component="span">
-                        {skill}
-                      </Typography>
-                    </Box>
-                  }
-                  sx={{ mb: 1, mr: 1 }}
+                  label={skill}
                   variant="outlined"
-                  onDelete={() => handleRemoveSkill(skill)}
+                  onDelete={() => handleRemove("skills", skill)}
+                  sx={{ mb: 1, mr: 1 }}
                 />
               ))}
             </Grid>
+
+            {/* Requirements */}
             <Grid item xs={12}>
               <Typography variant="h6">Requirements</Typography>
             </Grid>
@@ -373,7 +293,7 @@ const PostNewJob = () => {
                   fullWidth
                   label="Add a Requirement"
                   value={currentRequirement}
-                  onChange={handleChangeRequirement}
+                  onChange={handleChange(setCurrentRequirement, setRequirementError)}
                   size="small"
                   error={Boolean(requirementError)}
                   helperText={requirementError}
@@ -382,45 +302,39 @@ const PostNewJob = () => {
                   variant="outlined"
                   type="button"
                   color="primary"
-                  onClick={handleAddRequirement}
-                  style={{
-                    borderRadius: "10px",
-                    marginLeft: "10px",
-                    padding: "7px",
-                  }}
+                  onClick={() =>
+                    handleAdd(
+                      "requirements",
+                      currentRequirement,
+                      setCurrentRequirement,
+                      setRequirementError,
+                      "Requirement cannot be empty"
+                    )
+                  }
+                  style={{ borderRadius: "10px", marginLeft: "10px", padding: "7px" }}
                   size="small"
                 >
                   Add
                 </Button>
               </Box>
-              <Box
-                component="ul"
-                sx={{ listStyleType: "disc", paddingLeft: 2 }}
-              >
-                {formData.requirements.map((req, index) => (
-                  <Box
-                    key={index}
-                    sx={{ display: "flex", alignItems: "center" }}
+              {formData.requirements.map((requirement, index) => (
+                <Box key={index} sx={{ display: "flex", alignItems: "center" }}>
+                  <Typography component="li" variant="body2" sx={{ flexGrow: 1 }}>
+                    {requirement}
+                  </Typography>
+                  <IconButton
+                    edge="end"
+                    aria-label="delete"
+                    onClick={() => handleRemove("requirements", requirement)}
+                    size="small"
                   >
-                    <Typography
-                      component="li"
-                      variant="body2"
-                      sx={{ flexGrow: 1 }}
-                    >
-                      {req}
-                    </Typography>
-                    <IconButton
-                      edge="end"
-                      aria-label="delete"
-                      size="small"
-                      onClick={() => handleRemoveRequirement(req)}
-                    >
-                      <CloseIcon />
-                    </IconButton>
-                  </Box>
-                ))}
-              </Box>
+                    <CloseIcon />
+                  </IconButton>
+                </Box>
+              ))}
             </Grid>
+
+            {/* Responsibilities */}
             <Grid item xs={12}>
               <Typography variant="h6">Responsibilities</Typography>
             </Grid>
@@ -430,7 +344,7 @@ const PostNewJob = () => {
                   fullWidth
                   label="Add a Responsibility"
                   value={currentResponsibility}
-                  onChange={handleChangeResponsibility}
+                  onChange={handleChange(setCurrentResponsibility, setResponsibilityError)}
                   size="small"
                   error={Boolean(responsibilityError)}
                   helperText={responsibilityError}
@@ -439,45 +353,39 @@ const PostNewJob = () => {
                   variant="outlined"
                   type="button"
                   color="primary"
-                  onClick={handleAddResponsibility}
-                  style={{
-                    borderRadius: "10px",
-                    marginLeft: "10px",
-                    padding: "7px",
-                  }}
+                  onClick={() =>
+                    handleAdd(
+                      "responsibilities",
+                      currentResponsibility,
+                      setCurrentResponsibility,
+                      setResponsibilityError,
+                      "Responsibility cannot be empty"
+                    )
+                  }
+                  style={{ borderRadius: "10px", marginLeft: "10px", padding: "7px" }}
                   size="small"
                 >
                   Add
                 </Button>
               </Box>
-              <Box
-                component="ul"
-                sx={{ listStyleType: "disc", paddingLeft: 2 }}
-              >
-                {formData.responsibilities.map((resp, index) => (
-                  <Box
-                    key={index}
-                    sx={{ display: "flex", alignItems: "center" }}
+              {formData.responsibilities.map((responsibility, index) => (
+                <Box key={index} sx={{ display: "flex", alignItems: "center" }}>
+                  <Typography component="li" variant="body2" sx={{ flexGrow: 1 }}>
+                    {responsibility}
+                  </Typography>
+                  <IconButton
+                    edge="end"
+                    aria-label="delete"
+                    onClick={() => handleRemove("responsibilities", responsibility)}
+                    size="small"
                   >
-                    <Typography
-                      component="li"
-                      variant="body2"
-                      sx={{ flexGrow: 1 }}
-                    >
-                      {resp}
-                    </Typography>
-                    <IconButton
-                      edge="end"
-                      aria-label="delete"
-                      size="small"
-                      onClick={() => handleRemoveResponsibility(resp)}
-                    >
-                      <CloseIcon />
-                    </IconButton>
-                  </Box>
-                ))}
-              </Box>
+                    <CloseIcon />
+                  </IconButton>
+                </Box>
+              ))}
             </Grid>
+
+            {/* Benefits */}
             <Grid item xs={12}>
               <Typography variant="h6">Benefits</Typography>
             </Grid>
@@ -485,9 +393,9 @@ const PostNewJob = () => {
               <Box display="flex" alignItems="start">
                 <TextField
                   fullWidth
-                  label="Add a Benefits"
+                  label="Add a Benefit"
                   value={currentBenefit}
-                  onChange={handleChangeBenefit}
+                  onChange={handleChange(setCurrentBenefit, setBenefitError)}
                   size="small"
                   error={Boolean(benefitError)}
                   helperText={benefitError}
@@ -496,110 +404,119 @@ const PostNewJob = () => {
                   variant="outlined"
                   type="button"
                   color="primary"
-                  onClick={handleAddBenefit}
-                  style={{
-                    borderRadius: "10px",
-                    marginLeft: "10px",
-                    padding: "7px",
-                  }}
+                  onClick={() =>
+                    handleAdd(
+                      "benefits",
+                      currentBenefit,
+                      setCurrentBenefit,
+                      setBenefitError,
+                      "Benefit cannot be empty"
+                    )
+                  }
+                  style={{ borderRadius: "10px", marginLeft: "10px", padding: "7px" }}
                   size="small"
                 >
                   Add
                 </Button>
               </Box>
-              <Box
-                component="ul"
-                sx={{ listStyleType: "disc", paddingLeft: 2 }}
-              >
-                {formData.benefits.map((benefit, index) => (
-                  <Box
-                    key={index}
-                    sx={{ display: "flex", alignItems: "center" }}
+              {formData.benefits.map((benefit, index) => (
+                <Box key={index} sx={{ display: "flex", alignItems: "center" }}>
+                  <Typography component="li" variant="body2" sx={{ flexGrow: 1 }}>
+                    {benefit}
+                  </Typography>
+                  <IconButton
+                    edge="end"
+                    aria-label="delete"
+                    onClick={() => handleRemove("benefits", benefit)}
+                    size="small"
                   >
-                    <Typography
-                      component="li"
-                      variant="body2"
-                      sx={{ flexGrow: 1 }}
-                    >
-                      {benefit}
-                    </Typography>
-                    <IconButton
-                      edge="end"
-                      aria-label="delete"
-                      size="small"
-                      onClick={() => handleRemoveBenefit(benefit)}
-                    >
-                      <CloseIcon />
-                    </IconButton>
-                  </Box>
-                ))}
-              </Box>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography variant="h6">Other Information</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="Posted By"
-                name="postedBy"
-                value={formData.postedBy}
-                onChange={onChange}
-                required
-                size="small"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="Application Deadline"
-                name="applicationDeadline"
-                type="date"
-                value={formData.applicationDeadline}
-                onChange={onChange}
-                InputLabelProps={{ shrink: true }}
-                size="small"
-              />
+                    <CloseIcon />
+                  </IconButton>
+                </Box>
+              ))}
             </Grid>
 
+            {/* Additional Information */}
+            <Grid item xs={12}>
+              <Typography variant="h6">Additional Information</Typography>
+            </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
+                name="postedBy"
+                label="Posted By"
+                value={formData.postedBy}
+                onChange={onChange}
                 fullWidth
-                label="Application Instructions"
+                size="small"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                name="applicationDeadline"
+                label="Application Deadline"
+                value={formData.applicationDeadline}
+                onChange={onChange}
+                fullWidth
+                size="small"
+                type="date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
                 name="applicationInstructions"
+                label="Application Instructions"
                 value={formData.applicationInstructions}
                 onChange={onChange}
+                fullWidth
                 size="small"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
-                fullWidth
-                label="Contact Email"
                 name="contactEmail"
-                type="email"
+                label="Contact Email"
                 value={formData.contactEmail}
                 onChange={onChange}
-                required
+                fullWidth
                 size="small"
+                type="email"
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
-                fullWidth
-                label="Job Link (If any)"
                 name="externalLink"
+                label="External Link"
                 value={formData.externalLink}
                 onChange={onChange}
+                fullWidth
                 size="small"
+                error={formData.externalLink && !isValidURL(formData.externalLink)}
+                helperText={
+                  formData.externalLink && !isValidURL(formData.externalLink)
+                    ? "Please enter a valid URL"
+                    : ""
+                }
               />
             </Grid>
             <Grid item xs={12}>
-              <Box mt={2} display="flex" justifyContent="flex-start">
-                <Button type="submit" variant="contained" color="primary">
-                  Post Job
-                </Button>
-              </Box>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                fullWidth
+                sx={{
+                  mt: 3,
+                  mb: 2,
+                  p: 1.5,
+                  borderRadius: "20px",
+                  boxShadow: "0 3px 5px 2px rgba(105, 135, 255, .3)",
+                }}
+              >
+                Post Job
+              </Button>
             </Grid>
           </Grid>
         </form>
