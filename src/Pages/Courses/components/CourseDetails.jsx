@@ -25,7 +25,7 @@ const CourseDetails = () => {
   if (!course) return <Typography>Loading...</Typography>;
 
   return (
-    <Container sx={{ mt: 4 }}>
+    <Container sx={{ mt: 4, minHeight:"100vh" }}>
       <Paper elevation={3} sx={{ p: 3 }}>
         <Typography variant="h4" sx={{ mb: 2 }}>
           {course.title}

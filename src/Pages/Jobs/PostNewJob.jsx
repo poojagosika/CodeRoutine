@@ -191,7 +191,7 @@ const PostNewJob = () => {
   };
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="md" sx={{ minHeight:"100vh" }}>
       <Paper elevation={4} sx={{ padding: 4, marginTop: 5, marginBottom: 5 }}>
         <Typography variant="h5" component="h1" gutterBottom>
           Post a New Job

@@ -59,6 +59,7 @@ export default function Contest() {
       sx={{
         backgroundColor: "#1a1a1a",
         color: "white",
+        minHeight: "100vh",
       }}
     >
       <CssBaseline />

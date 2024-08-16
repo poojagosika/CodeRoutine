@@ -34,7 +34,7 @@ const orders = [
 
 const Orders = () => {
   return (
-    <Container>
+    <Container sx={{ minHeight: "100vh" }}>
       <Box display="flex" alignItems="center" mb={2}>
         <Typography variant="h4" component="h6">
           Your Orders

@@ -32,7 +32,7 @@ const Resume = () => {
     },
   ]
   return (
-    <Container sx={{ mt: 4, mb: 4 }} >
+    <Container sx={{ mt: 4, mb: 4, minHeight:"100vh" }} >
       {
         resumeCard.map((card) => (
 

@@ -59,7 +59,7 @@ const UpdateCourse = () => {
     };
 
     return (
-        <Box sx={{ p: 3 }}>
+        <Box sx={{ p: 3, minHeight:"100vh" }}>
             <Typography variant="h4" gutterBottom>Update Course</Typography>
             <form onSubmit={handleSubmit}>
                 <TextField
