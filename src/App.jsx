@@ -73,7 +73,6 @@ const App = () => {
             <Route path="/discuss" element={<Discuss />} />
             <Route path="/discuss/:id" element={<DiscussDetails />} />
             <Route path="/interview/assessment" element={<Assessment />} />
-            <Route path="/discuss/:id" element={<DiscussDetails />} />
             <Route
               path="/interview/onlineinterview"
               element={<InterviewOnline />}

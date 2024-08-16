@@ -41,6 +41,10 @@ const EditJob = () => {
     contactEmail: "",
   });
 
+  React.useEffect(() => {
+    document.title = "CodeRoutine | Edit Job";
+  }, []);
+
   useEffect(() => {
     if (job) {
       setFormData({
@@ -67,9 +71,7 @@ const EditJob = () => {
     const updatedJob = {
       ...formData,
       skills: formData.skills.split(",").map((skill) => skill.trim()),
-      requirements: formData.requirements
-        .split(",")
-        .map((req) => req.trim()),
+      requirements: formData.requirements.split(",").map((req) => req.trim()),
       responsibilities: formData.responsibilities
         .split(",")
         .map((resp) => resp.trim()),

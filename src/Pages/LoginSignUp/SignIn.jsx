@@ -72,6 +72,10 @@ export default function SignIn() {
   });
   const [isLoading, setIsLoading] = React.useState(false);
 
+  React.useEffect(() => {
+    document.title = "CodeRoutine | Sign In";
+  }, []);
+
   const handleLoginSuccess = async (response) => {
     if (response && response.credential) {
       const { credential } = response;

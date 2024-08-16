@@ -30,18 +30,17 @@ const Resume = () => {
       title: "Template Card 4",
       component: TemplateCard4,
     },
-  ]
+  ];
+  React.useEffect(() => {
+    document.title = "CodeRoutine | Resume";
+  }, []);
   return (
-    <Container sx={{ mt: 4, mb: 4, minHeight:"100vh" }} >
-      {
-        resumeCard.map((card) => (
-
-          <Grid item xs={12} md={6} lg={4} key={card.id} sx={{ mb: 4 }}>
-            <card.component user={user} />
-          </Grid>
-        ))
-      }
-
+    <Container sx={{ mt: 4, mb: 4, minHeight: "100vh" }}>
+      {resumeCard.map((card) => (
+        <Grid item xs={12} md={6} lg={4} key={card.id} sx={{ mb: 4 }}>
+          <card.component user={user} />
+        </Grid>
+      ))}
     </Container>
   );
 };

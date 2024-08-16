@@ -40,6 +40,10 @@ const Jobs = () => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
+  React.useEffect(() => {
+    document.title = "CodeRoutine | Jobs";
+  }, []);
+
   useEffect(() => {
     dispatch(fetchJobs());
   }, [dispatch, selectedTab]);
@@ -83,8 +87,10 @@ const Jobs = () => {
     return (
       isTabMatch &&
       (!title || job.title.toLowerCase().includes(title.toLowerCase())) &&
-      (!location || job.location.toLowerCase().includes(location.toLowerCase())) &&
-      (employmentTypes.length === 0 || employmentTypes.includes(job.employmentType))
+      (!location ||
+        job.location.toLowerCase().includes(location.toLowerCase())) &&
+      (employmentTypes.length === 0 ||
+        employmentTypes.includes(job.employmentType))
     );
   };
 
@@ -101,7 +107,10 @@ const Jobs = () => {
 
   if (loading) {
     return (
-      <Container maxWidth="md" style={{ marginTop: "50px", marginBottom: "50px" }}>
+      <Container
+        maxWidth="md"
+        style={{ marginTop: "50px", marginBottom: "50px" }}
+      >
         <JobsLoader />
       </Container>
     );
@@ -109,7 +118,10 @@ const Jobs = () => {
 
   if (error) {
     return (
-      <Container maxWidth="md" style={{ marginTop: "50px", marginBottom: "50px" }}>
+      <Container
+        maxWidth="md"
+        style={{ marginTop: "50px", marginBottom: "50px" }}
+      >
         <Typography variant="h6" color="error" gutterBottom>
           {error}
         </Typography>
@@ -118,7 +130,10 @@ const Jobs = () => {
   }
 
   return (
-    <Container maxWidth="lg" style={{ marginTop: "50px", marginBottom: "50px", minHeight:"100vh" }}>
+    <Container
+      maxWidth="lg"
+      style={{ marginTop: "50px", marginBottom: "50px", minHeight: "100vh" }}
+    >
       <Grid container spacing={2}>
         <Grid item xs={12} sm={12} md={4}>
           <Box mb={3}>
@@ -194,7 +209,12 @@ const Jobs = () => {
           </Button>
         </Grid>
         <Grid item xs={12} md={8}>
-          <Tabs value={selectedTab} style={{ paddingBottom: '16px' }} onChange={handleTabChange} aria-label="job categories">
+          <Tabs
+            value={selectedTab}
+            style={{ paddingBottom: "16px" }}
+            onChange={handleTabChange}
+            aria-label="job categories"
+          >
             <Tab label="All Jobs" />
             <Tab label="Saved Jobs" />
             <Tab label="Applied Jobs" />

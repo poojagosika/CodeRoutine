@@ -20,8 +20,16 @@ import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
 import ErrorIcon from "@mui/icons-material/Error";
 import { useDispatch, useSelector } from "react-redux";
 import { ContextStore } from "../../Context/ContextStore";
-import { selectJobById, selectLoading, selectError } from "../../features/jobs/jobSlice";
-import { applyForJob, fetchJobById, removeJob } from "../../features/jobs/jobActions";
+import {
+  selectJobById,
+  selectLoading,
+  selectError,
+} from "../../features/jobs/jobSlice";
+import {
+  applyForJob,
+  fetchJobById,
+  removeJob,
+} from "../../features/jobs/jobActions";
 
 const JobDetails = () => {
   const { id } = useParams();
@@ -33,6 +41,10 @@ const JobDetails = () => {
   const loading = useSelector(selectLoading);
   const error = useSelector(selectError);
   const [open, setOpen] = useState(false);
+
+  React.useEffect(() => {
+    document.title = "CodeRoutine | Job Details";
+  }, []);
 
   useEffect(() => {
     dispatch(fetchJobById(id)); // Fetch job details using Redux
@@ -220,7 +232,7 @@ const JobDetails = () => {
               color="primary"
               disabled={job?.applied}
               onClick={() => {
-                dispatch(applyForJob(job?._id))
+                dispatch(applyForJob(job?._id));
               }}
               sx={{
                 "&:hover": {

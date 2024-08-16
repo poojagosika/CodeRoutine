@@ -22,6 +22,10 @@ const Profile = () => {
   const navigate = useNavigate();
 
   React.useEffect(() => {
+    document.title = "CodeRoutine | Profile";
+  }, []);
+
+  React.useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await getUserByUserName(userName);

@@ -10,7 +10,7 @@ import {
   Grid,
   Chip,
 } from "@mui/material";
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
@@ -52,6 +52,9 @@ const PostNewJob = () => {
   const [responsibilityError, setResponsibilityError] = useState("");
   const [benefitError, setBenefitError] = useState("");
 
+  React.useEffect(() => {
+    document.title = "CodeRoutine | Post New Job";
+  }, []);
   const onChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
@@ -183,7 +186,7 @@ const PostNewJob = () => {
   const onSubmit = (e) => {
     e.preventDefault();
     dispatch(postNewJob(formData));
-    navigate('/jobs');
+    navigate("/jobs");
   };
 
   return (

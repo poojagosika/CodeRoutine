@@ -12,6 +12,9 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import { data } from "./data.js";
 
 const Assessment = () => {
+  React.useEffect(() => {
+    document.title = "CodeRoutine | Assessment";
+  }, []);
   return (
     <Container sx={{ mt: 5, backgroundColor: "#fafafa", p: 3, minHeight:"100vh"}}>
       <Typography variant="h3" component="h1" sx={{ mt: 8 }}>

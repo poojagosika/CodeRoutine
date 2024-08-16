@@ -25,6 +25,9 @@ const CreateCourse = () => {
       },
     ],
   });
+  React.useEffect(() => {
+    document.title = "CodeRoutine | Create Course";
+  }, []);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
