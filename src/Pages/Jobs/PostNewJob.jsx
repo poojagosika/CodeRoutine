@@ -10,7 +10,7 @@ import {
   Grid,
   Chip,
 } from "@mui/material";
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
@@ -51,6 +51,7 @@ const PostNewJob = () => {
   const [requirementError, setRequirementError] = useState("");
   const [responsibilityError, setResponsibilityError] = useState("");
   const [benefitError, setBenefitError] = useState("");
+  const [linkError, setLinkError] = useState("");
 
   const onChange = (e) => {
     const { name, value } = e.target;
@@ -58,6 +59,16 @@ const PostNewJob = () => {
       ...prevState,
       [name]: value,
     }));
+
+    if (name === "externalLink") {
+      if (value.trim() === "") {
+        setLinkError("");
+      } else if (!value.startsWith("https://")) {
+        setLinkError('Link must start with "https://"');
+      } else {
+        setLinkError("");
+      }
+    }
   };
 
   const handleChangeSkill = (e) => {
@@ -183,11 +194,11 @@ const PostNewJob = () => {
   const onSubmit = (e) => {
     e.preventDefault();
     dispatch(postNewJob(formData));
-    navigate('/jobs');
+    navigate("/jobs");
   };
 
   return (
-    <Container maxWidth="md" sx={{ minHeight:"100vh" }}>
+    <Container maxWidth="md" sx={{ minHeight: "100vh" }}>
       <Paper elevation={4} sx={{ padding: 4, marginTop: 5, marginBottom: 5 }}>
         <Typography variant="h5" component="h1" gutterBottom>
           Post a New Job
@@ -589,6 +600,8 @@ const PostNewJob = () => {
                 value={formData.externalLink}
                 onChange={onChange}
                 size="small"
+                error={!!linkError}
+                helperText={linkError}
               />
             </Grid>
             <Grid item xs={12}>
