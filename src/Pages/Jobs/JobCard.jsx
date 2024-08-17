@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, Button, Paper, Typography, Chip, IconButton } from '@mui/material';
 import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
@@ -11,7 +11,6 @@ import BookmarkIcon from '@mui/icons-material/Bookmark';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import ReactTimeAgo from "react-time-ago";
 import { Link, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import { toggleSavedJob } from '../../features/jobs/jobActions';
 
 const JobCard = ({ job, index }) => {
@@ -31,17 +30,8 @@ const JobCard = ({ job, index }) => {
     };
 
     const toggleSaveStatus = async (e) => {
-        e.stopPropagation(); // Prevent triggering card click event
-        try {
-            const resultAction = await dispatch(toggleSavedJob(job._id));
-            if (toggleSavedJob.fulfilled.match(resultAction)) {
-                toast.success(resultAction.payload.saved ? 'Job saved!' : 'Job unsaved!');
-            } else {
-                toast.error(resultAction.payload || 'Failed to update save status');
-            }
-        } catch (error) {
-            toast.error(error.message);
-        }
+        e.stopPropagation();
+        dispatch(toggleSavedJob(job._id));
     };
 
     useEffect(() => {
