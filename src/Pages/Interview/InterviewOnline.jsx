@@ -36,7 +36,6 @@ function InterviewOnline() {
         minHeight: "100vh",
         paddingTop: 4,
         paddingBottom: 4,
-        minHeight:"100vh"
       }}
     >
       <Typography

@@ -51,7 +51,6 @@ const Premium = () => {
           minHeight: "100vh",
           padding: 4,
           color: "white",
-          minHeight:"100vh"
         }}
       >
         <Container>
