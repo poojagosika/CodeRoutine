@@ -28,6 +28,7 @@ import JobsLoader from "./Loading/JobsLoading";
 import JobCard from "./JobCard";
 import { Link } from "react-router-dom";
 import { fetchJobs } from "../../features/jobs/jobActions";
+import Error from "../../Component/Shared/Error";
 
 const Jobs = () => {
   const dispatch = useDispatch();
@@ -106,16 +107,7 @@ const Jobs = () => {
   };
 
   if (error) {
-    return (
-      <Container
-        maxWidth="md"
-        style={{ marginTop: "50px", marginBottom: "50px" }}
-      >
-        <Typography variant="h6" color="error" gutterBottom>
-          {error}
-        </Typography>
-      </Container>
-    );
+    return <Error error={error} />;
   }
 
   return (
