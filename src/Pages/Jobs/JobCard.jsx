@@ -1,25 +1,17 @@
 import React, { useEffect, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Box, Button, Paper, Typography, Chip, IconButton } from '@mui/material';
+import { Box, Button, Paper, Typography, Chip, } from '@mui/material';
 import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import ArticleIcon from "@mui/icons-material/Article";
 import PsychologyIcon from '@mui/icons-material/Psychology';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import BookmarkIcon from '@mui/icons-material/Bookmark';
-import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import ReactTimeAgo from "react-time-ago";
 import { Link, useNavigate } from 'react-router-dom';
-import { toggleSavedJob } from '../../features/jobs/jobActions';
+import SaveJobBookMark from './components/SaveJobBookMark';
 
 const JobCard = ({ job, index }) => {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const isSaved = useSelector((state) =>
-        state.jobs.jobs.find((j) => j._id === job._id)?.saved
-    );
-
     const jobExpiry = useMemo(() => {
         const currentDate = new Date();
         return new Date(job?.applicationDeadline) > currentDate;
@@ -27,11 +19,6 @@ const JobCard = ({ job, index }) => {
 
     const handleClick = () => {
         navigate(`/jobs/${job._id}`);
-    };
-
-    const toggleSaveStatus = async (e) => {
-        e.stopPropagation();
-        dispatch(toggleSavedJob(job._id));
     };
 
     useEffect(() => {
@@ -128,20 +115,7 @@ const JobCard = ({ job, index }) => {
                     </Button>
                 </Box>
             </Box>
-
-            {/* Save icon button */}
-            <IconButton
-                onClick={toggleSaveStatus}
-                sx={{
-                    position: 'absolute',
-                    top: 10,
-                    right: 10,
-                    color: isSaved ? 'blue' : 'grey',
-                }}
-                aria-label="Save Job"
-            >
-                {isSaved ? <BookmarkIcon /> : <BookmarkBorderIcon />}
-            </IconButton>
+            <SaveJobBookMark jobId={job._id} />
         </Paper>
     );
 };
