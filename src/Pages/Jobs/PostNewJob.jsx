@@ -40,7 +40,6 @@ const PostNewJob = () => {
     industry: "",
     numberOfOpenings: "",
     applicationInstructions: "",
-    contactEmail: "",
     externalLink: "",
   });
 
@@ -72,7 +71,13 @@ const PostNewJob = () => {
   };
 
   // Generalized handleAdd function
-  const handleAdd = (type, currentItem, setCurrentItem, setError, errorText) => {
+  const handleAdd = (
+    type,
+    currentItem,
+    setCurrentItem,
+    setError,
+    errorText
+  ) => {
     const trimmedItem = currentItem.trim().toLowerCase();
     if (!trimmedItem) {
       setError(errorText);
@@ -104,7 +109,6 @@ const PostNewJob = () => {
       return false;
     }
   };
-
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -265,9 +269,19 @@ const PostNewJob = () => {
                   type="button"
                   color="primary"
                   onClick={() =>
-                    handleAdd("skills", currentSkill, setCurrentSkill, setSkillError, "Skill cannot be empty")
+                    handleAdd(
+                      "skills",
+                      currentSkill,
+                      setCurrentSkill,
+                      setSkillError,
+                      "Skill cannot be empty"
+                    )
                   }
-                  style={{ borderRadius: "10px", marginLeft: "10px", padding: "7px" }}
+                  style={{
+                    borderRadius: "10px",
+                    marginLeft: "10px",
+                    padding: "7px",
+                  }}
                   size="small"
                 >
                   Add
@@ -294,7 +308,10 @@ const PostNewJob = () => {
                   fullWidth
                   label="Add a Requirement"
                   value={currentRequirement}
-                  onChange={handleChange(setCurrentRequirement, setRequirementError)}
+                  onChange={handleChange(
+                    setCurrentRequirement,
+                    setRequirementError
+                  )}
                   size="small"
                   error={Boolean(requirementError)}
                   helperText={requirementError}
@@ -312,7 +329,11 @@ const PostNewJob = () => {
                       "Requirement cannot be empty"
                     )
                   }
-                  style={{ borderRadius: "10px", marginLeft: "10px", padding: "7px" }}
+                  style={{
+                    borderRadius: "10px",
+                    marginLeft: "10px",
+                    padding: "7px",
+                  }}
                   size="small"
                 >
                   Add
@@ -320,7 +341,11 @@ const PostNewJob = () => {
               </Box>
               {formData.requirements.map((requirement, index) => (
                 <Box key={index} sx={{ display: "flex", alignItems: "center" }}>
-                  <Typography component="li" variant="body2" sx={{ flexGrow: 1 }}>
+                  <Typography
+                    component="li"
+                    variant="body2"
+                    sx={{ flexGrow: 1 }}
+                  >
                     {requirement}
                   </Typography>
                   <IconButton
@@ -345,7 +370,10 @@ const PostNewJob = () => {
                   fullWidth
                   label="Add a Responsibility"
                   value={currentResponsibility}
-                  onChange={handleChange(setCurrentResponsibility, setResponsibilityError)}
+                  onChange={handleChange(
+                    setCurrentResponsibility,
+                    setResponsibilityError
+                  )}
                   size="small"
                   error={Boolean(responsibilityError)}
                   helperText={responsibilityError}
@@ -363,7 +391,11 @@ const PostNewJob = () => {
                       "Responsibility cannot be empty"
                     )
                   }
-                  style={{ borderRadius: "10px", marginLeft: "10px", padding: "7px" }}
+                  style={{
+                    borderRadius: "10px",
+                    marginLeft: "10px",
+                    padding: "7px",
+                  }}
                   size="small"
                 >
                   Add
@@ -371,13 +403,19 @@ const PostNewJob = () => {
               </Box>
               {formData.responsibilities.map((responsibility, index) => (
                 <Box key={index} sx={{ display: "flex", alignItems: "center" }}>
-                  <Typography component="li" variant="body2" sx={{ flexGrow: 1 }}>
+                  <Typography
+                    component="li"
+                    variant="body2"
+                    sx={{ flexGrow: 1 }}
+                  >
                     {responsibility}
                   </Typography>
                   <IconButton
                     edge="end"
                     aria-label="delete"
-                    onClick={() => handleRemove("responsibilities", responsibility)}
+                    onClick={() =>
+                      handleRemove("responsibilities", responsibility)
+                    }
                     size="small"
                   >
                     <CloseIcon />
@@ -414,7 +452,11 @@ const PostNewJob = () => {
                       "Benefit cannot be empty"
                     )
                   }
-                  style={{ borderRadius: "10px", marginLeft: "10px", padding: "7px" }}
+                  style={{
+                    borderRadius: "10px",
+                    marginLeft: "10px",
+                    padding: "7px",
+                  }}
                   size="small"
                 >
                   Add
@@ -422,7 +464,11 @@ const PostNewJob = () => {
               </Box>
               {formData.benefits.map((benefit, index) => (
                 <Box key={index} sx={{ display: "flex", alignItems: "center" }}>
-                  <Typography component="li" variant="body2" sx={{ flexGrow: 1 }}>
+                  <Typography
+                    component="li"
+                    variant="body2"
+                    sx={{ flexGrow: 1 }}
+                  >
                     {benefit}
                   </Typography>
                   <IconButton
@@ -477,28 +523,20 @@ const PostNewJob = () => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
-                name="contactEmail"
-                label="Contact Email"
-                value={formData.contactEmail}
-                onChange={onChange}
-                fullWidth
-                size="small"
-                type="email"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
                 name="externalLink"
                 label="External Link"
                 value={formData.externalLink}
                 onChange={onChange}
                 fullWidth
                 size="small"
-                error={formData.externalLink && !isValidURL(formData.externalLink)}
+                error={
+                  Boolean(formData.externalLink) &&
+                  !isValidURL(formData.externalLink)
+                }
                 helperText={
-                  formData.externalLink && !isValidURL(formData.externalLink)
-                    ? "Please enter a valid URL"
-                    : ""
+                  Boolean(formData.externalLink) &&
+                  !isValidURL(formData.externalLink) &&
+                  "Please enter a valid URL"
                 }
               />
             </Grid>
