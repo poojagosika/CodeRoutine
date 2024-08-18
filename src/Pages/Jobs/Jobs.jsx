@@ -203,12 +203,7 @@ const Jobs = () => {
           </Tabs>
 
           {loading ? (
-            <Container
-              maxWidth="md"
-              style={{ marginTop: "50px", marginBottom: "50px" }}
-            >
-              <JobsLoader />
-            </Container>
+            <JobsLoader />
           ) : (
             <Grid container spacing={2} mb={2}>
               {filteredJobs.length === 0 && (
