@@ -20,6 +20,8 @@ import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
 import ErrorIcon from "@mui/icons-material/Error";
 import { useDispatch, useSelector } from "react-redux";
 import { ContextStore } from "../../Context/ContextStore";
+import SaveJobBookMark from "./components/SaveJobBookMark";
+
 import {
   selectJobById,
   selectLoading,
@@ -123,6 +125,7 @@ const JobDetails = () => {
         >
           {job?.title}
         </Typography>
+        <SaveJobBookMark jobId={job?._id} />
 
         {job?.applicationDeadline && !JobExpiry(job?.applicationDeadline) && (
           <Box display="flex" gap={1} color="error.main" alignItems="center">
