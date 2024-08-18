@@ -152,46 +152,54 @@ const JobDetails = () => {
             {job?.description}
           </Typography>
         </Box>
-        <Section title="Skills Required">
-          {job?.skills?.map((skill, index) => (
-            <Chip
-              key={index}
-              label={skill}
-              sx={{
-                margin: 0.5,
-                backgroundColor: "primary.light",
-                color: "primary.contrastText",
-              }}
-            />
-          ))}
-        </Section>
-        <Section title="Responsibilities">
-          <ul>
-            {job?.responsibilities?.map((item, index) => (
-              <li style={{ marginLeft: "30px" }} key={index}>
-                {item}
-              </li>
+        {job?.skills?.length > 0 && (
+          <Section title="Skills Required">
+            {job?.skills?.map((skill, index) => (
+              <Chip
+                key={index}
+                label={skill}
+                sx={{
+                  margin: 0.5,
+                  backgroundColor: "primary.light",
+                  color: "primary.contrastText",
+                }}
+              />
             ))}
-          </ul>
-        </Section>
-        <Section title="Requirements">
-          <ul>
-            {job?.requirements?.map((item, index) => (
-              <li style={{ marginLeft: "30px" }} key={index}>
-                {item}
-              </li>
-            ))}
-          </ul>
-        </Section>
-        <Section title="Benefits">
-          <ul>
-            {job?.benefits?.map((item, index) => (
-              <li style={{ marginLeft: "30px" }} key={index}>
-                {item}
-              </li>
-            ))}
-          </ul>
-        </Section>
+          </Section>
+        )}
+        {job?.responsibilities?.length > 0 && (
+          <Section title="Responsibilities">
+            <ul>
+              {job?.responsibilities?.map((item, index) => (
+                <li style={{ marginLeft: "30px" }} key={index}>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </Section>
+        )}
+        {job?.requirements?.length > 0 && (
+          <Section title="Requirements">
+            <ul>
+              {job?.requirements?.map((item, index) => (
+                <li style={{ marginLeft: "30px" }} key={index}>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </Section>
+        )}
+        {job?.benefits.length > 0 && (
+          <Section title="Benefits">
+            <ul>
+              {job?.benefits?.map((item, index) => (
+                <li style={{ marginLeft: "30px" }} key={index}>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </Section>
+        )}
         <Grid container spacing={2}>
           <Grid item xs={6}>
             {job?.employmentType && (
@@ -218,7 +226,9 @@ const JobDetails = () => {
                 value={new Date(job?.applicationDeadline).toLocaleDateString()}
               />
             )}
-            <JobDetail label="Posted By" value={job?.postedBy} />
+            {job?.postedBy && (
+              <JobDetail label="Posted By" value={job?.postedBy} />
+            )}
           </Grid>
         </Grid>
         <Box sx={{ marginTop: 4 }} display="flex" gap={2}>
