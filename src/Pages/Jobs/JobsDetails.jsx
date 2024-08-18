@@ -189,7 +189,7 @@ const JobDetails = () => {
             </ul>
           </Section>
         )}
-        {job?.benefits.length > 0 && (
+        {job?.benefits?.length > 0 && (
           <Section title="Benefits">
             <ul>
               {job?.benefits?.map((item, index) => (
