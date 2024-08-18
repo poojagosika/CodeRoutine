@@ -113,7 +113,7 @@ const EditJob = () => {
     setCurrentItem("");
   };
 
-  const handleRemoveField = (type, itemToRemove) => {
+  const handleRemove = (type, itemToRemove) => {
     setFormData((prevState) => ({
       ...prevState,
       [type]: prevState[type].filter((item) => item !== itemToRemove),
