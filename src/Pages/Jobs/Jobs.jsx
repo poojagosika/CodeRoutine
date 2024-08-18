@@ -233,7 +233,7 @@ const Jobs = () => {
                 ))}
             </Grid>
           )}
-          {filteredJobs.length >= 0 && (
+          {jobs.length > 0 && filteredJobs.length > 0 && (
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
