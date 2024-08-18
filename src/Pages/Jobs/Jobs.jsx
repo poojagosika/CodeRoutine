@@ -68,6 +68,7 @@ const Jobs = () => {
     }
 
     dispatch(setFilters(newFilters));
+    setPage(0);
   };
 
   const handleTabChange = (event, newValue) => {
@@ -201,37 +202,38 @@ const Jobs = () => {
             <Tab label="Applied Jobs" />
           </Tabs>
 
-          {
-            loading ?
-              <Container
-                maxWidth="md"
-                style={{ marginTop: "50px", marginBottom: "50px" }}
-              >
-                <JobsLoader />
-              </Container>
-              :
-              <Grid container spacing={2} mb={2}>
-                {filteredJobs.length === 0 && (
-                  <Box
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                    height="100%"
-                    width="100%"
-                  >
-                    <Typography variant="h6" gutterBottom>
-                      No Jobs Found!
-                    </Typography>
-                  </Box>
-                )}
-                {filteredJobs.map((job, index) => (
+          {loading ? (
+            <Container
+              maxWidth="md"
+              style={{ marginTop: "50px", marginBottom: "50px" }}
+            >
+              <JobsLoader />
+            </Container>
+          ) : (
+            <Grid container spacing={2} mb={2}>
+              {filteredJobs.length === 0 && (
+                <Box
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  height="100%"
+                  width="100%"
+                >
+                  <Typography variant="h6" gutterBottom>
+                    No Jobs Found!
+                  </Typography>
+                </Box>
+              )}
+              {filteredJobs
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((job, index) => (
                   <Grid item key={index} xs={12} sm={12} md={12} gap={2}>
                     <JobCard job={job} index={index} />
                   </Grid>
                 ))}
-              </Grid>
-          }
-          {filteredJobs.length >= 10 && (
+            </Grid>
+          )}
+          {filteredJobs.length >= 0 && (
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
