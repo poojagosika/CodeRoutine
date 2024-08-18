@@ -214,6 +214,7 @@ const PostNewJob = () => {
                 onChange={onChange}
                 fullWidth
                 size="small"
+                required
               >
                 {jobLevels.map((level) => (
                   <MenuItem key={level} value={level}>
