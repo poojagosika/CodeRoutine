@@ -32,21 +32,26 @@ const ShareButton = ({ url, shareTitle, description }) => {
     const [open, setOpen] = useState(false);
 
     const handleOpen = (e) => {
+        e?.stopPropagation();
         setOpen(true);
-        e.stopPropagation();
     };
 
     const handleClose = (e) => {
+        e?.stopPropagation();
         setOpen(false);
-        e.stopPropagation();
     };
 
     const copyLinkToClipboard = (e) => {
-        e.stopPropagation();
+        e?.stopPropagation();
         navigator.clipboard.writeText(url);
         toast.success("Link copied to clipboard!");
         handleClose();
     };
+
+    const handleShare = (e) => {
+        e?.stopPropagation();
+        handleClose();
+    }
 
     return (
         <>
@@ -67,27 +72,27 @@ const ShareButton = ({ url, shareTitle, description }) => {
                         justifyContent="space-around"
                     >
                         <Tooltip title="Share on Facebook">
-                            <FacebookShareButton url={url} quote={shareTitle}>
+                            <FacebookShareButton url={url} quote={shareTitle} onClick={handleShare}>
                                 <FacebookIcon size={30} round />
                             </FacebookShareButton>
                         </Tooltip>
                         <Tooltip title="Share on Twitter">
-                            <TwitterShareButton url={url}>
+                            <TwitterShareButton url={url} onClick={handleShare}>
                                 <TwitterIcon size={30} round />
                             </TwitterShareButton>
                         </Tooltip>
                         <Tooltip title="Share on LinkedIn">
-                            <LinkedinShareButton url={url} summary={description}>
+                            <LinkedinShareButton url={url} summary={description} onClick={handleShare}>
                                 <LinkedinIcon size={30} round />
                             </LinkedinShareButton>
                         </Tooltip>
                         <Tooltip title="Share on WhatsApp">
-                            <WhatsappShareButton url={url}>
+                            <WhatsappShareButton url={url} onClick={handleShare}>
                                 <WhatsappIcon size={30} round />
                             </WhatsappShareButton>
                         </Tooltip>
                         <Tooltip title="Share via Email">
-                            <EmailShareButton url={url} subject={shareTitle} body={description}>
+                            <EmailShareButton url={url} subject={shareTitle} body={description} onClick={handleShare}>
                                 <EmailIcon size={30} round />
                             </EmailShareButton>
                         </Tooltip>
