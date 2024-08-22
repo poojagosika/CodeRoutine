@@ -32,6 +32,7 @@ import {
   fetchJobById,
   removeJob,
 } from "../../features/jobs/jobActions";
+import ShareButtons from "../../Component/Shared/ShareButtons";
 
 const JobDetails = () => {
   const { id } = useParams();
@@ -88,6 +89,9 @@ const JobDetails = () => {
     const deadlineDate = new Date(applicationDeadline);
     return deadlineDate.getTime() > currentDate.getTime();
   };
+  const url = "https://example.com";
+  const title = "Check out this amazing page!";
+  const description = "This is an awesome page that you should definitely check out.";
 
   return (
     <Container
@@ -125,6 +129,7 @@ const JobDetails = () => {
         >
           {job?.title}
         </Typography>
+        <ShareButtons url={url} shareTitle={job?.title} description={job?.description} />
         <SaveJobBookMark jobId={job?._id} />
 
         {job?.applicationDeadline && !JobExpiry(job?.applicationDeadline) && (
