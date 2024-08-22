@@ -89,9 +89,6 @@ const JobDetails = () => {
     const deadlineDate = new Date(applicationDeadline);
     return deadlineDate.getTime() > currentDate.getTime();
   };
-  const url = "https://example.com";
-  const title = "Check out this amazing page!";
-  const description = "This is an awesome page that you should definitely check out.";
 
   return (
     <Container
@@ -121,16 +118,24 @@ const JobDetails = () => {
           },
         }}
       >
-        <Typography
-          variant="h4"
-          component="h1"
-          gutterBottom
-          sx={{ fontWeight: "bold", color: "primary.main" }}
-        >
-          {job?.title}
-        </Typography>
-        <ShareButtons url={url} shareTitle={job?.title} description={job?.description} />
-        <SaveJobBookMark jobId={job?._id} />
+        <Box display="flex" justifyContent="space-between">
+          <Typography
+            variant="h4"
+            component="h1"
+            gutterBottom
+            sx={{ fontWeight: "bold", color: "primary.main" }}
+          >
+            {job?.title}
+          </Typography>
+          <Box>
+            <ShareButtons
+              url={window.location.href}
+              shareTitle={job?.title}
+              description={job?.description}
+            />
+            <SaveJobBookMark jobId={job?._id} />
+          </Box>
+        </Box>
 
         {job?.applicationDeadline && !JobExpiry(job?.applicationDeadline) && (
           <Box display="flex" gap={1} color="error.main" alignItems="center">
