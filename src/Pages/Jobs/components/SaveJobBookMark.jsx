@@ -18,9 +18,6 @@ const SaveJobBookMark = ({ jobId }) => {
         <IconButton
             onClick={toggleSaveStatus}
             sx={{
-                position: 'absolute',
-                top: 10,
-                right: 10,
                 color: isSaved ? 'blue' : 'grey',
             }}
             aria-label="Save Job"
