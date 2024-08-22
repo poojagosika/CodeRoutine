@@ -31,10 +31,18 @@ const Transition = forwardRef(function Transition(props, ref) {
 const ShareButton = ({ url, shareTitle, description }) => {
     const [open, setOpen] = useState(false);
 
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    const handleOpen = (e) => {
+        setOpen(true);
+        e.stopPropagation();
+    };
 
-    const copyLinkToClipboard = () => {
+    const handleClose = (e) => {
+        setOpen(false);
+        e.stopPropagation();
+    };
+
+    const copyLinkToClipboard = (e) => {
+        e.stopPropagation();
         navigator.clipboard.writeText(url);
         toast.success("Link copied to clipboard!");
         handleClose();

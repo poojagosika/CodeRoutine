@@ -9,6 +9,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ReactTimeAgo from "react-time-ago";
 import { Link, useNavigate } from 'react-router-dom';
 import SaveJobBookMark from './components/SaveJobBookMark';
+import ShareButtons from "../../Component/Shared/ShareButtons";
 
 const JobCard = ({ job, index }) => {
     const navigate = useNavigate();
@@ -33,6 +34,8 @@ const JobCard = ({ job, index }) => {
         return () => clearTimeout(timer);
     }, [index]);
 
+    const url = `${window.location.href}/${job._id}`;
+
     return (
         <Paper
             id={`job-card-${index}`}
@@ -52,9 +55,15 @@ const JobCard = ({ job, index }) => {
             onClick={handleClick}
         >
             <Box display="flex" flexDirection="column">
-                <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                    {job.title}
-                </Typography>
+                <Box display="flex" alignItems="center" justifyContent="space-between">
+                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                        {job.title}
+                    </Typography>
+                    <Box>
+                        <ShareButtons url={url} shareTitle={job?.title} description={job?.description} />
+                        <SaveJobBookMark jobId={job._id} />
+                    </Box>
+                </Box>
                 <Typography color="textSecondary" sx={{ fontWeight: 600 }}>
                     {job.company}
                 </Typography>
@@ -115,7 +124,6 @@ const JobCard = ({ job, index }) => {
                     </Button>
                 </Box>
             </Box>
-            <SaveJobBookMark jobId={job._id} />
         </Paper>
     );
 };
