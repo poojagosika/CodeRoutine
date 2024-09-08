@@ -1,73 +1,48 @@
-import React, { useCallback, useEffect, useState } from "react";
+// src/components/Discuss.js
+import React, { useEffect, useState, useCallback } from "react";
 import {
   List,
   Container,
   Box,
   Button,
   InputBase,
-  debounce,
   IconButton,
-  Pagination,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   TablePagination,
 } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchDiscussions } from "../../features/discuss/discussAction";
 import DiscussList from "./DiscussList";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import DiscussLoading from "./Loading/DiscussLoading";
 import NewPost from "./NewPost";
-import { getDiscuss } from "../../Api/Discuss/discussApi";
 
 const Discuss = () => {
-  const [loading, setLoading] = useState(true);
-  const [discussions, setDiscussions] = useState([]);
+  const dispatch = useDispatch();
+  const { discussions, loading, totalPages } = useSelector(
+    (state) => state.discussions
+  );
+
   const [searchTerm, setSearchTerm] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
   const [sortBy, setSortBy] = useState("createdAt");
   const [order, setOrder] = useState("desc");
   const [page, setPage] = useState(0);
   const [limit, setLimit] = useState(10);
-  const [totalPages, setTotalPages] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  React.useEffect(() => {
-    document.title = "CodeRoutine | Discuss";
-  }, []);
-  const fetchDiscussions = useCallback(async () => {
-    setLoading(true);
-    try {
-      const response = await getDiscuss({
-        params: {
-          page,
-          limit,
-          sortBy,
-          order,
-          searchTerm,
-        },
-      });
-      const { topics, total, pages } = response?.data || {};
-      setDiscussions(topics || []);
-      setTotalPages(pages || 0);
-    } catch (error) {
-      console.error("Error fetching discussions:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, [page, limit, sortBy, order, searchTerm]);
+  const fetchDiscussionsData = useCallback(() => {
+    dispatch(fetchDiscussions({ page, limit, sortBy, order, searchTerm }));
+  }, [dispatch, page, limit, sortBy, order, searchTerm]);
 
   useEffect(() => {
-    fetchDiscussions();
-  }, [fetchDiscussions]);
+    fetchDiscussionsData();
+  }, [fetchDiscussionsData]);
 
-  const handleSearch = useCallback(
-    debounce((searchTerm) => {
-      setSearchTerm(searchTerm);
-      setPage(1); // Reset page when search term changes
-    }, 300),
-    []
-  );
+  const handleSearch = (searchTerm) => {
+    setSearchTerm(searchTerm);
+    setPage(0);
+    fetchDiscussionsData();
+  };
 
   const handleSearchChange = (event) => {
     const searchTerm = event.target.value;
@@ -82,6 +57,7 @@ const Discuss = () => {
   const handleCloseDialog = () => {
     setOpenDialog(false);
   };
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -101,18 +77,8 @@ const Discuss = () => {
     setPage(1); // Reset to first page on sort change
   };
 
-  const handlePageChange = (event, value) => {
-    setPage(value);
-  };
-
-  const handleLimitChange = (event) => {
-    const newLimit = parseInt(event.target.value, 10);
-    setLimit(newLimit);
-    setPage(1); // Reset page when limit changes
-  };
-
   return (
-    <Container maxWidth="lg" sx={{ mt: 4, mb: 4, minHeight:"100vh"}}>
+    <Container maxWidth="lg" sx={{ mt: 4, mb: 4, minHeight: "100vh" }}>
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <InputBase
           placeholder="Search..."
@@ -177,7 +143,7 @@ const Discuss = () => {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={discussions.length}
+          count={totalPages * rowsPerPage}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
@@ -187,7 +153,7 @@ const Discuss = () => {
       <NewPost
         openDialog={openDialog}
         handleCloseDialog={handleCloseDialog}
-        setDiscussions={setDiscussions}
+        setDiscussions={() => fetchDiscussionsData()}
         setOpenDialog={setOpenDialog}
       />
     </Container>
