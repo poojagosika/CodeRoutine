@@ -39,3 +39,17 @@ export const getDiscussById = createAsyncThunk(
 );
 
 
+// post createDiscuss 
+export const createDiscuss = createAsyncThunk(
+    "discussions/createDiscuss",
+    async (data, { rejectWithValue }) => {
+        try {
+            const response = await axiosInstance.post("/api/discuss", data);
+            return response.data.newTopic; // Return created discussion
+        } catch (error) {
+            return handleThunkError(error, rejectWithValue); // Handle error
+        }
+    }
+);
+
+

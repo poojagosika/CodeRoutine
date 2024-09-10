@@ -1,6 +1,7 @@
 // src/store/slices/discussSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 import {
+    createDiscuss,
     fetchDiscussions,
     getDiscussById,
 
@@ -60,12 +61,26 @@ const discussSlice = createSlice({
                     state.discussions.push(action.payload);
                 }
             })
-
-
             .addCase(getDiscussById.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
             })
+
+            // handle  post createDiscuss
+            .addCase(createDiscuss.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(createDiscuss.fulfilled, (state, action) => {
+                state.loading = false;
+                state.discussions.push(action.payload);
+            })
+            .addCase(createDiscuss.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            })
+
+
 
 
     },
