@@ -20,3 +20,32 @@ export const fetchUserProfile = createAsyncThunk(
     }
   }
 );
+
+export const addSkill = createAsyncThunk(
+  "profile/addSkill",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post(
+        "/api/users/profile/addSkill",
+        data
+      );
+      return response?.data?.skills;
+    } catch (error) {
+      return handleThunkError(error, rejectWithValue);
+    }
+  }
+);
+
+export const deleteSkill = createAsyncThunk(
+  "profile/deleteSkill",
+  async (skillId, { rejectWithValue }) => {
+    try {
+      await axiosInstance.delete(
+        `/api/users/profile/deleteSkill/${skillId}`
+      );
+      return skillId;
+    } catch (error) {
+      return handleThunkError(error, rejectWithValue);
+    }
+  }
+);

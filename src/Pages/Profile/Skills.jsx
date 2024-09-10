@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Grid,
   Typography,
@@ -16,13 +17,15 @@ import {
   Chip,
 } from "@mui/material";
 import { Add as AddIcon, Clear as ClearIcon } from "@mui/icons-material";
-import { addSkill, deleteSkill } from "../../Api/Profile/skillsApi";
+import { addSkill, deleteSkill } from "../../features/profile/profileActions";
+import { selectSkills } from "../../features/profile/profileSlice";
 import { toast } from "react-toastify";
 import { ContextStore } from "../../Context/ContextStore";
 
 const Skills = ({ userProfile }) => {
+  const dispatch = useDispatch();
+  const skills = useSelector(selectSkills);
   const [openDialog, setOpenDialog] = useState(false);
-  const [skills, setSkills] = useState(userProfile?.skills || []);
   const [newSkill, setNewSkill] = useState("");
   const [selectedLevel, setSelectedLevel] = useState("intermediate");
   const [error, setError] = useState("");
@@ -47,20 +50,12 @@ const Skills = ({ userProfile }) => {
 
       const skillObject = { skill: newSkill.trim(), level: selectedLevel };
       try {
-        const response = await addSkill(skillObject);
-        if (response.data) {
-          setSkills(response.data.skills);
-          resetDialog();
-        }
+        await dispatch(addSkill(skillObject)).unwrap();
+        resetDialog();
       } catch (error) {
-        handleError(error, "Failed to add skill");
+        toast.error(error);
       }
     }
-  };
-
-  const handleError = (error, defaultMessage) => {
-    toast.error(error?.response?.data?.message || defaultMessage);
-    console.error(defaultMessage, error);
   };
 
   const resetDialog = () => {
@@ -103,12 +98,9 @@ const Skills = ({ userProfile }) => {
   const handleDeleteSkill = async (index) => {
     const skillId = skills[index]._id;
     try {
-      const response = await deleteSkill(skillId);
-      if (response.data) {
-        setSkills((prevSkills) => prevSkills.filter((_, i) => i !== index));
-      }
+      await dispatch(deleteSkill(skillId));
     } catch (error) {
-      handleError(error, "Error deleting skill");
+      toast.error(error);
     }
   };
 
