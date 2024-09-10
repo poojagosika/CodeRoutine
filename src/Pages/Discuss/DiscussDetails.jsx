@@ -24,12 +24,23 @@ import TopicLoadig from "./Loading/TopicLoadig";
 import {
   addLikeOrRemoveLike,
   deleteDiscussById,
-  getDiscussById,
 } from "../../Api/Discuss/discussApi";
 import { addCommentToTopic } from "../../Api/Discuss/commentApi";
+import { useDispatch, useSelector } from "react-redux";
+import { getDiscussById } from "../../features/discuss/discussAction";
 
 const DiscussDetails = () => {
   const { id } = useParams();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getDiscussById(id));
+  }, [id]);
+
+  const topic1 = useSelector((state) =>
+    state.discussions.discussions.filter((item) => item._id === id)
+  );
+
   const [topic, setTopic] = useState(null);
   const [update, setUpdate] = useState({});
   const [newComment, setNewComment] = useState("");
@@ -48,7 +59,7 @@ const DiscussDetails = () => {
     const fetchTopic = async () => {
       try {
         const response = await getDiscussById(id);
-        setTopic(response.data);
+        // setTopic(response.data);
         setUpdate(response.data);
       } catch (error) {
         console.error("Error fetching topic:", error);
@@ -156,7 +167,7 @@ const DiscussDetails = () => {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 5, minHeight:"100vh"}} >
+    <Container maxWidth="lg" sx={{ mt: 5, minHeight: "100vh" }}>
       {!topic ? (
         <TopicLoadig />
       ) : (

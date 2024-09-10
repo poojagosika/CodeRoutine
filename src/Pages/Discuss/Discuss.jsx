@@ -1,4 +1,3 @@
-// src/components/Discuss.js
 import React, { useEffect, useState, useCallback } from "react";
 import {
   List,
@@ -128,7 +127,7 @@ const Discuss = () => {
         <DiscussLoading />
       ) : (
         <List>
-          {discussions.map((discussion) => (
+          {discussions?.map((discussion) => (
             <DiscussList key={discussion._id} discussion={discussion} />
           ))}
         </List>
