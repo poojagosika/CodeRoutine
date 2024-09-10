@@ -13,16 +13,15 @@ import {
 } from "@mui/material";
 import React from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import { toast } from "react-toastify";
-import { personalInformationUpdate } from "../../../Api/Profile/personalInformationApi.js";
 import SendIcon from "@mui/icons-material/Send";
+import { useDispatch } from "react-redux";
+import { personalInformationUpdate } from "../../../features/profile/profileActions";
 
 const PersonalInfoDialog = ({
     toggleEditing,
     isEditing,
     tempPersonalInfo,
     setTempPersonalInfo,
-    setPersonalInfo,
     education,
     experience
 }) => {
@@ -35,18 +34,12 @@ const PersonalInfoDialog = ({
         setTempPersonalInfo((prev) => ({ ...prev, gender }));
     };
 
-    const handleSave = async () => {
-        try {
-            const response = await personalInformationUpdate(tempPersonalInfo);
-            if (response?.data) {
-                setPersonalInfo(tempPersonalInfo);
-                toast.success("Personal information updated successfully");
-                toggleEditing();
-            }
-        } catch (error) {
-            toast.error(error.response.data.message);
-            console.error("Error updating personal information:", error);
-        }
+    const dispatch = useDispatch();
+
+
+    const handleSave = () => {
+        dispatch(personalInformationUpdate(tempPersonalInfo));
+        toggleEditing();
     };
 
     const handleCancel = () => {
