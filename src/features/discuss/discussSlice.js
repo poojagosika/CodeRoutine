@@ -1,37 +1,76 @@
 // src/store/slices/discussSlice.js
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchDiscussions } from "./discussAction";
+import {
+    fetchDiscussions,
+    getDiscussById,
 
-const initialState = {
-    discussions: [],
-    loading: false,
-    error: null,
-    totalPages: 0,
-};
+} from "./discussAction";
 
 const discussSlice = createSlice({
     name: "discussions",
-    initialState,
+    initialState: {
+        discussions: [], // List of discussions
+        selectedDiscussion: null, // Current selected discussion
+        loading: false, // Loading state for any async action
+        error: null, // Error message if an action fails
+        totalPages: 0, // For pagination purposes
+    },
     reducers: {
-        // Add other local reducers if needed
+        // You can add other reducers here if you need to manage other states locally
+
+
     },
     extraReducers: (builder) => {
         builder
-            // Handle the fetch discussions
+            // Handle fetch discussions
             .addCase(fetchDiscussions.pending, (state) => {
+                state.loading = true; // Set loading state when the fetch starts
+                state.error = null; // Reset error state
+            })
+            .addCase(fetchDiscussions.fulfilled, (state, action) => {
+                state.loading = false; // Turn off loading state
+                state.discussions = action.payload.topics || []; // Save discussions to state
+                state.totalPages = action.payload.pages || 0; // Save total number of pages for pagination
+            })
+            .addCase(fetchDiscussions.rejected, (state, action) => {
+                state.loading = false; // Turn off loading
+                state.error = action.payload; // Save error message
+            })
+
+            // Handle getdiscussion by ID
+            .addCase(getDiscussById.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(fetchDiscussions.fulfilled, (state, action) => {
+            .addCase(getDiscussById.fulfilled, (state, action) => {
+                console.log(action.payload)
                 state.loading = false;
-                state.discussions = action.payload.topics || [];
-                state.totalPages = action.payload.pages || 0;
+                //check id is exicting or not give me
+
+                const existingDiscussion = state.discussions.find((discussion) => discussion._id === action.payload._id);
+                if (existingDiscussion) {
+                    state.discussions = state.discussions.map((discussion) => {
+                        if (discussion._id === action.payload._id) {
+                            return action.payload;
+                        }
+                        return discussion;
+                    });
+                }
+                else {
+                    state.discussions.push(action.payload);
+                }
             })
-            .addCase(fetchDiscussions.rejected, (state, action) => {
+
+
+            .addCase(getDiscussById.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
-            });
+            })
+
+
     },
 });
+
+
 
 export default discussSlice.reducer;

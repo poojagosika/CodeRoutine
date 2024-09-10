@@ -6,8 +6,8 @@ import axiosInstance from "../../Api/axiosConfig";
 // Helper function to handle errors
 const handleThunkError = (error, rejectWithValue) => {
     const message = error.response?.data?.message || "An error occurred";
-    toast.error(message);
-    return rejectWithValue(message);
+    toast.error(message); // Show error notification
+    return rejectWithValue(message); // Return the error message to be handled in the slice
 };
 
 // Fetch discussions
@@ -18,11 +18,24 @@ export const fetchDiscussions = createAsyncThunk(
             const response = await axiosInstance.get("/api/discuss", {
                 params: { page, limit, sortBy, order, searchTerm },
             });
-            console.log(response.data);
-            return response.data;
+            return response.data; // Return fetched discussions
         } catch (error) {
-            return handleThunkError(error, rejectWithValue);
+            return handleThunkError(error, rejectWithValue); // Handle error
         }
     }
 );
+
+// Get discussion by ID
+export const getDiscussById = createAsyncThunk(
+    "discussions/getDiscussById",
+    async (id, { rejectWithValue }) => {
+        try {
+            const response = await axiosInstance.get(`/api/discuss/${id}`);
+            return response.data; // Return discussion data
+        } catch (error) {
+            return handleThunkError(error, rejectWithValue); // Handle error
+        }
+    }
+);
+
 
