@@ -51,5 +51,17 @@ export const createDiscuss = createAsyncThunk(
         }
     }
 );
-
-
+// delete deleteDiscussById
+export const deleteDiscussById = createAsyncThunk(
+    "discussions/deleteDiscussById",
+    async (id, { rejectWithValue }) => {
+        try {
+            const response = await axiosInstance.delete(`/api/discuss/${id}`);
+            const data = response.data
+            data.deletedTopic = id;
+            return data; // Return deleted discussion
+        } catch (error) {
+            return handleThunkError(error, rejectWithValue); // Handle error
+        }
+    }
+);

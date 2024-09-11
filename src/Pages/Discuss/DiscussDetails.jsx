@@ -21,13 +21,13 @@ import { ContextStore } from "../../Context/ContextStore";
 import Comment from "./Comment";
 import IsLogin from "../../Component/IsLogin";
 import TopicLoadig from "./Loading/TopicLoadig";
-import {
-  addLikeOrRemoveLike,
-  deleteDiscussById,
-} from "../../Api/Discuss/discussApi";
+import { addLikeOrRemoveLike } from "../../Api/Discuss/discussApi";
 import { addCommentToTopic } from "../../Api/Discuss/commentApi";
 import { useDispatch, useSelector } from "react-redux";
-import { getDiscussById } from "../../features/discuss/discussAction";
+import {
+  deleteDiscussById,
+  getDiscussById,
+} from "../../features/discuss/discussAction";
 
 const DiscussDetails = () => {
   const { id } = useParams();
@@ -37,11 +37,9 @@ const DiscussDetails = () => {
     dispatch(getDiscussById(id));
   }, [id]);
 
-  const topic1 = useSelector((state) =>
-    state.discussions.discussions.filter((item) => item._id === id)
-  );
+  const topic1 = useSelector((state) => state.discussions.discussions);
 
-  const [topic, setTopic] = useState(null);
+  const [topic, setTopic] = useState(topic1.find((item) => item._id === id));
   const [update, setUpdate] = useState({});
   const [newComment, setNewComment] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
@@ -55,19 +53,6 @@ const DiscussDetails = () => {
   React.useEffect(() => {
     document.title = "CodeRoutine | Discuss Details";
   }, []);
-  useEffect(() => {
-    const fetchTopic = async () => {
-      try {
-        const response = await getDiscussById(id);
-        // setTopic(response.data);
-        setUpdate(response.data);
-      } catch (error) {
-        console.error("Error fetching topic:", error);
-      }
-    };
-
-    fetchTopic();
-  }, [id]);
 
   useEffect(() => {
     if (topic) {
@@ -75,13 +60,9 @@ const DiscussDetails = () => {
     }
   }, [topic, userData]);
 
-  const handleDelete = async () => {
-    try {
-      await deleteDiscussById(id);
-      navigate("/discuss");
-    } catch (error) {
-      console.error("Error deleting topic:", error);
-    }
+  const handleDelete = () => {
+    dispatch(deleteDiscussById(id));
+    navigate("/discuss");
   };
 
   const handleAddComment = async () => {

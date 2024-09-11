@@ -35,7 +35,7 @@ const Discuss = () => {
 
   useEffect(() => {
     fetchDiscussionsData();
-  }, [fetchDiscussionsData]);
+  }, []);
 
   const handleSearch = (searchTerm) => {
     setSearchTerm(searchTerm);
