@@ -2,6 +2,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
     createDiscuss,
+    deleteDiscussById,
     fetchDiscussions,
     getDiscussById,
 
@@ -44,7 +45,6 @@ const discussSlice = createSlice({
                 state.error = null;
             })
             .addCase(getDiscussById.fulfilled, (state, action) => {
-                console.log(action.payload)
                 state.loading = false;
                 //check id is exicting or not give me
 
@@ -73,15 +73,29 @@ const discussSlice = createSlice({
             })
             .addCase(createDiscuss.fulfilled, (state, action) => {
                 state.loading = false;
-                state.discussions.push(action.payload);
+                state.discussions.unshift(action.payload);
             })
             .addCase(createDiscuss.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
             })
 
+            // handle delete deleteDiscussById
+            .addCase(deleteDiscussById.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(deleteDiscussById.fulfilled, (state, action) => {
+                state.loading = false;
+                state.discussions = state.discussions.filter(
+                    (discussion) => discussion._id !== action.payload.deletedTopic
 
-
+                );
+            })
+            .addCase(deleteDiscussById.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            })
 
     },
 });
