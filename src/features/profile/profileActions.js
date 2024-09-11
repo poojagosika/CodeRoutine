@@ -40,10 +40,25 @@ export const deleteSkill = createAsyncThunk(
   "profile/deleteSkill",
   async (skillId, { rejectWithValue }) => {
     try {
-      await axiosInstance.delete(
-        `/api/users/profile/deleteSkill/${skillId}`
-      );
+      await axiosInstance.delete(`/api/users/profile/deleteSkill/${skillId}`);
       return skillId;
+    } catch (error) {
+      return handleThunkError(error, rejectWithValue);
+    }
+  }
+);
+
+export const personalInformationUpdate = createAsyncThunk(
+  "profile/personalInformationUpdate",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.put(
+        "/api/users/profile/personalInformation",
+        data
+      );
+      toast.success(response?.data?.message);
+      return response?.data?.personalInformation?.profile;
+
     } catch (error) {
       return handleThunkError(error, rejectWithValue);
     }

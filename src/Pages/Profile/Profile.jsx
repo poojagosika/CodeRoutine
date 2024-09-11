@@ -4,7 +4,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Box, Container, Paper, CircularProgress, Button } from "@mui/material";
 import { fetchUserProfile } from "../../features/profile/profileActions";
 import {
-  selectUserProfile,
   selectProfileLoading,
   selectProfileError,
 } from "../../features/profile/profileSlice";
@@ -22,7 +21,7 @@ const Profile = () => {
   const dispatch = useDispatch();
   const { id: userName } = useParams();
   const navigate = useNavigate();
-  const userProfile = useSelector(selectUserProfile);
+  const userProfile = useSelector(state => state.profile.userProfile);
   const loading = useSelector(selectProfileLoading);
   const error = useSelector(selectProfileError);
   const { userData } = ContextStore();
@@ -30,7 +29,7 @@ const Profile = () => {
   useEffect(() => {
     document.title = "CodeRoutine | Profile";
     dispatch(fetchUserProfile(userName));
-  }, [dispatch, userName]);
+  }, [userName]);
 
   const hasSocialLinks = (socialLinks) => {
     if (!socialLinks) return false;

@@ -1,5 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchUserProfile, addSkill, deleteSkill } from "./profileActions";
+import {
+  fetchUserProfile,
+  addSkill,
+  deleteSkill,
+  personalInformationUpdate,
+} from "./profileActions";
 
 const profileSlice = createSlice({
   name: "profile",
@@ -23,22 +28,43 @@ const profileSlice = createSlice({
         state.loading = false;
         state.error = action.payload || "Failed to fetch user profile";
       })
+      .addCase(addSkill.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(addSkill.fulfilled, (state, action) => {
         state.userProfile.skills = action.payload;
+        state.loading = false;
       })
       .addCase(addSkill.rejected, (state, action) => {
         state.error = action.payload || "Failed to add skill";
+      })
+      .addCase(deleteSkill.pending, (state) => {
+        state.loading = true;
+        state.error = null;
       })
       .addCase(deleteSkill.fulfilled, (state, action) => {
         if (state.userProfile) {
           state.userProfile.skills = state.userProfile.skills.filter(
             (skill) => skill._id !== action.payload
           );
+          state.loading = false;
         }
       })
       .addCase(deleteSkill.rejected, (state, action) => {
         state.error = action.payload || "Failed to delete skill";
-      });
+      })
+      .addCase(personalInformationUpdate.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(personalInformationUpdate.fulfilled, (state, action) => {
+        state.userProfile.profile = action.payload;
+        state.loading = false;
+      })
+      .addCase(personalInformationUpdate.rejected, (state, action) => {
+        state.error = action.payload || "Failed to update personal information";
+      })
   },
 });
 
