@@ -24,11 +24,12 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ExperienceList from "./ExperienceList";
 import { ContextStore } from "../../../Context/ContextStore";
 import {
-  addExperience,
   updateExperience,
 } from "../../../Api/Profile/experienceApi";
 import { toast } from "react-toastify";
 import { formatDateWithYearMonth } from "../config.js";
+import { addExperience } from "../../../features/profile/profileActions.js";
+import { useDispatch, useSelector } from "react-redux";
 
 const Experience = (props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -51,6 +52,8 @@ const Experience = (props) => {
   const [currentSkill, setCurrentSkill] = useState("");
   const [error, setError] = useState("");
   const { userData } = ContextStore();
+  const dispatch = useDispatch();
+  const experienceData = useSelector((state) => state?.profile.userProfile.experience);
 
   const handleOpenDialog = (index = null) => {
     if (index !== null) {
@@ -128,13 +131,7 @@ const Experience = (props) => {
           toast.error("Failed to update experience");
         }
       } else {
-        const response = await addExperience(experienceToSave);
-        if (response.data) {
-          setExperienceList(response?.data?.experience);
-          toast.success(response?.data?.message);
-        } else {
-          toast.error("Failed to add experience");
-        }
+        dispatch(addExperience(experienceToSave));
       }
       handleCloseDialog();
     } catch (error) {

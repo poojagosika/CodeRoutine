@@ -64,3 +64,21 @@ export const personalInformationUpdate = createAsyncThunk(
     }
   }
 );
+
+//add experience api
+
+export const addExperience = createAsyncThunk(
+    "profile/addExperience",
+    async (data, { rejectWithValue }) => {
+      try {
+        const response = await axiosInstance.post(
+          "/api/users/profile/addExperience",
+          data
+        );
+        toast.success(response?.data?.message);
+        return response?.data?.experience;
+      } catch (error) {
+        return handleThunkError(error, rejectWithValue);
+      }
+    }
+  );
