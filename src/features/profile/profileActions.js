@@ -112,3 +112,50 @@ export const deleteExperience = createAsyncThunk(
     }
   }
 );
+
+export const addEducation = createAsyncThunk(
+  "profile/addEducation",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post(
+        "/api/users/profile/addEducation",
+        data
+      );
+      toast.success(response?.data?.message);
+      return response?.data?.education;
+    } catch (error) {
+      return handleThunkError(error, rejectWithValue);
+    }
+  }
+);
+
+export const updateEducation = createAsyncThunk(
+  "profile/updateEducation",
+  async ({ educationId, data }, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.put(
+        `/api/users/profile/updateEducation/${educationId}`,
+        data
+      );
+      toast.success(response?.data?.message);
+      return response?.data?.education;
+    } catch (error) {
+      return handleThunkError(error, rejectWithValue);
+    }
+  }
+);
+
+export const deleteEducation = createAsyncThunk(
+  "profile/deleteEducation",
+  async (educationId, { rejectWithValue }) => {
+    try {
+      await axiosInstance.delete(
+        `/api/users/profile/deleteEducation/${educationId}`
+      );
+      toast.success("Education deleted successfully");
+      return educationId;
+    } catch (error) {
+      return handleThunkError(error, rejectWithValue);
+    }
+  }
+);

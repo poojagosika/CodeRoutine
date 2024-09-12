@@ -4,8 +4,9 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { ContextStore } from "../../../Context/ContextStore";
 import { toast } from "react-toastify";
-import { deleteEducation } from "../../../Api/Profile/educationApi";
+import { deleteEducation } from "../../../features/profile/profileActions";
 import { calculateYearsMonths, formatDate, formatDuration } from "../config";
+import { useDispatch } from "react-redux";
 
 const EducationList = ({
   educationList,
@@ -13,20 +14,13 @@ const EducationList = ({
   setEducationList,
   userId,
 }) => {
+  const dispatch = useDispatch();
   const { userData } = ContextStore();
 
   const handleDelete = async (index, educationId) => {
-    try {
-      const response = await deleteEducation(educationId);
-      if (response.status === 200) {
-        setEducationList((prev) => prev.filter((_, idx) => idx !== index));
-        toast.success(response?.data?.message);
-      }
-    } catch (error) {
-      toast.error(
-        error?.response?.data?.message || "Failed to delete education"
-      );
-      console.error("Delete Error:", error); // Log error for debugging
+    const response = await dispatch(deleteEducation(educationId));
+    if (response.status === 200) {
+      setEducationList((prev) => prev.filter((_, idx) => idx !== index));
     }
   };
 
@@ -45,7 +39,7 @@ const EducationList = ({
             justifyContent="space-between"
             alignItems="center"
             sx={{
-              borderBottom: "1px solid #E5E5E5"
+              borderBottom: "1px solid #E5E5E5",
             }}
           >
             <Box ml={2}>
@@ -82,7 +76,11 @@ const EducationList = ({
               <Typography variant="body2" sx={{ color: "#6B7280" }}>
                 Grade: {education.grade} | CGPA: {education.cgpa}
               </Typography>
-              <Typography variant="body1" gutterBottom style={{ maxWidth: "500px" }}>
+              <Typography
+                variant="body1"
+                gutterBottom
+                style={{ maxWidth: "500px" }}
+              >
                 Activities: {education.activities}
               </Typography>
             </Box>

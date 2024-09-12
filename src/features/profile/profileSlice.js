@@ -7,6 +7,9 @@ import {
   addExperience,
   updateExperience,
   deleteExperience,
+  addEducation,
+  updateEducation,
+  deleteEducation,
 } from "./profileActions";
 
 const profileSlice = createSlice({
@@ -102,6 +105,41 @@ const profileSlice = createSlice({
       })
       .addCase(deleteExperience.rejected, (state, action) => {
         state.error = action.payload || "Failed to delete experience";
+      })
+      .addCase(addEducation.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addEducation.fulfilled, (state, action) => {
+        state.userProfile.education = action.payload;
+        state.loading = false;
+      })
+      .addCase(addEducation.rejected, (state, action) => {
+        state.error = action.payload || "Failed to add education";
+      })
+      .addCase(updateEducation.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateEducation.fulfilled, (state, action) => {
+        state.userProfile.education = action.payload;
+        state.loading = false;
+      })
+      .addCase(updateEducation.rejected, (state, action) => {
+        state.error = action.payload || "Failed to update education";
+      })
+      .addCase(deleteEducation.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteEducation.fulfilled, (state, action) => {
+        state.userProfile.education = state.userProfile.education.filter(
+          (education) => education._id !== action.payload
+        );
+        state.loading = false;
+      })
+      .addCase(deleteEducation.rejected, (state, action) => {
+        state.error = action.payload || "Failed to delete education";
       });
   },
 });
