@@ -22,12 +22,14 @@ import {
   addEducation,
   updateEducation,
   deleteEducation,
-} from "../../../Api/Profile/educationApi";
+} from "../../../features/profile/profileActions";
 import EducationList from "./EducationList";
 import { ContextStore } from "../../../Context/ContextStore";
 import { formatDateWithYearMonth } from "../config.js";
+import { useDispatch } from "react-redux";
 
 const Education = (props) => {
+  const dispatch = useDispatch();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [educationList, setEducationList] = useState(
     props?.userProfile?.education || []
@@ -72,7 +74,7 @@ const Education = (props) => {
         grade: "",
         activities: "",
         cgpa: "",
-        isCurrent:false,
+        isCurrent: false,
       });
       setEditIndex(null);
     }
@@ -97,6 +99,7 @@ const Education = (props) => {
     const endDate = currentEducation.endDate
       ? new Date(currentEducation.endDate)
       : today;
+
     try {
       const educationToSave = {
         ...currentEducation,
@@ -104,26 +107,14 @@ const Education = (props) => {
         endDate: currentEducation.endDate ? endDate.toISOString() : "",
       };
       if (editIndex !== null) {
-        const response = await updateEducation(
-          educationList[editIndex]._id,
-          educationToSave
+        dispatch(
+          updateEducation({
+            educationId: currentEducation?._id,
+            data: educationToSave,
+          })
         );
-        if (response.status === 200) {
-          toast.success(response?.data?.message);
-          setEducationList((prev) =>
-            prev.map((edu, idx) => (idx === editIndex ? currentEducation : edu))
-          );
-        } else {
-          toast.error("Failed to update education");
-        }
       } else {
-        const response = await addEducation(educationToSave);
-        if (response.data) {
-          setEducationList((prev) => [...prev, currentEducation]);
-          toast.success(response?.data?.message);
-        } else {
-          toast.error("Failed to add education");
-        }
+        dispatch(addEducation(educationToSave));
       }
       setIsDialogOpen(false);
     } catch (error) {
