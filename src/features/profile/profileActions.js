@@ -58,7 +58,6 @@ export const personalInformationUpdate = createAsyncThunk(
       );
       toast.success(response?.data?.message);
       return response?.data?.personalInformation?.profile;
-
     } catch (error) {
       return handleThunkError(error, rejectWithValue);
     }
@@ -68,17 +67,33 @@ export const personalInformationUpdate = createAsyncThunk(
 //add experience api
 
 export const addExperience = createAsyncThunk(
-    "profile/addExperience",
-    async (data, { rejectWithValue }) => {
-      try {
-        const response = await axiosInstance.post(
-          "/api/users/profile/addExperience",
-          data
-        );
-        toast.success(response?.data?.message);
-        return response?.data?.experience;
-      } catch (error) {
-        return handleThunkError(error, rejectWithValue);
-      }
+  "profile/addExperience",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post(
+        "/api/users/profile/addExperience",
+        data
+      );
+      toast.success(response?.data?.message);
+      return response?.data?.experience;
+    } catch (error) {
+      return handleThunkError(error, rejectWithValue);
     }
-  );
+  }
+);
+
+export const updateExperience = createAsyncThunk(
+  "profile/updateExperience",
+  async ({ experienceId, data }, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.put(
+        `/api/users/profile/updateExperience/${experienceId}`,
+        data
+      );
+      toast.success(response?.data?.message);
+      return response?.data?.experience;
+    } catch (error) {
+      return handleThunkError(error, rejectWithValue);
+    }
+  }
+);
