@@ -6,6 +6,7 @@ import {
   personalInformationUpdate,
   addExperience,
   updateExperience,
+  deleteExperience,
 } from "./profileActions";
 
 const profileSlice = createSlice({
@@ -88,6 +89,19 @@ const profileSlice = createSlice({
       })
       .addCase(updateExperience.rejected, (state, action) => {
         state.error = action.payload || "Failed to update experience";
+      })
+      .addCase(deleteExperience.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteExperience.fulfilled, (state, action) => {
+        state.userProfile.experience = state.userProfile.experience.filter(
+          (experience) => experience._id !== action.payload
+        );
+        state.loading = false;
+      })
+      .addCase(deleteExperience.rejected, (state, action) => {
+        state.error = action.payload || "Failed to delete experience";
       });
   },
 });

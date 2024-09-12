@@ -97,3 +97,18 @@ export const updateExperience = createAsyncThunk(
     }
   }
 );
+
+export const deleteExperience = createAsyncThunk(
+  "profile/deleteExperience",
+  async (experienceId, { rejectWithValue }) => {
+    try {
+      await axiosInstance.delete(
+        `/api/users/profile/deleteExperience/${experienceId}`
+      );
+      toast.success("Experience deleted successfully");
+      return experienceId;
+    } catch (error) {
+      return handleThunkError(error, rejectWithValue);
+    }
+  }
+);
