@@ -5,6 +5,7 @@ import {
     deleteDiscussById,
     fetchDiscussions,
     getDiscussById,
+    updateDiscussById,
 
 } from "./discussAction";
 
@@ -96,6 +97,26 @@ const discussSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload;
             })
+
+            //handle update updateDiscussById
+
+            .addCase(updateDiscussById.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(updateDiscussById.fulfilled, (state, action) => {
+                state.loading = false;
+                state.discussions = state.discussions.map((item) => {
+                    if (item._id === action.payload._id) {
+                        return action.payload
+                    }
+                    return item;
+                });
+            })
+            .addCase(updateDiscussById.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            });
 
     },
 });

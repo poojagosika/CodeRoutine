@@ -65,3 +65,17 @@ export const deleteDiscussById = createAsyncThunk(
         }
     }
 );
+
+// update updateDiscussById
+export const updateDiscussById = createAsyncThunk(
+    "discussions/updateDiscussById",
+    async ({ id, data }, { rejectWithValue }) => {
+        try {
+            const response = await axiosInstance.put(`/api/discuss/${id}`, data);
+            return response.data.topic;
+            // Return updated discussion
+        } catch (error) {
+            return handleThunkError(error, rejectWithValue); // Handle error
+        }
+    }
+);
