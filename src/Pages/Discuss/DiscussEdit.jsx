@@ -13,8 +13,9 @@ import ReactQuill from "react-quill";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import CloseIcon from "@mui/icons-material/Close";
 import { useParams } from "react-router-dom";
-import { updateDiscussById } from "../../Api/Discuss/discussApi";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { updateDiscussById } from "../../features/discuss/discussAction";
 
 const DiscussEdit = ({
   openDialog,
@@ -28,24 +29,19 @@ const DiscussEdit = ({
   const [postLoading, setPostLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
   const { id } = useParams();
+  const dispatch = useDispatch();
 
   const handleUpdatePost = async () => {
-    try {
-      setPostLoading(true);
-      const response = await updateDiscussById(id, {
-        title: update.title,
-        content: update.content,
-        tags: update.tags,
-      });
-      setTopic(response.data.topic);
-      setOpenDialog(false);
-    } catch (error) {
-      toast.error(error.response.data.message);
-      setError("Error updating post:", error);
-    } finally {
-      setPostLoading(false);
-    }
+    const data = {
+      title: update.title,
+      content: update.content,
+      tags: update.tags,
+    };
+
+    dispatch(updateDiscussById({ id, data }));
+    handleCloseDialog();
   };
+
   return (
     <Dialog
       open={openDialog}
