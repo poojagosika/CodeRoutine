@@ -4,15 +4,16 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { ContextStore } from '../../../Context/ContextStore';
 import { toast } from 'react-toastify';
-import { deleteExperience } from '../../../Api/Profile/experienceApi';
 import { calculateYearsMonths, formatDate, formatDuration } from '../config';
+import { useDispatch } from 'react-redux';
+import { deleteExperience } from '../../../features/profile/profileActions';
 
 const ExperienceList = ({ experienceList, userId, setExperienceList, handleOpenDialog }) => {
+    const dispatch = useDispatch();
     const { userData } = ContextStore();
     const handleDelete = async (index, experienceId) => {
-        console.log(experienceId)
         try {
-            const response = await deleteExperience(experienceId);
+            const response = await dispatch(deleteExperience(experienceId));
             if (response.status === 200) {
                 setExperienceList((prev) => prev.filter((_, idx) => idx !== index));
                 toast.success(response?.data?.message);
