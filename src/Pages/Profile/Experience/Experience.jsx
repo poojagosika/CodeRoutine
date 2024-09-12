@@ -23,12 +23,12 @@ import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ExperienceList from "./ExperienceList";
 import { ContextStore } from "../../../Context/ContextStore";
-import {
-  updateExperience,
-} from "../../../Api/Profile/experienceApi";
 import { toast } from "react-toastify";
 import { formatDateWithYearMonth } from "../config.js";
-import { addExperience } from "../../../features/profile/profileActions.js";
+import {
+  addExperience,
+  updateExperience,
+} from "../../../features/profile/profileActions.js";
 import { useDispatch, useSelector } from "react-redux";
 
 const Experience = (props) => {
@@ -53,7 +53,9 @@ const Experience = (props) => {
   const [error, setError] = useState("");
   const { userData } = ContextStore();
   const dispatch = useDispatch();
-  const experienceData = useSelector((state) => state?.profile.userProfile.experience);
+  const experienceData = useSelector(
+    (state) => state?.profile.userProfile.experience
+  );
 
   const handleOpenDialog = (index = null) => {
     if (index !== null) {
@@ -117,19 +119,12 @@ const Experience = (props) => {
       };
 
       if (editIndex !== null) {
-        const response = await updateExperience(
-          currentExperience?._id,
-          experienceToSave
+        dispatch(
+          updateExperience({
+            experienceId: currentExperience?._id,
+            data: experienceToSave,
+          })
         );
-        if (response.status === 200) {
-          const updatedExperienceList = experienceList.map((experience, idx) =>
-            idx === editIndex ? currentExperience : experience
-          );
-          setExperienceList(updatedExperienceList);
-          toast.success(response?.data?.message);
-        } else {
-          toast.error("Failed to update experience");
-        }
       } else {
         dispatch(addExperience(experienceToSave));
       }
@@ -138,7 +133,6 @@ const Experience = (props) => {
       toast.error(
         error?.response?.data?.message || "Failed to process experience"
       );
-      console.log(error);
     }
   };
 
