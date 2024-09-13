@@ -16,7 +16,7 @@ const ProjectList = ({
   const { userData } = ContextStore();
   const dispatch = useDispatch();
 
-  const handleDelete = (index, projectId) => {
+  const handleDelete = (projectId) => {
     dispatch(deleteProject(projectId));
   };
 
@@ -105,7 +105,7 @@ const ProjectList = ({
                 <IconButton
                   size="small"
                   color="error"
-                  onClick={() => handleDelete(index, project?._id)}
+                  onClick={() => handleDelete(project?._id)}
                 >
                   <DeleteIcon />
                 </IconButton>

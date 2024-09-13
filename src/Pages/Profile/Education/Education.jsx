@@ -21,7 +21,6 @@ import { toast } from "react-toastify";
 import {
   addEducation,
   updateEducation,
-  deleteEducation,
 } from "../../../features/profile/profileActions";
 import EducationList from "./EducationList";
 import { ContextStore } from "../../../Context/ContextStore";

@@ -20,7 +20,6 @@ import {
 } from "@mui/icons-material";
 import { ContextStore } from "../../../Context/ContextStore";
 import SocialLinksList from "./SocialLinksList";
-import { toast } from "react-toastify";
 import SendIcon from "@mui/icons-material/Send";
 import { useDispatch } from "react-redux";
 import { addOrUpdateSocialLinks } from "../../../features/profile/profileActions";
