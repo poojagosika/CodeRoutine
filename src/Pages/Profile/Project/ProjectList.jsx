@@ -3,9 +3,9 @@ import React from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { ContextStore } from "../../../Context/ContextStore";
-import { deleteProject } from "../../../Api/Profile/projectApi";
-import { toast } from "react-toastify";
 import { calculateYearsMonths, formatDate, formatDuration } from "../config";
+import { useDispatch } from "react-redux";
+import { deleteProject } from "../../../features/profile/profileActions";
 
 const ProjectList = ({
   projectList,
@@ -14,18 +14,10 @@ const ProjectList = ({
   setProjectList,
 }) => {
   const { userData } = ContextStore();
+  const dispatch = useDispatch();
 
-  const handleDelete = async (index, projectId) => {
-    try {
-      const response = await deleteProject(projectId);
-      if (response.data) {
-        setProjectList((prev) => prev.filter((_, idx) => idx !== index));
-        toast.success(response?.data?.message);
-      }
-    } catch (error) {
-      toast.error(error?.response?.data?.message || "Failed to delete project");
-      console.log(error);
-    }
+  const handleDelete = (index, projectId) => {
+    dispatch(deleteProject(projectId));
   };
 
   return (
