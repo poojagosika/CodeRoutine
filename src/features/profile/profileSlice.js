@@ -10,6 +10,9 @@ import {
   addEducation,
   updateEducation,
   deleteEducation,
+  addTraining,
+  updateTraining,
+  deleteTraining,
 } from "./profileActions";
 
 const profileSlice = createSlice({
@@ -140,6 +143,41 @@ const profileSlice = createSlice({
       })
       .addCase(deleteEducation.rejected, (state, action) => {
         state.error = action.payload || "Failed to delete education";
+      })
+      .addCase(addTraining.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addTraining.fulfilled, (state, action) => {
+        state.userProfile.training = action.payload;
+        state.loading = false;
+      })
+      .addCase(addTraining.rejected, (state, action) => {
+        state.error = action.payload || "Failed to add training";
+      })
+      .addCase(updateTraining.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateTraining.fulfilled, (state, action) => {
+        state.userProfile.training = action.payload;
+        state.loading = false;
+      })
+      .addCase(updateTraining.rejected, (state, action) => {
+        state.error = action.payload || "Failed to update training";
+      })
+      .addCase(deleteTraining.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteTraining.fulfilled, (state, action) => {
+        state.userProfile.training = state.userProfile.training.filter(
+          (training) => training._id !== action.payload
+        );
+        state.loading = false;
+      })
+      .addCase(deleteTraining.rejected, (state, action) => {
+        state.error = action.payload || "Failed to delete training";
       });
   },
 });
