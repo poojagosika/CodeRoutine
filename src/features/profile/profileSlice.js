@@ -13,6 +13,9 @@ import {
   addTraining,
   updateTraining,
   deleteTraining,
+  addProject,
+  deleteProject,
+  updateProject,
 } from "./profileActions";
 
 const profileSlice = createSlice({
@@ -178,6 +181,41 @@ const profileSlice = createSlice({
       })
       .addCase(deleteTraining.rejected, (state, action) => {
         state.error = action.payload || "Failed to delete training";
+      })
+      .addCase(addProject.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addProject.fulfilled, (state, action) => {
+        state.userProfile.project = action.payload;
+        state.loading = false;
+      })
+      .addCase(addProject.rejected, (state, action) => {
+        state.error = action.payload || "Failed to add project";
+      })
+      .addCase(updateProject.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateProject.fulfilled, (state, action) => {
+        state.userProfile.project = action.payload;
+        state.loading = false;
+      })
+      .addCase(updateProject.rejected, (state, action) => {
+        state.error = action.payload || "Failed to update project";
+      })
+      .addCase(deleteProject.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteProject.fulfilled, (state, action) => {
+        state.userProfile.project = state.userProfile.project.filter(
+          (projects) => projects._id !== action.payload
+        );
+        state.loading = false;
+      })
+      .addCase(deleteProject.rejected, (state, action) => {
+        state.error = action.payload || "Failed to delete project";
       });
   },
 });

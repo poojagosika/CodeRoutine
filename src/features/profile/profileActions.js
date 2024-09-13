@@ -206,3 +206,50 @@ export const deleteTraining = createAsyncThunk(
     }
   }
 );
+
+export const addProject = createAsyncThunk(
+  "profile/addProject",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post(
+        "/api/users/profile/addProject",
+        data
+      );
+      toast.success(response?.data?.message);
+      return response?.data?.project;
+    } catch (error) {
+      return handleThunkError(error, rejectWithValue);
+    }
+  }
+);
+
+export const updateProject = createAsyncThunk(
+  "profile/updateProject",
+  async ({ projectId, data }, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.put(
+        `/api/users/profile/updateProject/${projectId}`,
+        data
+      );
+      toast.success(response?.data?.message);
+      return response?.data?.project;
+    } catch (error) {
+      return handleThunkError(error, rejectWithValue);
+    }
+  }
+);
+
+export const deleteProject = createAsyncThunk(
+  "profile/deleteProject",
+  async (projectId, { rejectWithValue }) => {
+    try {
+      await axiosInstance.delete(
+        `/api/users/profile/deleteProject/${projectId}`
+      );
+      toast.success("Project deleted successfully");
+      return projectId;
+    } catch (error) {
+      return handleThunkError(error, rejectWithValue);
+    }
+  }
+);

@@ -19,8 +19,12 @@ import CloseIcon from "@mui/icons-material/Close";
 import ProjectList from "./ProjectList";
 import { ContextStore } from "../../../Context/ContextStore";
 import { toast } from "react-toastify";
-import { addProject, updateProject } from "../../../Api/Profile/projectApi";
 import { formatDateWithYearMonth } from "../config.js";
+import { useDispatch } from "react-redux";
+import {
+  addProject,
+  updateProject,
+} from "../../../features/profile/profileActions.js";
 
 const Project = (props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -35,6 +39,7 @@ const Project = (props) => {
   });
   const [editIndex, setEditIndex] = useState(null);
   const { userData } = ContextStore();
+  const dispatch = useDispatch();
 
   const handleOpenDialog = (index = null) => {
     if (index !== null) {
@@ -94,27 +99,11 @@ const Project = (props) => {
       };
 
       if (editIndex !== null) {
-        const response = await updateProject(
-          currentProject?._id,
-          projectToSave
+        dispatch(
+          updateProject({ projectId: currentProject?._id, data: projectToSave })
         );
-        if (response.data) {
-          const updatedProjectList = projectList.map((project, idx) =>
-            idx === editIndex ? currentProject : project
-          );
-          setProjectList(updatedProjectList);
-          toast.success("Project updated successfully");
-        } else {
-          toast.error("Failed to update project");
-        }
       } else {
-        const response = await addProject(projectToSave);
-        if (response.data) {
-          setProjectList(response?.data.project);
-          toast.success(response?.data.message);
-        } else {
-          toast.error("Failed to add project");
-        }
+        dispatch(addProject(projectToSave));
       }
       handleCloseDialog();
     } catch (error) {
