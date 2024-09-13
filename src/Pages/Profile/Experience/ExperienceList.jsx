@@ -3,7 +3,6 @@ import React from 'react';
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { ContextStore } from '../../../Context/ContextStore';
-import { toast } from 'react-toastify';
 import { calculateYearsMonths, formatDate, formatDuration } from '../config';
 import { useDispatch } from 'react-redux';
 import { deleteExperience } from '../../../features/profile/profileActions';
@@ -11,17 +10,8 @@ import { deleteExperience } from '../../../features/profile/profileActions';
 const ExperienceList = ({ experienceList, userId, setExperienceList, handleOpenDialog }) => {
     const dispatch = useDispatch();
     const { userData } = ContextStore();
-    const handleDelete = async (index, experienceId) => {
-        try {
-            const response = await dispatch(deleteExperience(experienceId));
-            if (response.status === 200) {
-                setExperienceList((prev) => prev.filter((_, idx) => idx !== index));
-                toast.success(response?.data?.message);
-            }
-        } catch (error) {
-            toast.error(error?.response?.data?.message || "Failed to delete training");
-            console.log(error);
-        }
+    const handleDelete = async (experienceId) => {
+        dispatch(deleteExperience(experienceId));    
     };
 
     return (
@@ -118,7 +108,7 @@ const ExperienceList = ({ experienceList, userId, setExperienceList, handleOpenD
                                 <IconButton
                                     size="small"
                                     color="error"
-                                    onClick={() => handleDelete(index, experience?._id)}>
+                                    onClick={() => handleDelete(experience?._id)}>
                                     <DeleteIcon />
                                 </IconButton>
                             </Box>

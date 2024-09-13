@@ -3,7 +3,6 @@ import { Box, IconButton, Typography } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { ContextStore } from "../../../Context/ContextStore";
-import { toast } from "react-toastify";
 import { deleteEducation } from "../../../features/profile/profileActions";
 import { calculateYearsMonths, formatDate, formatDuration } from "../config";
 import { useDispatch } from "react-redux";
@@ -17,11 +16,8 @@ const EducationList = ({
   const dispatch = useDispatch();
   const { userData } = ContextStore();
 
-  const handleDelete = async (index, educationId) => {
-    const response = await dispatch(deleteEducation(educationId));
-    if (response.status === 200) {
-      setEducationList((prev) => prev.filter((_, idx) => idx !== index));
-    }
+  const handleDelete = async (educationId) => {
+    dispatch(deleteEducation(educationId));
   };
 
   return (
@@ -96,7 +92,7 @@ const EducationList = ({
                 <IconButton
                   size="small"
                   color="error"
-                  onClick={() => handleDelete(index, education._id)}
+                  onClick={() => handleDelete(education._id)}
                 >
                   <DeleteIcon />
                 </IconButton>

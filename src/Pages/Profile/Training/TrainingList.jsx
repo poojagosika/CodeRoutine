@@ -107,7 +107,7 @@ const TrainingList = ({ trainingList, handleOpenDialog, userId }) => {
                                 <IconButton
                                     size="small"
                                     color="error"
-                                    onClick={() => handleDelete(index, training?._id)}>
+                                    onClick={() => handleDelete(training?._id)}>
                                     <DeleteIcon />
                                 </IconButton>
                             </Box>
