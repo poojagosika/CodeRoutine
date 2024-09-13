@@ -20,9 +20,10 @@ import {
 } from "@mui/icons-material";
 import { ContextStore } from "../../../Context/ContextStore";
 import SocialLinksList from "./SocialLinksList";
-import { addOrUpdateSocialLinks } from "../../../Api/Profile/socialLinksApi";
 import { toast } from "react-toastify";
 import SendIcon from "@mui/icons-material/Send";
+import { useDispatch } from "react-redux";
+import { addOrUpdateSocialLinks } from "../../../features/profile/profileActions";
 
 const SocialLinks = (props) => {
   const [urls, setUrls] = useState(
@@ -38,6 +39,7 @@ const SocialLinks = (props) => {
   const [openDialog, setOpenDialog] = useState(false);
   const [tempUrls, setTempUrls] = useState({ ...urls });
   const { userData } = ContextStore();
+  const dispatch = useDispatch();
 
   const handleOpenDialog = () => {
     setOpenDialog(true);
@@ -48,16 +50,7 @@ const SocialLinks = (props) => {
   };
 
   const handleSaveLinks = async () => {
-    try {
-      const response = await addOrUpdateSocialLinks(tempUrls);
-      if (response?.data) {
-        setUrls(tempUrls);
-        handleCloseDialog();
-        toast.success(response?.data?.message);
-      }
-    } catch (error) {
-      toast.error(error?.response?.data?.message);
-    }
+    dispatch(addOrUpdateSocialLinks(tempUrls));
   };
 
   const handleAdd = () => {

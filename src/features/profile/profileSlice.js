@@ -16,6 +16,7 @@ import {
   addProject,
   deleteProject,
   updateProject,
+  addOrUpdateSocialLinks,
 } from "./profileActions";
 
 const profileSlice = createSlice({
@@ -216,6 +217,17 @@ const profileSlice = createSlice({
       })
       .addCase(deleteProject.rejected, (state, action) => {
         state.error = action.payload || "Failed to delete project";
+      })
+      .addCase(addOrUpdateSocialLinks.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addOrUpdateSocialLinks.fulfilled, (state, action) => {
+        state.userProfile.socialLinks = action.payload;
+        state.loading = false;
+      })
+      .addCase(addOrUpdateSocialLinks.rejected, (state, action) => {
+        state.error = action.payload || "Failed to add or update social links";
       });
   },
 });

@@ -29,6 +29,7 @@ export const addSkill = createAsyncThunk(
         "/api/users/profile/addSkill",
         data
       );
+      toast.success(response?.data?.message);
       return response?.data?.skills;
     } catch (error) {
       return handleThunkError(error, rejectWithValue);
@@ -41,6 +42,7 @@ export const deleteSkill = createAsyncThunk(
   async (skillId, { rejectWithValue }) => {
     try {
       await axiosInstance.delete(`/api/users/profile/deleteSkill/${skillId}`);
+      toast.success("Skill deleted successfully");
       return skillId;
     } catch (error) {
       return handleThunkError(error, rejectWithValue);
@@ -248,6 +250,22 @@ export const deleteProject = createAsyncThunk(
       );
       toast.success("Project deleted successfully");
       return projectId;
+    } catch (error) {
+      return handleThunkError(error, rejectWithValue);
+    }
+  }
+);
+
+export const addOrUpdateSocialLinks = createAsyncThunk(
+  "profile/addOrUpdateSocialLinks",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.put(
+        "/api/users/profile/addOrUpdateSocialLinks",
+        data
+      );
+      toast.success(response?.data?.message);
+      return response?.data?.socialLinks;
     } catch (error) {
       return handleThunkError(error, rejectWithValue);
     }
