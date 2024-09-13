@@ -3,26 +3,16 @@ import React from 'react';
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { ContextStore } from '../../../Context/ContextStore';
-import { deleteTraining } from '../../../Api/Profile/trainingApi';
-import { toast } from 'react-toastify';
 import { calculateYearsMonths, formatDate, formatDuration } from "../config";
+import { useDispatch } from 'react-redux';
+import { deleteTraining } from '../../../features/profile/profileActions';
 
-const TrainingList = ({ trainingList, handleOpenDialog, userId, setTrainingList }) => {
+const TrainingList = ({ trainingList, handleOpenDialog, userId }) => {
     const { userData } = ContextStore();
+    const dispatch = useDispatch();
 
-    const handleDelete = async (index, trainingId) => {
-        try {
-            const response = await deleteTraining(trainingId);
-            if (response.status === 200) {
-                setTrainingList((prev) => prev.filter((_, idx) => idx !== index));
-                toast.success(response?.data?.message);
-            }
-        }
-        catch (error) {
-            toast.error(
-                error?.response?.data?.message || "Failed to delete training");
-            console.log(error);
-        }
+    const handleDelete = async (trainingId) => {
+        dispatch(deleteTraining(trainingId))
     };
 
     return (

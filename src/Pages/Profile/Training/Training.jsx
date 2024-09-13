@@ -19,8 +19,12 @@ import CloseIcon from "@mui/icons-material/Close";
 import TrainingList from "./TrainingList";
 import { ContextStore } from "../../../Context/ContextStore";
 import { toast } from "react-toastify";
-import { addTraining, updateTraining } from "../../../Api/Profile/trainingApi";
 import { formatDateWithYearMonth } from "../config.js";
+import {
+  addTraining,
+  updateTraining,
+} from "../../../features/profile/profileActions.js";
+import { useDispatch } from "react-redux";
 
 const Training = (props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -39,6 +43,7 @@ const Training = (props) => {
   });
   const [editIndex, setEditIndex] = useState(null);
   const { userData } = ContextStore();
+  const dispatch = useDispatch();
 
   const handleOpenDialog = (index = null) => {
     if (index !== null) {
@@ -101,27 +106,14 @@ const Training = (props) => {
         endDate: currentTraining.endDate ? endDate.toISOString() : "",
       };
       if (editIndex !== null) {
-        const response = await updateTraining(
-          currentTraining?._id,
-          trainingToSave
+        dispatch(
+          updateTraining({
+            trainingId: currentTraining?._id,
+            data: trainingToSave,
+          })
         );
-        if (response.status === 200) {
-          const updatedTrainingList = trainingList.map((training, idx) =>
-            idx === editIndex ? currentTraining : training
-          );
-          setTrainingList(updatedTrainingList);
-          toast.success("Training updated successfully");
-        } else {
-          toast.error("Failed to update training");
-        }
       } else {
-        const response = await addTraining(trainingToSave);
-        if (response.data) {
-          setTrainingList(response?.data?.training);
-          toast.success(response.data.message);
-        } else {
-          toast.error("Failed to add training");
-        }
+        dispatch(addTraining(trainingToSave));
       }
       handleCloseDialog();
     } catch (error) {

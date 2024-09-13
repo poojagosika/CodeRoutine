@@ -159,3 +159,50 @@ export const deleteEducation = createAsyncThunk(
     }
   }
 );
+
+export const addTraining = createAsyncThunk(
+  "profile/addTraining",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post(
+        "/api/users/profile/addTraining",
+        data
+      );
+      toast.success(response?.data?.message);
+      return response?.data?.training;
+    } catch (error) {
+      return handleThunkError(error, rejectWithValue);
+    }
+  }
+);
+
+export const updateTraining = createAsyncThunk(
+  "profile/updateTraining",
+  async ({ trainingId, data }, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.put(
+        `/api/users/profile/updateTraining/${trainingId}`,
+        data
+      );
+      toast.success(response?.data?.message);
+      return response?.data?.training;
+    } catch (error) {
+      return handleThunkError(error, rejectWithValue);
+    }
+  }
+);
+
+export const deleteTraining = createAsyncThunk(
+  "profile/deleteTraining",
+  async (trainingId, { rejectWithValue }) => {
+    try {
+      await axiosInstance.delete(
+        `/api/users/profile/deleteTraining/${trainingId}`
+      );
+      toast.success("Training deleted successfully");
+      return trainingId;
+    } catch (error) {
+      return handleThunkError(error, rejectWithValue);
+    }
+  }
+);
