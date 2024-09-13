@@ -1,6 +1,7 @@
 // src/store/slices/discussSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 import {
+    addLikeOrRemoveLike,
     createDiscuss,
     deleteDiscussById,
     fetchDiscussions,
@@ -8,6 +9,7 @@ import {
     updateDiscussById,
 
 } from "./discussAction";
+import user from "../../../server/Model/userModel";
 
 const discussSlice = createSlice({
     name: "discussions",
@@ -116,8 +118,43 @@ const discussSlice = createSlice({
             .addCase(updateDiscussById.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
-            });
+            })
+            //handle put  addLikeOrRemoveLike
+            .addCase(addLikeOrRemoveLike.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(addLikeOrRemoveLike.fulfilled, (state, action) => {
+                state.loading = false;
+                // Update the discussion with the new like count
+                state.discussions = state.discussions.map((discussion) => {
 
+                    if (discussion._id === action.payload._id) {
+                        const userId = JSON.parse(localStorage.getItem("user"))._id
+                        const userHasLiked = discussion.likes.includes(userId);
+                        if (!userHasLiked) {
+                            // Add the like
+                            return {
+                                ...discussion,
+                                likes: [userId, ...discussion.likes]
+                            };
+                        } else {
+                            // Remove the like
+                            return {
+                                ...discussion,
+                                likes: discussion.likes.filter(likeId => likeId !== userId)
+                            };
+                        }
+
+                    }
+                    return discussion;
+                });
+            })
+
+            .addCase(addLikeOrRemoveLike.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            });
     },
 });
 
