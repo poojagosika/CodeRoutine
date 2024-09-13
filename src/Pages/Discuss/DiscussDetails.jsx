@@ -21,10 +21,10 @@ import { ContextStore } from "../../Context/ContextStore";
 import Comment from "./Comment";
 import IsLogin from "../../Component/IsLogin";
 import TopicLoadig from "./Loading/TopicLoadig";
-import { addLikeOrRemoveLike } from "../../Api/Discuss/discussApi";
 import { addCommentToTopic } from "../../Api/Discuss/commentApi";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  addLikeOrRemoveLike,
   deleteDiscussById,
   getDiscussById,
 } from "../../features/discuss/discussAction";
@@ -37,9 +37,11 @@ const DiscussDetails = () => {
     dispatch(getDiscussById(id));
   }, [id]);
 
-  const topic1 = useSelector((state) => state.discussions.discussions);
+  const topic = useSelector((state) => state.discussions.discussions).find(
+    (item) => item._id === id
+  );
 
-  const [topic, setTopic] = useState(topic1.find((item) => item._id === id));
+  const [topic1, setTopic] = useState();
   const [update, setUpdate] = useState({});
   const [newComment, setNewComment] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
@@ -49,6 +51,7 @@ const DiscussDetails = () => {
 
   const navigate = useNavigate();
   const { userData } = ContextStore();
+  const userLikes = topic?.likes.includes(userData?._id);
 
   React.useEffect(() => {
     document.title = "CodeRoutine | Discuss Details";
@@ -99,37 +102,7 @@ const DiscussDetails = () => {
   };
 
   const handleLike = async () => {
-    if (!userData) {
-      // Check if user is logged in
-      setisLikeorComment("If you want to like,then please Login");
-      setLoginDialogOpen(true); // Open login dialog
-      return;
-    }
-
-    const userId = userData?._id;
-    try {
-      const response = await addLikeOrRemoveLike(id);
-      const userLikes = topic?.likes.includes(userId);
-      if (response && response.data) {
-        if (!userLikes) {
-          setTopic((prevTopic) => ({
-            ...prevTopic,
-            likes: [...(topic?.likes || []), userId],
-          }));
-          setIsLiked(true);
-        } else {
-          setTopic((prevTopic) => ({
-            ...prevTopic,
-            likes: prevTopic.likes.filter((like) => like !== userId),
-          }));
-          setIsLiked(false);
-        }
-      } else {
-        console.error("Invalid response data:", response);
-      }
-    } catch (error) {
-      console.error("Error liking/unliking topic:", error);
-    }
+    dispatch(addLikeOrRemoveLike(topic?._id));
   };
 
   const handleOpenDialog = () => {
@@ -195,9 +168,9 @@ const DiscussDetails = () => {
               onClick={handleLike}
               fontSize="small"
               sx={{
-                color: isLiked ? "#0247FE" : "gray",
+                color: userLikes ? "#0247FE" : "gray",
                 "&:hover": {
-                  color: isLiked ? "gray" : "#0247FE",
+                  color: userLikes ? "gray" : "#0247FE",
                 },
               }}
               color="action"
