@@ -9,7 +9,6 @@ import {
     updateDiscussById,
 
 } from "./discussAction";
-import user from "../../../server/Model/userModel";
 
 const discussSlice = createSlice({
     name: "discussions",
