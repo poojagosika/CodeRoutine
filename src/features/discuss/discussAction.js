@@ -79,3 +79,20 @@ export const updateDiscussById = createAsyncThunk(
         }
     }
 );
+export const addLikeOrRemoveLike = createAsyncThunk(
+    "discussions/addLikeOrRemoveLike",
+    async (id, { rejectWithValue }) => {
+        try {
+            const response = await axiosInstance.put(
+                `/api/discuss/topics/${id}/like`
+            );
+            const data = response.data;
+            data._id = id;
+            return data;
+
+            // Return updated discussion
+        } catch (error) {
+            return handleThunkError(error, rejectWithValue); // Handle error
+        }
+    }
+);

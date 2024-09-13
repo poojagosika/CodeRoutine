@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ReactTimeAgo from "react-time-ago";
@@ -10,10 +10,11 @@ import {
   Typography,
   Box,
 } from "@mui/material";
-import getCuteAvatar from '../../Config/getCuteAvatar';
-import { ContextStore } from '../../Context/ContextStore';
-import IsLogin from '../../Component/IsLogin';
-import { addLikeOrRemoveLike } from '../../Api/Discuss/discussApi';
+import getCuteAvatar from "../../Config/getCuteAvatar";
+import { ContextStore } from "../../Context/ContextStore";
+import IsLogin from "../../Component/IsLogin";
+import { useDispatch, useSelector } from "react-redux";
+import { addLikeOrRemoveLike } from "../../features/discuss/discussAction";
 const DiscussList = (props) => {
   const navagate = useNavigate();
   const { userData } = ContextStore();
@@ -21,38 +22,10 @@ const DiscussList = (props) => {
   const [loginDialogOpen, setLoginDialogOpen] = useState(false); // New state
   const [likeorComment, setisLikeorComment] = useState(null);
   const userLikes = discussion?.likes.includes(userData?._id);
-  const [isLiked, setIsLiked] = useState(userLikes);
-  const handleLike = async () => {
-    if (!userData) {
-      // Check if user is logged in
-      setisLikeorComment("If you want to like,then please Login");
-      setLoginDialogOpen(true); // Open login dialog
-      return;
-    }
 
-    const userId = userData?._id;
-    try {
-      const response = await addLikeOrRemoveLike(discussion?._id);
-      if (response && response.data) {
-        if (!userLikes) {
-          setDiscussion((prevTopic) => ({
-            ...prevTopic,
-            likes: [...(discussion?.likes || []), userId],
-          }));
-          setIsLiked(true);
-        } else {
-          setDiscussion((prevTopic) => ({
-            ...prevTopic,
-            likes: prevTopic.likes.filter((like) => like !== userId),
-          }));
-          setIsLiked(false);
-        }
-      } else {
-        console.error("Invalid response data:", response);
-      }
-    } catch (error) {
-      console.error("Error liking/unliking topic:", error);
-    }
+  const dispatch = useDispatch();
+  const handleLike = async () => {
+    dispatch(addLikeOrRemoveLike(discussion?._id));
   };
 
   return (
@@ -103,7 +76,7 @@ const DiscussList = (props) => {
         }
         secondary={
           <Typography
-            component="div"  // Changed from default <p> to <div>
+            component="div" // Changed from default <p> to <div>
           >
             <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
               <Typography
@@ -116,7 +89,9 @@ const DiscussList = (props) => {
                     textDecoration: "underline",
                   },
                 }}
-                onClick={() => navagate(`/profile/${discussion?.author?.userName}`)}
+                onClick={() =>
+                  navagate(`/profile/${discussion?.author?.userName}`)
+                }
                 component="span"
               >
                 {discussion?.author?.userName}
@@ -144,13 +119,18 @@ const DiscussList = (props) => {
           onClick={handleLike}
           style={{ cursor: "pointer" }}
           sx={{
-            color: isLiked ? "#0247FE" : "gray",
+            color: userLikes ? "#0247FE" : "gray",
             "&:hover": {
-              color: isLiked ? "gray" : "#0247FE",
+              color: userLikes ? "gray" : "#0247FE",
             },
           }}
         />
-        <Typography variant="body2" color="gray" style={{ cursor: "pointer" }} component="span">
+        <Typography
+          variant="body2"
+          color="gray"
+          style={{ cursor: "pointer" }}
+          component="span"
+        >
           {discussion?.likes?.length > 0 && discussion?.likes?.length}
         </Typography>
       </Box>
@@ -159,8 +139,8 @@ const DiscussList = (props) => {
         loginDialogOpen={loginDialogOpen}
         message={likeorComment}
       />
-    </ListItem >
-  )
-}
+    </ListItem>
+  );
+};
 
-export default DiscussList
+export default DiscussList;
