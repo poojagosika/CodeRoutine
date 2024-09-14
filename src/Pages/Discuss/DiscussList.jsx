@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ReactTimeAgo from "react-time-ago";
@@ -15,6 +15,7 @@ import { ContextStore } from "../../Context/ContextStore";
 import IsLogin from "../../Component/IsLogin";
 import { useDispatch, useSelector } from "react-redux";
 import { addLikeOrRemoveLike } from "../../features/discuss/discussAction";
+import { fetchUserProfile } from "../../features/profile/profileActions";
 const DiscussList = (props) => {
   const navagate = useNavigate();
   const { userData } = ContextStore();
@@ -27,6 +28,10 @@ const DiscussList = (props) => {
   const handleLike = async () => {
     dispatch(addLikeOrRemoveLike(discussion?._id));
   };
+
+  useEffect(() => {
+    dispatch(fetchUserProfile(userData?.userName));
+  }, [userData?.userName]);
 
   return (
     <ListItem
@@ -42,8 +47,8 @@ const DiscussList = (props) => {
     >
       <ListItemAvatar>
         <Avatar
-          alt={discussion?.author?.userName}
-          src={getCuteAvatar(discussion?.author?.userName)}
+          alt={userData?.userName}
+          src={getCuteAvatar(userData?.userName)}
           onClick={() => navagate(`/profile/${discussion?.author?.userName}`)}
           aria-label="author"
           sx={{
@@ -94,7 +99,7 @@ const DiscussList = (props) => {
                 }
                 component="span"
               >
-                {discussion?.author?.userName}
+                {userData?.userName}
               </Typography>
               <Typography
                 variant="body2"
