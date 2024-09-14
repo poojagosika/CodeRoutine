@@ -9,6 +9,7 @@ import {
     updateDiscussById,
 
 } from "./discussAction";
+import { addCommentToTopic } from "./discussCommentAction";
 
 const discussSlice = createSlice({
     name: "discussions",
@@ -153,7 +154,33 @@ const discussSlice = createSlice({
             .addCase(addLikeOrRemoveLike.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+            })
+
+            // handle post addCommentToTopic
+            .addCase(addCommentToTopic.pending, (state) => {
+                state.loading = true;
+                state.error = null;  // Clear any previous errors
+            })
+            // Handle fulfilled state
+            .addCase(addCommentToTopic.fulfilled, (state, action) => {
+                state.loading = false;
+                state.discussions = state.discussions.map((discussion) => {
+                    if (discussion._id === action.payload.topic_id) {
+                        return {
+                            ...discussion,
+                            comments: [...discussion.comments, action.payload],
+                        };
+                    }
+                    return discussion;
+                });
+                // Add new comment
+            })
+            // Handle rejected state
+            .addCase(addCommentToTopic.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload || 'Failed to add comment';  // Set error message
             });
+
     },
 });
 

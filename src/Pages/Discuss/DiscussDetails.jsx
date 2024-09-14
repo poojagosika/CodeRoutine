@@ -21,13 +21,13 @@ import { ContextStore } from "../../Context/ContextStore";
 import Comment from "./Comment";
 import IsLogin from "../../Component/IsLogin";
 import TopicLoadig from "./Loading/TopicLoadig";
-import { addCommentToTopic } from "../../Api/Discuss/commentApi";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addLikeOrRemoveLike,
   deleteDiscussById,
   getDiscussById,
 } from "../../features/discuss/discussAction";
+import { addCommentToTopic } from "../../features/discuss/discussCommentAction";
 
 const DiscussDetails = () => {
   const { id } = useParams();
@@ -68,37 +68,8 @@ const DiscussDetails = () => {
     navigate("/discuss");
   };
 
-  const handleAddComment = async () => {
-    try {
-      if (!userData) {
-        // Check if user is logged in
-        setisLikeorComment("If you want write comment,then please Login");
-        setLoginDialogOpen(true); // Open login dialog
-        return; // Exit function to prevent further execution
-      }
-
-      const response = await addCommentToTopic(id, {
-        content: newComment,
-      });
-      if (response && response.data) {
-        const newCommentData = {
-          ...response.data.comment,
-          author: {
-            _id: userData?._id,
-            userName: userData?.userName,
-          },
-        };
-        const updatedComments = [...(topic?.comments || []), newCommentData];
-        setTopic((prevTopic) => ({
-          ...prevTopic,
-          comments: updatedComments,
-        }));
-      }
-      setNewComment("");
-    } catch (error) {
-      console.error("Error adding comment:", error);
-      // Handle error scenarios here
-    }
+  const handleAddComment = () => {
+    dispatch(addCommentToTopic({ id, content: newComment }));
   };
 
   const handleLike = async () => {
