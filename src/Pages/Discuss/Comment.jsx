@@ -29,9 +29,14 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import IsLogin from "../../Component/IsLogin";
 import CommentLoading from "./Loading/CommentLoading";
 import { useNavigate } from "react-router-dom";
-import { addLikeOrRemoveLikeComment, deleteComment, editComment } from "../../Api/Discuss/commentApi";
+import {
+  addLikeOrRemoveLikeComment,
+  editComment,
+} from "../../Api/Discuss/commentApi";
 import { addReplyToComment } from "../../Api/Discuss/replyApi";
 import { toast } from "react-toastify";
+import { deleteComment } from "../../features/discuss/discussCommentAction";
+import { useDispatch } from "react-redux";
 
 const Comment = (props) => {
   const [comment, setComment] = React.useState(props?.comment);
@@ -48,7 +53,7 @@ const Comment = (props) => {
   const { userData } = ContextStore();
   const userId = userData?._id;
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -160,24 +165,10 @@ const Comment = (props) => {
     }
   };
 
-  const handleDeleteComment = async () => {
-    try {
-      const response = await deleteComment(props.topicId, props.comment._id);
-      if (response && response.status === 200) {
-        props.setTopic((prevTopic) => ({
-          ...prevTopic,
-          comments: prevTopic.comments.filter(
-            (comment) => comment._id !== props.comment._id
-          ),
-        }));
-        setAnchorEl(null);
-      } else {
-        console.error("Invalid response data:", response);
-      }
-    } catch (error) {
-      toast.error(error.response.data.message);
-      console.error("Error deleting comment:", error);
-    }
+  const handleDeleteComment = () => {
+    dispatch(
+      deleteComment({ topicId: props.topicId, commentId: props.comment._id })
+    ); // Ensures proper error handling from createAsyncThunk
   };
 
   const handleCancel = () => {

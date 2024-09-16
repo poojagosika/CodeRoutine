@@ -70,6 +70,7 @@ const DiscussDetails = () => {
 
   const handleAddComment = () => {
     dispatch(addCommentToTopic({ id, content: newComment }));
+    setNewComment("");
   };
 
   const handleLike = async () => {
