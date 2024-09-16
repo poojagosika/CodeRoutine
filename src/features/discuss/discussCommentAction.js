@@ -28,3 +28,17 @@ export const addCommentToTopic = createAsyncThunk(
     }
 );
 
+
+export const deleteComment = createAsyncThunk(
+    'comments/deleteComment',
+    async ({ topicId, commentId }, { rejectWithValue }) => {
+        try {
+            const response = await axiosInstance.delete(
+                `/api/discuss/comments/${topicId}/${commentId}/delete`
+            );
+            return { topicId, commentId }; // Return the IDs to update the state
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
