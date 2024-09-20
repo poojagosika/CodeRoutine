@@ -1,32 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React from 'react';
 import {
   Typography,
   Card,
   CardContent,
   Box,
 } from '@mui/material';
-import { getProblemById } from '../../../Api/problemApi';
-const Description = () => {
-  const [problem, setProblem] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const { id } = useParams();
-
-  useEffect(() => {
-    const fetchProblem = async () => {
-      try {
-        const response = await getProblemById(id);
-        setProblem(response.data.problem);
-      } catch (err) {
-        setError(err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchProblem();
-  }, [id]);
+const Description = ({ isLoading, error, problem }) => {  
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -63,35 +42,38 @@ const Description = () => {
       >
         <CardContent>
           <Typography variant="h4" component="div" gutterBottom>
-            {problem.title}
+            {problem?.title}
           </Typography>
           <Typography
             variant="subtitle1"
             component="div"
             gutterBottom
-            sx={{ color: getDifficultyColor(problem.difficulty) }}
+            sx={{ color: getDifficultyColor(problem?.difficulty) }}
           >
-            Difficulty: {problem.difficulty}
+            Difficulty: {problem?.difficulty}
           </Typography>
           <Typography variant="body1" paragraph>
-            {problem.description}
+            {problem?.description}
           </Typography>
           <Typography variant="h6" component="div" gutterBottom>
             Example:
           </Typography>
           {
-            problem.examples.map((example) => (
+            problem?.examples?.map((example, index) => (
               <Box
                 component="pre"
-                bgcolor="#3c3b3b"
                 p={2}
                 borderRadius={1}
                 mb={2}
+                key={index}
+                sx={{
+                  backgroundColor: "#3c3b3b"
+                }}
               >
-                Input: {example.input} <br />
-                Output: {example.output}
-                {example.explanation ? (
-                  <span> <br />Explanation : {example.explanation}</span>
+                Input: {example?.input} <br />
+                Output: {example?.output}
+                {example?.explanation ? (
+                  <span> <br />Explanation : {example?.explanation}</span>
                 ) : (
                   <span> </span>
                 )}
@@ -103,7 +85,7 @@ const Description = () => {
             Constraints:
           </Typography>
           <Typography variant="body2" component="ul" sx={{ ml: 4 }} >
-            {problem.constraints}
+            {problem?.constraints}
             <li>1 ≤ nums.length ≤ 10<sup>4</sup></li>
             <li>-10<sup>9</sup> ≤ nums[i] ≤ 10<sup>9</sup></li>
           </Typography>
