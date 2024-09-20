@@ -9,12 +9,15 @@ import {
   Paper,
   Grid,
   Chip,
-  IconButton,
+  Stepper,
+  Step,
+  StepLabel,
 } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import CloseIcon from "@mui/icons-material/Close";
 import { postNewJob } from "../../features/jobs/jobActions";
+
+const steps = ["Basic Information", "Job Details", "Skills & Requirements", "Responsibilities & Benefits", "Additional Information"];
 
 const employmentTypes = ["Full-Time", "Part-Time", "Contract"];
 const jobLevels = ["Entry-Level", "Mid-Level", "Senior-Level"];
@@ -43,6 +46,7 @@ const PostNewJob = () => {
     externalLink: "",
   });
 
+  const [currentStep, setCurrentStep] = useState(0);
   const [currentSkill, setCurrentSkill] = useState("");
   const [currentRequirement, setCurrentRequirement] = useState("");
   const [currentResponsibility, setCurrentResponsibility] = useState("");
@@ -64,20 +68,12 @@ const PostNewJob = () => {
     }));
   };
 
-  // Generalized handleChange function
   const handleChange = (setter, setError) => (e) => {
     setter(e.target.value);
     setError("");
   };
 
-  // Generalized handleAdd function
-  const handleAdd = (
-    type,
-    currentItem,
-    setCurrentItem,
-    setError,
-    errorText
-  ) => {
+  const handleAdd = (type, currentItem, setCurrentItem, setError, errorText) => {
     const trimmedItem = currentItem.trim().toLowerCase();
     if (!trimmedItem) {
       setError(errorText);
@@ -94,13 +90,13 @@ const PostNewJob = () => {
     setCurrentItem("");
   };
 
-  // Generalized handleRemove function
   const handleRemove = (type, itemToRemove) => {
     setFormData((prevState) => ({
       ...prevState,
       [type]: prevState[type].filter((item) => item !== itemToRemove),
     }));
   };
+
   const isValidURL = (string) => {
     try {
       new URL(string);
@@ -110,21 +106,37 @@ const PostNewJob = () => {
     }
   };
 
-  const onSubmit = (e) => {
-    e.preventDefault();
-    dispatch(postNewJob(formData));
-    navigate("/jobs");
+  const validateForm = () => {
+    let valid = true;
+    if (!formData.title || !formData.company || !formData.description) {
+      valid = false;
+      alert("Please fill out all required fields.");
+    }
+
+    if (formData.externalLink && !isValidURL(formData.externalLink)) {
+      valid = false;
+      alert("Please enter a valid URL.");
+    }
+
+    return valid;
   };
 
-  return (
-    <Container maxWidth="md" sx={{ minHeight: "100vh" }}>
-      <Paper elevation={4} sx={{ padding: 4, marginTop: 5, marginBottom: 5 }}>
-        <Typography variant="h5" component="h1" gutterBottom>
-          Post a New Job
-        </Typography>
-        <form onSubmit={onSubmit}>
-          <Grid container spacing={2}>
-            {/* Basic Information */}
+  const onSubmit = (e) => {
+    e.preventDefault();
+    if (validateForm()) {
+      dispatch(postNewJob(formData));
+      navigate("/jobs");
+    }
+  };
+
+  const nextStep = () => setCurrentStep((prevStep) => prevStep + 1);
+  const prevStep = () => setCurrentStep((prevStep) => prevStep - 1);
+
+  const renderStepContent = (step) => {
+    switch (step) {
+      case 0:
+        return (
+          <>
             <Grid item xs={12}>
               <Typography variant="h6">Basic Information</Typography>
             </Grid>
@@ -164,8 +176,11 @@ const PostNewJob = () => {
                 required
               />
             </Grid>
-
-            {/* Job Details */}
+          </>
+        );
+      case 1:
+        return (
+          <>
             <Grid item xs={12}>
               <Typography variant="h6">Job Details</Typography>
             </Grid>
@@ -227,29 +242,11 @@ const PostNewJob = () => {
                 ))}
               </TextField>
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                name="industry"
-                label="Industry"
-                value={formData.industry}
-                onChange={onChange}
-                fullWidth
-                size="small"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                name="numberOfOpenings"
-                label="Number of Openings"
-                value={formData.numberOfOpenings}
-                onChange={onChange}
-                fullWidth
-                size="small"
-                type="number"
-              />
-            </Grid>
-
-            {/* Skills */}
+          </>
+        );
+      case 2:
+        return (
+          <>
             <Grid item xs={12}>
               <Typography variant="h6">Skills</Typography>
             </Grid>
@@ -297,75 +294,16 @@ const PostNewJob = () => {
                 />
               ))}
             </Grid>
-
-            {/* Requirements */}
-            <Grid item xs={12}>
-              <Typography variant="h6">Requirements</Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Box display="flex" alignItems="start">
-                <TextField
-                  fullWidth
-                  label="Add a Requirement"
-                  value={currentRequirement}
-                  onChange={handleChange(
-                    setCurrentRequirement,
-                    setRequirementError
-                  )}
-                  size="small"
-                  error={Boolean(requirementError)}
-                  helperText={requirementError}
-                />
-                <Button
-                  variant="outlined"
-                  type="button"
-                  color="primary"
-                  onClick={() =>
-                    handleAdd(
-                      "requirements",
-                      currentRequirement,
-                      setCurrentRequirement,
-                      setRequirementError,
-                      "Requirement cannot be empty"
-                    )
-                  }
-                  style={{
-                    borderRadius: "10px",
-                    marginLeft: "10px",
-                    padding: "7px",
-                  }}
-                  size="small"
-                >
-                  Add
-                </Button>
-              </Box>
-              {formData.requirements.map((requirement, index) => (
-                <Box key={index} sx={{ display: "flex", alignItems: "center" }}>
-                  <Typography
-                    component="li"
-                    variant="body2"
-                    sx={{ flexGrow: 1 }}
-                  >
-                    {requirement}
-                  </Typography>
-                  <IconButton
-                    edge="end"
-                    aria-label="delete"
-                    onClick={() => handleRemove("requirements", requirement)}
-                    size="small"
-                  >
-                    <CloseIcon />
-                  </IconButton>
-                </Box>
-              ))}
-            </Grid>
-
-            {/* Responsibilities */}
+          </>
+        );
+      case 3:
+        return (
+          <>
             <Grid item xs={12}>
               <Typography variant="h6">Responsibilities</Typography>
             </Grid>
             <Grid item xs={12}>
-              <Box display="flex" alignItems="start">
+              <Box display="flex" alignItems="start" mb={1}>
                 <TextField
                   fullWidth
                   label="Add a Responsibility"
@@ -402,92 +340,26 @@ const PostNewJob = () => {
                 </Button>
               </Box>
               {formData.responsibilities.map((responsibility, index) => (
-                <Box key={index} sx={{ display: "flex", alignItems: "center" }}>
-                  <Typography
-                    component="li"
-                    variant="body2"
-                    sx={{ flexGrow: 1 }}
-                  >
-                    {responsibility}
-                  </Typography>
-                  <IconButton
-                    edge="end"
-                    aria-label="delete"
-                    onClick={() =>
-                      handleRemove("responsibilities", responsibility)
-                    }
-                    size="small"
-                  >
-                    <CloseIcon />
-                  </IconButton>
-                </Box>
-              ))}
-            </Grid>
-
-            {/* Benefits */}
-            <Grid item xs={12}>
-              <Typography variant="h6">Benefits</Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Box display="flex" alignItems="start">
-                <TextField
-                  fullWidth
-                  label="Add a Benefit"
-                  value={currentBenefit}
-                  onChange={handleChange(setCurrentBenefit, setBenefitError)}
-                  size="small"
-                  error={Boolean(benefitError)}
-                  helperText={benefitError}
-                />
-                <Button
+                <Chip
+                  key={index}
+                  label={responsibility}
                   variant="outlined"
-                  type="button"
-                  color="primary"
-                  onClick={() =>
-                    handleAdd(
-                      "benefits",
-                      currentBenefit,
-                      setCurrentBenefit,
-                      setBenefitError,
-                      "Benefit cannot be empty"
-                    )
+                  onDelete={() =>
+                    handleRemove("responsibilities", responsibility)
                   }
-                  style={{
-                    borderRadius: "10px",
-                    marginLeft: "10px",
-                    padding: "7px",
-                  }}
-                  size="small"
-                >
-                  Add
-                </Button>
-              </Box>
-              {formData.benefits.map((benefit, index) => (
-                <Box key={index} sx={{ display: "flex", alignItems: "center" }}>
-                  <Typography
-                    component="li"
-                    variant="body2"
-                    sx={{ flexGrow: 1 }}
-                  >
-                    {benefit}
-                  </Typography>
-                  <IconButton
-                    edge="end"
-                    aria-label="delete"
-                    onClick={() => handleRemove("benefits", benefit)}
-                    size="small"
-                  >
-                    <CloseIcon />
-                  </IconButton>
-                </Box>
+                  sx={{ mb: 1, mr: 1 }}
+                />
               ))}
             </Grid>
-
-            {/* Additional Information */}
+          </>
+        );
+      case 4:
+        return (
+          <>
             <Grid item xs={12}>
               <Typography variant="h6">Additional Information</Typography>
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <TextField
                 name="postedBy"
                 label="Posted By"
@@ -497,31 +369,21 @@ const PostNewJob = () => {
                 size="small"
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <TextField
                 name="applicationDeadline"
                 label="Application Deadline"
+                type="date"
                 value={formData.applicationDeadline}
                 onChange={onChange}
                 fullWidth
                 size="small"
-                type="date"
                 InputLabelProps={{
                   shrink: true,
                 }}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                name="applicationInstructions"
-                label="Application Instructions"
-                value={formData.applicationInstructions}
-                onChange={onChange}
-                fullWidth
-                size="small"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <TextField
                 name="externalLink"
                 label="External Link"
@@ -529,37 +391,63 @@ const PostNewJob = () => {
                 onChange={onChange}
                 fullWidth
                 size="small"
-                error={
-                  Boolean(formData.externalLink) &&
-                  !isValidURL(formData.externalLink)
-                }
-                helperText={
-                  Boolean(formData.externalLink) &&
-                  !isValidURL(formData.externalLink) &&
-                  "Please enter a valid URL"
-                }
               />
             </Grid>
-            <Grid item xs={12}>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                fullWidth
-                sx={{
-                  mt: 3,
-                  mb: 2,
-                  p: 1.5,
-                  borderRadius: "20px",
-                  boxShadow: "0 3px 5px 2px rgba(105, 135, 255, .3)",
-                }}
-              >
-                Post Job
-              </Button>
-            </Grid>
-          </Grid>
-        </form>
-      </Paper>
+          </>
+        );
+      default:
+        return "Unknown step";
+    }
+  };
+
+  return (
+    <Container component={Paper} sx={{ p: 4, mt: 4 }}>
+      <form onSubmit={onSubmit}>
+        <Typography variant="h4" align="center" gutterBottom>
+          Post New Job
+        </Typography>
+
+        {/* Stepper */}
+        <Stepper activeStep={currentStep} alternativeLabel>
+          {steps.map((label, index) => (
+            <Step key={index}>
+              <StepLabel>{label}</StepLabel>
+            </Step>
+          ))}
+        </Stepper>
+
+        <Grid container spacing={2} mt={2}>
+          {renderStepContent(currentStep)}
+        </Grid>
+
+        <Box mt={3} display="flex" justifyContent="space-between">
+          {currentStep > 0 && (
+            <Button variant="outlined" onClick={prevStep} size="large">
+              Back
+            </Button>
+          )}
+          {currentStep < steps.length - 1 ? (
+            <Button
+              variant="contained"
+              onClick={nextStep}
+              size="large"
+              sx={{ ml: "auto" }}
+            >
+              Next
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              type="submit"
+              color="primary"
+              size="large"
+              sx={{ ml: "auto" }}
+            >
+              Submit
+            </Button>
+          )}
+        </Box>
+      </form>
     </Container>
   );
 };
