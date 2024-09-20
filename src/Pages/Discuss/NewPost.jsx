@@ -12,7 +12,6 @@ import {
 import ReactQuill from "react-quill";
 import CloseIcon from "@mui/icons-material/Close";
 import SendIcon from "@mui/icons-material/Send";
-import { ContextStore } from "../../Context/ContextStore";
 import { useDispatch } from "react-redux";
 import { createDiscuss } from "../../features/discuss/discussAction";
 
@@ -23,7 +22,6 @@ const NewPost = (props) => {
     content: "",
     tags: "",
   });
-  const { userData } = ContextStore();
   const [error, setError] = useState(null);
 
   const dispatch = useDispatch();

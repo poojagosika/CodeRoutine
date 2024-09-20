@@ -11,7 +11,7 @@ export const createDiscuss = async (req, res) => {
     }
 
     // Create new topic with comments and likes initialized as empty arrays
-    const newTopic = await Topic.create({
+    const newUserTopic = await Topic.create({
       title,
       content,
       author,
@@ -21,14 +21,14 @@ export const createDiscuss = async (req, res) => {
     });
 
     // Populate author details (_id and userName)
-    const populatedTopic = await newTopic.populate({
+    const newTopic = await newUserTopic.populate({
       path: "author",
       select: "_id userName", // Only select _id and userName fields of the author
     });
 
     return res
       .status(201)
-      .json({ populatedTopic, message: "Topic created successfully" });
+      .json({ newTopic, message: "Topic created successfully" });
   } catch (error) {
     console.error(error); // Log the error for debugging
     return res
