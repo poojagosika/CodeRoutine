@@ -3,6 +3,7 @@ import authReducer from "../features/Auth/authSlice";
 import jobReducer from "../features/jobs/jobSlice";
 import discussReducer from "../features/discuss/discussSlice";
 import profileReducer from "../features/profile/profileSlice";
+import problemReducer from "../features/problems/problemSlice";
 
 const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
     jobs: jobReducer,
     profile: profileReducer,
     discussions: discussReducer,
+    problems: problemReducer,
   },
 });
 

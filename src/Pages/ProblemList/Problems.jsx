@@ -19,7 +19,8 @@ import Skeleton from "@mui/material/Skeleton";
 import { ContextStore } from "../../Context/ContextStore";
 import { Container } from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import { getAllQuestionsData } from "../../Api/problemApi";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProblems } from "../../features/problems/problemActions";
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -95,29 +96,14 @@ export default function Problems() {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [questions, setQuestions] = React.useState([]);
-  const [loading, setLoading] = React.useState(true);
-  const [error, setError] = React.useState(null);
   const { userData } = ContextStore();
+  const dispatch = useDispatch();
+  const { problems: questions, loading } = useSelector((state) => state?.problems);
 
   React.useEffect(() => {
     document.title = "CodeRoutine | Problems";
-  }, []);
-
-  React.useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getAllQuestionsData();
-        setQuestions(response.data.problemsData);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setError("Error fetching data. Please try again later.");
-      }
-    };
-
-    fetchData();
-  }, [setQuestions]);
+    dispatch(fetchProblems());
+  }, [dispatch]);
 
   const CombinedLink = React.forwardRef(function CombinedLink(props, ref) {
     return <RouterLink ref={ref} {...props} />;
@@ -131,7 +117,7 @@ export default function Problems() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = questions.map((n) => n.id);
+      const newSelected = questions?.map((n) => n.id);
       setSelected(newSelected);
     } else {
       setSelected([]);
@@ -167,7 +153,7 @@ export default function Problems() {
   };
 
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - questions.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - questions?.length) : 0;
 
   const SkeletonTable = () => (
     <>
@@ -229,7 +215,7 @@ export default function Problems() {
                 orderBy={orderBy}
                 onSelectAllClick={handleSelectAllClick}
                 onRequestSort={handleRequestSort}
-                rowCount={questions.length}
+                rowCount={questions?.length}
               />
               <TableBody>
                 {loading ? (
@@ -332,7 +318,7 @@ export default function Problems() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={questions.length}
+            count={questions?.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
