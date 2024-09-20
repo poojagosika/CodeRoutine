@@ -9,12 +9,12 @@ import {
     updateDiscussById,
 
 } from "./discussAction";
-import { addCommentToTopic, deleteComment } from "./discussCommentAction";
+import { addCommentToTopic, deleteComment, editComment } from "./discussCommentAction";
 
 const discussSlice = createSlice({
     name: "discussions",
     initialState: {
-        discussions: [], // List of discussions
+        discussions: [],
         selectedDiscussion: null, // Current selected discussion
         loading: false, // Loading state for any async action
         error: null, // Error message if an action fails
@@ -206,6 +206,39 @@ const discussSlice = createSlice({
             .addCase(deleteComment.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload || 'Failed to delete comment';
+            })
+            .addCase(editComment.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            // Fulfilled state
+            .addCase(editComment.fulfilled, (state, action) => {
+                state.loading = false;
+
+                state.discussions = state.discussions.map((discussion) => {
+                    if (discussion._id === action.payload.topic_id) {
+
+                        return {
+                            ...discussion,
+                            comments: discussion.comments.map((comment) => {
+                                if (comment._id === action.payload._id) {
+                                    return {
+                                        ...comment,
+                                        content: action.payload.content,
+                                    };
+                                }
+                                return comment;
+                            }),
+                        };
+                    }
+                    return discussion;
+                });
+            })
+
+            // Rejected state
+            .addCase(editComment.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
             });
 
     },
