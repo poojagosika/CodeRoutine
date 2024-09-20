@@ -201,45 +201,6 @@ export const addLikeOrRemoveLike = async (req, res) => {
   }
 };
 
-export const addCommentToTopic = async (req, res) => {
-  try {
-    const { id: topicId } = req.params;
-    const { content } = req.body;
-    const userId = req.id;
-
-    // Validate the topicId
-    if (!mongoose.Types.ObjectId.isValid(topicId)) {
-      return res.status(400).json({ message: "Invalid topic ID" });
-    }
-
-    // Find the topic
-    const topic = await Topic.findById(topicId);
-    if (!topic) {
-      return res.status(404).json({ message: "Topic not found" });
-    }
-
-    // Create a new comment
-    const newComment = new Comment({
-      content,
-      author: userId,
-    });
-
-    // Save the comment
-    const savedComment = await newComment.save();
-
-    // Add the comment to the topic
-    topic.comments.push(savedComment._id);
-    await topic.save();
-
-    res.status(201).json({
-      message: "Comment added successfully",
-      comment: savedComment,
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error", error: error.message });
-  }
-};
 
 export const addLikeOrRemoveLikeComment = async (req, res) => {
   try {
@@ -278,49 +239,6 @@ export const addLikeOrRemoveLikeComment = async (req, res) => {
   }
 };
 
-export const editComment = async (req, res) => {
-  try {
-    const { id: commentId } = req.params;
-    const { content } = req.body;
-    const userId = req.id;
-
-    // Validate the commentId
-    if (!mongoose.Types.ObjectId.isValid(commentId)) {
-      return res.status(400).json({ message: "Invalid comment ID" });
-    }
-
-    // Validate content
-    if (!content || content.trim() === "") {
-      return res.status(400).json({ message: "Content cannot be empty" });
-    }
-
-    // Find the comment
-    const comment = await Comment.findById(commentId);
-    if (!comment) {
-      return res.status(404).json({ message: "Comment not found" });
-    }
-
-    // Check if the user is the author of the comment
-    if (comment.author.toString() !== userId) {
-      return res
-        .status(401)
-        .json({ message: "You are not authorized to perform this action" });
-    }
-
-    // Update the comment
-    comment.content = content;
-    await comment.save();
-
-    // Respond with the updated comment
-    res.status(200).json({
-      message: "Comment updated successfully",
-      comment,
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error", error: error.message });
-  }
-};
 
 export const deleteComment = async (req, res) => {
   try {

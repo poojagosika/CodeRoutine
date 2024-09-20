@@ -3,19 +3,19 @@ import {
   addLikeOrRemoveLike,
   addLikeOrRemoveLikeComment,
   addLikeOrRemoveLikeReply,
-  addCommentToTopic,
   addReplyToComment,
   deleteDiscussById,
   getDiscuss,
   getDiscussById,
   updateDiscussById,
-  editComment,
   deleteComment,
   editReply,
   deleteReply,
 } from "../Controllers/discussControllers.js";
 import { tokenVerify } from "../Middleware/tokenVerify.js";
 import { createDiscuss } from "../Controllers/discuss/createDiscuss.js";
+import { addCommentOnTopic } from "../Controllers/discuss/addCommentOnTopic.js";
+import { editCommentOnTopic } from "../Controllers/discuss/editCommentOnTopic.js";
 const discussRouter = express.Router();
 
 discussRouter.post("/", tokenVerify, createDiscuss);
@@ -26,13 +26,13 @@ discussRouter.delete("/:id", tokenVerify, deleteDiscussById);
 discussRouter.put("/topics/:id/like", tokenVerify, addLikeOrRemoveLike);
 
 // comments
-discussRouter.post("/topics/:id/comments", tokenVerify, addCommentToTopic);
+discussRouter.post("/topics/:id/comments", tokenVerify, addCommentOnTopic);
 discussRouter.put(
   "/comments/:id/like",
   tokenVerify,
   addLikeOrRemoveLikeComment
 );
-discussRouter.put("/comments/:id/edit", tokenVerify, editComment);
+discussRouter.put("/comments/:id/edit", tokenVerify, editCommentOnTopic);
 discussRouter.delete(
   "/comments/:topicId/:commentId/delete",
   tokenVerify,
