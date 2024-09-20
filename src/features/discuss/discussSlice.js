@@ -9,7 +9,7 @@ import {
     updateDiscussById,
 
 } from "./discussAction";
-import { addCommentToTopic } from "./discussCommentAction";
+import { addCommentToTopic, deleteComment } from "./discussCommentAction";
 
 const discussSlice = createSlice({
     name: "discussions",
@@ -179,6 +179,33 @@ const discussSlice = createSlice({
             .addCase(addCommentToTopic.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload || 'Failed to add comment';  // Set error message
+            })
+            // handle  delete deleteComment
+
+            .addCase(deleteComment.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(deleteComment.fulfilled, (state, action) => {
+                state.loading = false;
+                const { topicId, commentId } = action.payload;
+                // Update the comments state after successful deletion
+                state.discussions = state.discussions.map((discussion) => {
+                    if (discussion._id === topicId) {
+                        return {
+                            ...discussion,
+                            comments: discussion.comments.filter(
+                                (comment) => comment._id !== commentId
+                            ),
+                        };
+                    }
+                    return discussion;
+                });
+                // Add new comment
+            })
+            .addCase(deleteComment.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload || 'Failed to delete comment';
             });
 
     },
