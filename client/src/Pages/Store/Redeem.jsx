@@ -11,7 +11,7 @@ import { Avatar, Button, CssBaseline, Grid, Stack } from "@mui/material";
 import Box from "@mui/material/Box";
 import codeRoutineLogo from "../../assets/logo.png";
 import StarsIcon from "@mui/icons-material/Stars";
-import { data } from "../Store/Config.js";
+import { data } from "./Config.js";
 
 export default function Redeem() {
   React.useEffect(() => {

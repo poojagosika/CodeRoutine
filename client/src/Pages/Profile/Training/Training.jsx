@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -8,72 +8,62 @@ import {
   DialogTitle,
   Grid,
   IconButton,
-  Typography,
   TextField,
-  FormControlLabel,
+  Typography,
   Checkbox,
+  FormControlLabel,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
+import SaveIcon from "@mui/icons-material/Save";
 import CloseIcon from "@mui/icons-material/Close";
-import DeleteIcon from "@mui/icons-material/Delete";
+import TrainingList from "./TrainingList.jsx";
+import { ContextStore } from "../../../Context/ContextStore.jsx";
 import { toast } from "react-toastify";
-import {
-  addEducation,
-  updateEducation,
-} from "../../../features/profile/profileActions";
-import EducationList from "./EducationList";
-import { ContextStore } from "../../../Context/ContextStore";
 import { formatDateWithYearMonth } from "../config.js";
+import {
+  addTraining,
+  updateTraining,
+} from "../../../features/profile/profileActions.js";
 import { useDispatch } from "react-redux";
 
-const Education = (props) => {
-  const dispatch = useDispatch();
+const Training = (props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [educationList, setEducationList] = useState(
-    props?.userProfile?.education || []
+  const [trainingList, setTrainingList] = useState(
+    props?.userProfile?.training
   );
-  const [currentEducation, setCurrentEducation] = useState({
-    institution: "",
-    degree: "",
-    fieldOfStudy: "",
+  const [currentTraining, setCurrentTraining] = useState({
+    courseName: "",
+    organization: "",
+    location: "",
     startDate: "",
     endDate: "",
-    grade: "",
-    activities: "",
-    cgpa: "",
+    description: "",
     isCurrent: false,
+    isOnline: false,
   });
   const [editIndex, setEditIndex] = useState(null);
   const { userData } = ContextStore();
-
-  // useEffect(() => {
-  //   const sortedList = [...educationList].sort((a, b) => {
-  //     return new Date(b.startDate) - new Date(a.startDate);
-  //   });
-  //   setEducationList(sortedList);
-  // }, [educationList]);
+  const dispatch = useDispatch();
 
   const handleOpenDialog = (index = null) => {
     if (index !== null) {
-      const education = educationList[index];
-      setCurrentEducation({
-        ...education,
-        startDate: formatDateWithYearMonth(education.startDate),
-        endDate: formatDateWithYearMonth(education.endDate),
+      const training = trainingList[index];
+      setCurrentTraining({
+        ...training,
+        startDate: formatDateWithYearMonth(training.startDate),
+        endDate: formatDateWithYearMonth(training.endDate),
       });
       setEditIndex(index);
     } else {
-      setCurrentEducation({
-        institution: "",
-        degree: "",
-        fieldOfStudy: "",
+      setCurrentTraining({
+        courseName: "",
+        organization: "",
+        location: "",
         startDate: "",
         endDate: "",
-        grade: "",
-        activities: "",
-        cgpa: "",
+        description: "",
         isCurrent: false,
+        isOnline: false,
       });
       setEditIndex(null);
     }
@@ -82,11 +72,22 @@ const Education = (props) => {
 
   const handleCloseDialog = () => {
     setIsDialogOpen(false);
+    setCurrentTraining({
+      courseName: "",
+      organization: "",
+      location: "",
+      startDate: "",
+      endDate: "",
+      description: "",
+      isCurrent: false,
+      isOnline: false,
+    });
+    setEditIndex(null);
   };
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setCurrentEducation((prev) => ({
+    setCurrentTraining((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
@@ -94,42 +95,41 @@ const Education = (props) => {
 
   const handleSave = async () => {
     const today = new Date();
-    const startDate = new Date(currentEducation.startDate);
-    const endDate = currentEducation.endDate
-      ? new Date(currentEducation.endDate)
+    const startDate = new Date(currentTraining.startDate);
+    const endDate = currentTraining.endDate
+      ? new Date(currentTraining.endDate)
       : today;
-
     try {
-      const educationToSave = {
-        ...currentEducation,
+      const trainingToSave = {
+        ...currentTraining,
         startDate: startDate.toISOString(),
-        endDate: currentEducation.endDate ? endDate.toISOString() : "",
+        endDate: currentTraining.endDate ? endDate.toISOString() : "",
       };
       if (editIndex !== null) {
         dispatch(
-          updateEducation({
-            educationId: currentEducation?._id,
-            data: educationToSave,
+          updateTraining({
+            trainingId: currentTraining?._id,
+            data: trainingToSave,
           })
         );
       } else {
-        dispatch(addEducation(educationToSave));
+        dispatch(addTraining(trainingToSave));
       }
-      setIsDialogOpen(false);
+      handleCloseDialog();
     } catch (error) {
       toast.error(
-        error?.response?.data?.message || "Failed to process education"
+        error?.response?.data?.message || "Failed to process training"
       );
-      console.error(error);
+      console.log(error);
     }
   };
 
   const isFormValid = () => {
     return (
-      currentEducation.institution &&
-      currentEducation.degree &&
-      currentEducation.startDate &&
-      (currentEducation.endDate || currentEducation.isCurrent)
+      currentTraining.courseName &&
+      currentTraining.organization &&
+      currentTraining.startDate &&
+      (currentTraining.isCurrent || currentTraining.endDate)
     );
   };
 
@@ -143,7 +143,7 @@ const Education = (props) => {
             fontSize: "1.25rem",
           }}
         >
-          Education
+          Training | Courses
         </Typography>
         {userData?._id === props?.userProfile?._id && (
           <IconButton
@@ -155,17 +155,16 @@ const Education = (props) => {
           </IconButton>
         )}
       </Box>
-
-      <EducationList
-        educationList={educationList}
+      <TrainingList
+        trainingList={trainingList}
         userId={props?.userProfile?._id}
-        setEducationList={setEducationList}
+        setTrainingList={setTrainingList}
         handleOpenDialog={handleOpenDialog}
       />
-
       <Dialog
         open={isDialogOpen}
         onClose={handleCloseDialog}
+        aria-labelledby="form-dialog-title"
         fullWidth
         maxWidth="sm"
       >
@@ -178,8 +177,8 @@ const Education = (props) => {
           }}
         >
           {editIndex !== null
-            ? "Edit Education Details"
-            : "Add Education Details"}
+            ? "Edit Training | Course Details"
+            : "Add Training | Course Details"}
           <IconButton
             onClick={handleCloseDialog}
             sx={{
@@ -199,37 +198,64 @@ const Education = (props) => {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
-                name="institution"
+                name="courseName"
                 variant="outlined"
-                value={currentEducation.institution}
+                value={currentTraining.courseName}
                 onChange={handleChange}
                 fullWidth
                 margin="dense"
-                label="Institution"
+                label="Training | Course Name"
                 required
+                autoFocus
+                autoComplete="off"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck="false"
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
-                name="degree"
+                name="organization"
                 variant="outlined"
-                value={currentEducation.degree}
-                onChange={handleChange}
                 fullWidth
                 margin="dense"
-                label="Degree"
+                label="Organization"
                 required
+                autoComplete="off"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck="false"
+                value={currentTraining.organization}
+                onChange={handleChange}
               />
+              <Box>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      name="isOnline"
+                      checked={currentTraining.isOnline}
+                      onChange={handleChange}
+                      inputProps={{ "aria-label": "primary checkbox" }}
+                      color="primary"
+                      size="small"
+                    />
+                  }
+                  label="Online"
+                />
+              </Box>
             </Grid>
             <Grid item xs={12}>
               <TextField
-                name="fieldOfStudy"
+                name="location"
                 variant="outlined"
-                value={currentEducation.fieldOfStudy}
+                value={currentTraining.location}
                 onChange={handleChange}
                 fullWidth
-                margin="dense"
-                label="Field of Study"
+                label="Location"
+                autoComplete="off"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck="false"
               />
             </Grid>
             <Grid item xs={6}>
@@ -238,11 +264,12 @@ const Education = (props) => {
                 variant="outlined"
                 type="date"
                 InputLabelProps={{ shrink: true }}
-                value={currentEducation.startDate}
+                value={currentTraining.startDate}
                 onChange={handleChange}
                 fullWidth
                 margin="dense"
                 required
+                autoComplete="off"
                 label="Start Date"
                 InputProps={{
                   inputProps: {
@@ -258,73 +285,62 @@ const Education = (props) => {
                 variant="outlined"
                 type="date"
                 InputLabelProps={{ shrink: true }}
-                value={currentEducation.endDate}
+                value={currentTraining.endDate}
                 onChange={handleChange}
                 fullWidth
                 margin="dense"
-                required={!currentEducation?.isCurrent}
+                required
+                autoComplete="off"
                 label="End Date"
-                disabled={currentEducation?.isCurrent}
+                disabled={currentTraining.isCurrent}
                 InputProps={{
                   inputProps: {
                     max: new Date().toISOString().split("T")[0],
-                    min: currentEducation.startDate,
+                    min: currentTraining.startDate,
                   },
                 }}
               />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={currentEducation?.isCurrent}
-                    onChange={handleChange}
-                    color="primary"
-                    size="small"
-                    name="isCurrent"
-                  />
-                }
-                label="Currently Working here"
-              />
+              <Box>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={currentTraining.isCurrent}
+                      onChange={handleChange}
+                      inputProps={{ "aria-label": "primary checkbox" }}
+                      color="primary"
+                      size="small"
+                      name="isCurrent"
+                    />
+                  }
+                  label="Currently Ongoing"
+                />
+              </Box>
             </Grid>
             <Grid item xs={12}>
               <TextField
-                name="grade"
+                id="Description"
+                label="Description"
                 variant="outlined"
-                value={currentEducation.grade}
-                onChange={handleChange}
-                fullWidth
-                margin="dense"
-                label="Grade"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                name="activities"
-                variant="outlined"
-                value={currentEducation.activities}
-                onChange={handleChange}
-                fullWidth
-                margin="dense"
-                label="Activities"
+                name="description"
                 multiline
-                minRows={2}
-                maxRows={4}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                name="cgpa"
-                variant="outlined"
-                value={currentEducation.cgpa}
-                onChange={handleChange}
                 fullWidth
-                margin="dense"
-                label="CGPA"
+                minRows={2}
+                maxRows={10}
+                inputProps={{ maxLength: 220 }}
+                value={currentTraining.description}
+                onChange={handleChange}
               />
             </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleSave} disabled={!isFormValid()}>
+          <Button
+            onClick={handleSave}
+            disabled={!isFormValid()}
+            color="primary"
+            variant="contained"
+            startIcon={editIndex !== null ? <SaveIcon /> : <AddIcon />}
+          >
             {editIndex !== null ? "Update" : "Add"}
           </Button>
         </DialogActions>
@@ -333,4 +349,4 @@ const Education = (props) => {
   );
 };
 
-export default Education;
+export default Training;

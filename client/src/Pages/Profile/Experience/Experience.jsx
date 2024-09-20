@@ -21,8 +21,8 @@ import AddIcon from "@mui/icons-material/Add";
 import SaveIcon from "@mui/icons-material/Save";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
-import ExperienceList from "./ExperienceList";
-import { ContextStore } from "../../../Context/ContextStore";
+import ExperienceList from "./ExperienceList.jsx";
+import { ContextStore } from "../../../Context/ContextStore.jsx";
 import { toast } from "react-toastify";
 import { formatDateWithYearMonth } from "../config.js";
 import {

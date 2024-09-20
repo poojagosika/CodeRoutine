@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { Link as RouterLink } from "react-router-dom";
-import { ContextStore } from "../../Context/ContextStore";
+import { ContextStore } from "../../Context/ContextStore.jsx";
 import { cards } from "./Config.js";
 
 function Home() {

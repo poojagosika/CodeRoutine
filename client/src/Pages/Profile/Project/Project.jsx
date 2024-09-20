@@ -16,8 +16,8 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import SaveIcon from "@mui/icons-material/Save";
 import CloseIcon from "@mui/icons-material/Close";
-import ProjectList from "./ProjectList";
-import { ContextStore } from "../../../Context/ContextStore";
+import ProjectList from "./ProjectList.jsx";
+import { ContextStore } from "../../../Context/ContextStore.jsx";
 import { toast } from "react-toastify";
 import { formatDateWithYearMonth } from "../config.js";
 import { useDispatch } from "react-redux";
