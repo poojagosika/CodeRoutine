@@ -1,17 +1,6 @@
 import { Topic, Comment, Reply } from "../Model/discussModel.js";
 import mongoose from "mongoose";
 
-export const createDiscuss = async (req, res) => {
-  try {
-    const { title, content, tags } = req.body;
-    const author = req.id;
-    const newTopic = await Topic.create({ title, content, author, tags });
-    return res.status(201).json({ newTopic, message: "Topic created" });
-  } catch (error) {
-    return res.status(500).json({ message: "Something went wrong" });
-  }
-};
-
 export const getDiscuss = async (req, res) => {
   try {
     let {
@@ -47,20 +36,6 @@ export const getDiscuss = async (req, res) => {
     // Fetching topics with pagination, filtering, and sorting
     const topics = await Topic.find(query)
       .populate("author", "userName")
-      .populate({
-        path: "comments",
-        populate: {
-          path: "author",
-          select: "userName",
-        },
-      })
-      .populate({
-        path: "comments.replies",
-        populate: {
-          path: "author",
-          select: "userName",
-        },
-      })
       .sort(sort)
       .skip((page - 1) * limit)
       .limit(limit);

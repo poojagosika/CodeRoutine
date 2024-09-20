@@ -5,7 +5,6 @@ import {
   addLikeOrRemoveLikeReply,
   addCommentToTopic,
   addReplyToComment,
-  createDiscuss,
   deleteDiscussById,
   getDiscuss,
   getDiscussById,
@@ -16,6 +15,7 @@ import {
   deleteReply,
 } from "../Controllers/discussControllers.js";
 import { tokenVerify } from "../Middleware/tokenVerify.js";
+import { createDiscuss } from "../Controllers/discuss/createDiscuss.js";
 const discussRouter = express.Router();
 
 discussRouter.post("/", tokenVerify, createDiscuss);
