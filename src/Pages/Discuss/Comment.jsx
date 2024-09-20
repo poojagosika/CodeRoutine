@@ -29,13 +29,13 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import IsLogin from "../../Component/IsLogin";
 import CommentLoading from "./Loading/CommentLoading";
 import { useNavigate } from "react-router-dom";
-import {
-  addLikeOrRemoveLikeComment,
-  editComment,
-} from "../../Api/Discuss/commentApi";
+import { addLikeOrRemoveLikeComment } from "../../Api/Discuss/commentApi";
 import { addReplyToComment } from "../../Api/Discuss/replyApi";
 import { toast } from "react-toastify";
-import { deleteComment } from "../../features/discuss/discussCommentAction";
+import {
+  deleteComment,
+  editComment,
+} from "../../features/discuss/discussCommentAction";
 import { useDispatch } from "react-redux";
 
 const Comment = (props) => {
@@ -99,7 +99,6 @@ const Comment = (props) => {
     }
   };
 
-  //console.log(comment);
   useEffect(() => {
     if (comment) {
       setIsLiked(comment?.likes?.includes(userData?._id));
@@ -145,24 +144,17 @@ const Comment = (props) => {
     }
   };
 
-  const handleEdit = async () => {
-    try {
-      const response = await editComment(comment?._id, {
+  const handleEdit = () => {
+    dispatch(
+      editComment({
+        id: props.comment?._id,
         content: content,
-      });
-      if (response && response.data) {
-        setComment((prevTopic) => ({
-          ...prevTopic,
-          content: content,
-        }));
-        setIsEdit(false);
-      } else {
-        console.error("Invalid response data:", response);
-      }
-    } catch (error) {
-      toast.error(error.response.data.message);
-      console.error("Error editing comment:", error);
-    }
+        topicId: props.topicId,
+      })
+    );
+    setIsEdit(false);
+    
+
   };
 
   const handleDeleteComment = () => {
@@ -412,8 +404,8 @@ const Comment = (props) => {
                         Cancel
                       </Button>
                       <Button
-                        onClick={() => handleEdit(comment?._id)}
-                        disabled={comment?.content === content}
+                        onClick={() => handleEdit(props.comment?._id)}
+                        disabled={props.comment?.content === content}
                         variant="contained"
                         color="primary"
                         size="small"

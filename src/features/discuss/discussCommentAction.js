@@ -42,3 +42,25 @@ export const deleteComment = createAsyncThunk(
         }
     }
 );
+
+// export const editComment = async (id, data) => {
+//     return await axiosInstance.put(`/api/discuss/comments/${id}/edit`, data);
+//   };
+
+
+export const editComment = createAsyncThunk(
+    "comments/editComment",
+    async ({ id, content, topicId }, { rejectWithValue }) => {
+        try {
+            const response = await axiosInstance.put(
+                `/api/discuss/comments/${id}/edit`,
+                { content }
+            );
+            const data = response.data.comment;
+            data.topic_id = topicId;
+            return data
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
