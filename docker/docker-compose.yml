@@ -1,0 +1,9 @@
+version: '3'
+services:
+  code_runner:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/usr/src/app
+    tty: true
