@@ -28,7 +28,7 @@ export const getProblems = async (req, res) => {
 
     // Fetch problems from the database with pagination and query filters applied
     const problems = await Problem.find(query)
-      .select("-hiddenTestCases") // Exclude hidden test cases
+      .select("_id title difficulty tags createdAt updatedAt") // Select only the required fields
       .skip(skip) // Skip the number of documents based on the page
       .limit(limitNum); // Limit the number of documents returned
 
