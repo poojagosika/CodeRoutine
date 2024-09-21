@@ -36,7 +36,7 @@ export const createProblem = async (req, res) => {
     }
 
     // Validate difficulty
-    const validDifficulties = ["easy", "medium", "hard"];
+    const validDifficulties = ["Easy", "Medium", "Hard"];
     if (!validDifficulties.includes(difficulty)) {
       return res.status(400).json({ message: "Invalid difficulty level." });
     }
