@@ -1,12 +1,6 @@
-import React from 'react';
-import {
-  Typography,
-  Card,
-  CardContent,
-  Box,
-} from '@mui/material';
-const Description = ({ isLoading, error, problem }) => {  
-
+import React from "react";
+import { Typography, Card, CardContent, Box } from "@mui/material";
+const Description = ({ isLoading, error, problem }) => {
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -16,21 +10,25 @@ const Description = ({ isLoading, error, problem }) => {
   }
   const getDifficultyColor = (difficulty) => {
     switch (difficulty) {
-      case 'Easy':
-        return 'green';
-      case 'Medium':
-        return 'orange';
-      case 'Hard':
-        return 'red';
+      case "Easy":
+        return "green";
+      case "Medium":
+        return "orange";
+      case "Hard":
+        return "red";
       default:
-        return 'black';
+        return "black";
     }
   };
 
   return (
-    <div style={{
-      backgroundColor: "#262626",
-    }}>
+    <div
+      style={{
+        backgroundColor: "#262626",
+        width: "50%",
+        overflow: "auto",
+      }}
+    >
       <Card
         sx={{
           maxWidth: 800,
@@ -58,40 +56,53 @@ const Description = ({ isLoading, error, problem }) => {
           <Typography variant="h6" component="div" gutterBottom>
             Example:
           </Typography>
-          {
-            problem?.examples?.map((example, index) => (
-              <Box
-                component="pre"
-                p={2}
-                borderRadius={1}
-                mb={2}
-                key={index}
-                sx={{
-                  backgroundColor: "#3c3b3b"
-                }}
-              >
-                Input: {example?.input} <br />
+          {problem?.examples?.map((example, index) => (
+            <Box
+              p={2}
+              borderRadius={1}
+              mb={2}
+              key={index}
+              sx={{
+                backgroundColor: "#3c3b3b",
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              <Typography variant="body" gutterBottom>
+                Input: {example?.input}
+              </Typography>
+              <Typography variant="body" gutterBottom>
                 Output: {example?.output}
-                {example?.explanation ? (
-                  <span> <br />Explanation : {example?.explanation}</span>
-                ) : (
-                  <span> </span>
-                )}
-              </Box>
-            ))
-          }
+              </Typography>
+              {example?.explanation && (
+                <Typography variant="body" gutterBottom>
+                  Explanation:
+                  {example.explanation.split(/Step\s/).map((line, index) => (
+                    <div key={index}>
+                      {line.trim() && `Step ${line.trim()}`} <br />
+                    </div>
+                  ))}
+                </Typography>
+              )}
+            </Box>
+          ))}
 
           <Typography variant="h6" component="div" gutterBottom>
             Constraints:
           </Typography>
-          <Typography variant="body2" component="ul" sx={{ ml: 4 }} >
+          <Typography variant="body2" component="ul" sx={{ ml: 4 }}>
             {problem?.constraints}
-            <li>1 ≤ nums.length ≤ 10<sup>4</sup></li>
-            <li>-10<sup>9</sup> ≤ nums[i] ≤ 10<sup>9</sup></li>
+            <li>
+              1 ≤ nums.length ≤ 10<sup>4</sup>
+            </li>
+            <li>
+              -10<sup>9</sup> ≤ nums[i] ≤ 10<sup>9</sup>
+            </li>
           </Typography>
         </CardContent>
       </Card>
-    </div>)
+    </div>
+  );
 };
 
 export default Description;
