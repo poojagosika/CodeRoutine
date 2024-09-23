@@ -153,7 +153,7 @@ export default function Problems() {
   };
 
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - questions?.length) : 0;
+    page > 0 ? Math?.max(0, (1 + page) * rowsPerPage - questions?.length) : 0;
 
   const SkeletonTable = () => (
     <>
@@ -210,7 +210,7 @@ export default function Problems() {
               size={dense ? "small" : "medium"}
             >
               <EnhancedTableHead
-                numSelected={selected.length}
+                numSelected={selected?.length}
                 order={order}
                 orderBy={orderBy}
                 onSelectAllClick={handleSelectAllClick}
@@ -222,18 +222,18 @@ export default function Problems() {
                   <SkeletonTable />
                 ) : (
                   stableSort(questions, getComparator(order, orderBy))
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row, index) => {
-                      const isItemSelected = isSelected(row.id);
+                    ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    ?.map((row, index) => {
+                      const isItemSelected = isSelected(row?._id);
                       const labelId = `enhanced-table-checkbox-${index}`;
                       return (
                         <TableRow
                           hover
-                          onClick={(event) => handleClick(event, row.id)}
+                          onClick={(event) => handleClick(event, row?._id)}
                           role="checkbox"
                           aria-checked={isItemSelected}
                           tabIndex={-1}
-                          key={row.id}
+                          key={row?._id}
                           selected={isItemSelected}
                           sx={{ cursor: "pointer" }}
                         >
@@ -247,13 +247,13 @@ export default function Problems() {
                               to={`/problems/${row.id}`}
                               style={{ textDecoration: "none" }}
                             >
-                              {row.title}
+                              {row?.title}
                             </RouterLink>
                           </TableCell>
                           <TableCell>
                             <Link
                               component={CombinedLink}
-                              to={row.solution}
+                              to={row?.solution}
                               variant="body2"
                             >
                               <PlayCircleIcon />
@@ -272,7 +272,7 @@ export default function Problems() {
                                   : "#ffc107",
                             }}
                           >
-                            {row.difficulty}
+                            {row?.difficulty}
                           </TableCell>
                           <TableCell style={{ color: "#357a38" }}>
                             <SyncLockIcon />
@@ -281,7 +281,7 @@ export default function Problems() {
                             <TableCell>
                               <Link
                                 component={CombinedLink}
-                                to={row.edit}
+                                to={row?.edit}
                                 variant="body2"
                               >
                                 <EditIcon style={{ color: "green" }} />
@@ -292,7 +292,7 @@ export default function Problems() {
                             <TableCell>
                               <Link
                                 component={CombinedLink}
-                                to={row.delete}
+                                to={row?.delete}
                                 variant="body2"
                               >
                                 <DeleteIcon style={{ color: "red" }} />
