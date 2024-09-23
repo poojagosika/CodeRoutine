@@ -14,7 +14,7 @@ export const fetchProblems = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get("/api/problem");
-      return response?.data?.problemsData;
+      return response?.data?.problems;
     } catch (error) {
       return handleThunkError(error, rejectWithValue);
     }
