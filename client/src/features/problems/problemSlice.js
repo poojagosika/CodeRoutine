@@ -29,9 +29,14 @@ const problemSlice = createSlice({
       })
       .addCase(fetchProblemById.fulfilled, (state, action) => {
         state.loading = false;
-        state.problems = state.problems.map((problem) =>
-          problem.id === action.payload._id ? action.payload : problem
+        const existingProblemIndex = state.problems.findIndex(
+          (problem) => problem._id === action.payload._id
         );
+        if (existingProblemIndex !== -1) {
+          state.problems[existingProblemIndex] = action.payload;
+        } else {
+          state.problems.push(action.payload);
+        }
       })
       .addCase(fetchProblemById.rejected, (state, action) => {
         state.loading = false;
