@@ -16,7 +16,7 @@ const Problem = () => {
     dispatch(fetchProblemById(id))
   }, [id]);
 
-  const problem = useSelector((state) => state.problems.problems.find((problem) => problem._id === id));
+  const problem = useSelector((state) => state?.problems?.problems?.find((problem) => problem?._id === id));
 
   return (
     <div>

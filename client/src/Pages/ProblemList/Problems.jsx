@@ -244,7 +244,7 @@ export default function Problems() {
                           </TableCell>
                           <TableCell>
                             <RouterLink
-                              to={`/problems/${row.id}`}
+                              to={`/problems/${row._id}`}
                               style={{ textDecoration: "none" }}
                             >
                               {row?.title}
