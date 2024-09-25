@@ -153,8 +153,6 @@ const Comment = (props) => {
       })
     );
     setIsEdit(false);
-    
-
   };
 
   const handleDeleteComment = () => {
@@ -238,7 +236,11 @@ const Comment = (props) => {
                   component="span"
                 >
                   <ReactTimeAgo
-                    date={new Date(comment?.createdAt).getTime()}
+                    date={
+                      comment?.createdAt
+                        ? new Date(comment?.createdAt).getTime()
+                        : Date.now()
+                    }
                     locale="en-US"
                   />
                 </Typography>
@@ -350,7 +352,7 @@ const Comment = (props) => {
                       Reply
                     </Typography>
                   </Button>
-                  {comment.replies.length > 0 && (
+                  {comment?.replies?.length > 0 && (
                     <Button
                       onClick={handleReplies}
                       sx={{

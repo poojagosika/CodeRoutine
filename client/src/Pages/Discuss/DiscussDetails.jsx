@@ -37,7 +37,7 @@ const DiscussDetails = () => {
     dispatch(getDiscussById(id));
   }, [id]);
 
-  const topic = useSelector((state) => state.discussions.discussions).find(
+  const topic = useSelector((state) => state?.discussions?.discussions).find(
     (item) => item._id === id
   );
 
@@ -248,9 +248,9 @@ const DiscussDetails = () => {
           ) : (
             <List>
               {topic?.comments
-                ?.map((comment) => (
+                ?.map((comment, index) => (
                   <Comment
-                    key={comment._id}
+                    key={comment?._id || index}
                     comment={comment}
                     topicId={topic?._id}
                     setTopic={setTopic}
