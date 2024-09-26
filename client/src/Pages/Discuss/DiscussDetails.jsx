@@ -253,7 +253,6 @@ const DiscussDetails = () => {
                     key={comment?._id || index}
                     comment={comment}
                     topicId={topic?._id}
-                    setTopic={setTopic}
                   />
                 ))
                 .reverse()}

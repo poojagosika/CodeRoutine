@@ -32,7 +32,7 @@ import Error from "../../Component/Shared/Error";
 
 const Jobs = () => {
   const dispatch = useDispatch();
-  const jobs = useSelector(selectJobs);
+  const jobs = useSelector((state) => state.jobs.jobs);
   const loading = useSelector(selectLoading);
   const error = useSelector(selectError);
   const filters = useSelector(selectFilters);

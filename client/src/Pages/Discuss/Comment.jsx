@@ -29,10 +29,9 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import IsLogin from "../../Component/IsLogin";
 import CommentLoading from "./Loading/CommentLoading";
 import { useNavigate } from "react-router-dom";
-import { addLikeOrRemoveLikeComment } from "../../Api/Discuss/commentApi";
 import { addReplyToComment } from "../../Api/Discuss/replyApi";
-import { toast } from "react-toastify";
 import {
+  addLikeOrRemoveLikeComment,
   deleteComment,
   editComment,
 } from "../../features/discuss/discussCommentAction";
@@ -67,43 +66,11 @@ const Comment = (props) => {
     setIsReplying(false);
   };
 
-  const handleLikeComment = async (commentId) => {
-    if (!userData) {
-      setLoginDialogOpen(true);
-      setisMessageDialog("If you want to like,then please Login");
-      return;
-    }
-
-    try {
-      const response = await addLikeOrRemoveLikeComment(commentId);
-      const userLikes = comment?.likes.includes(userId);
-      if (response && response.data) {
-        if (!userLikes) {
-          setComment((prevTopic) => ({
-            ...prevTopic,
-            likes: [...(comment?.likes || []), userId], // Update likes with the new data
-          }));
-          setIsLiked(true);
-        } else {
-          setComment((prevTopic) => ({
-            ...prevTopic,
-            likes: prevTopic.likes.filter((like) => like !== userId), // Remove userId from likes array
-          }));
-          setIsLiked(false);
-        }
-      } else {
-        console.error("Invalid response data:", response);
-      }
-    } catch (error) {
-      console.error("Error liking comment:", error);
-    }
+  const handleLikeComment = (commentId) => {
+    dispatch(addLikeOrRemoveLikeComment({ topicId: props?.topicId, commentId }))
   };
 
-  useEffect(() => {
-    if (comment) {
-      setIsLiked(comment?.likes?.includes(userData?._id));
-    }
-  }, [comment, userData]);
+
   const handleReplyClick = () => {
     if (!userData) {
       setLoginDialogOpen(true);
@@ -322,9 +289,9 @@ const Comment = (props) => {
                     onClick={() => handleLikeComment(comment?._id)}
                     fontSize="small"
                     sx={{
-                      color: isLiked ? "#0247FE" : "gray",
+                      color: props?.comment?.likes?.includes(userData?._id) ? "#0247FE" : "gray",
                       "&:hover": {
-                        color: isLiked ? "gray" : "#0247FE",
+                        color: props?.comment?.likes?.includes(userData?._id) ? "gray" : "#0247FE",
                       },
                     }}
                     color="action"
@@ -335,7 +302,7 @@ const Comment = (props) => {
                     color="text.secondary"
                     component="span"
                   >
-                    {comment?.likes?.length > 0 && comment?.likes?.length}
+                    {props?.comment?.likes?.length > 0 && props?.comment?.likes?.length}
                   </Typography>
                   <Button
                     onClick={handleReplyClick}
@@ -371,12 +338,10 @@ const Comment = (props) => {
                       }
                     >
                       {showReplies
-                        ? `Hide ${comment?.replies?.length} ${
-                            comment?.replies?.length > 1 ? "Replies" : "Reply"
-                          }`
-                        : `Show ${comment?.replies?.length} ${
-                            comment?.replies?.length > 1 ? "Replies" : "Reply"
-                          }`}
+                        ? `Hide ${comment?.replies?.length} ${comment?.replies?.length > 1 ? "Replies" : "Reply"
+                        }`
+                        : `Show ${comment?.replies?.length} ${comment?.replies?.length > 1 ? "Replies" : "Reply"
+                        }`}
                     </Button>
                   )}
                 </Box>
