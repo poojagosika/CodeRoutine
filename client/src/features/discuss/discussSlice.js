@@ -14,6 +14,7 @@ import {
   deleteComment,
   editComment,
 } from "./discussCommentAction";
+import { addLikeOrRemoveLikeReply } from "./discussReplyAction";
 
 const discussSlice = createSlice({
   name: "discussions",
@@ -283,6 +284,57 @@ const discussSlice = createSlice({
 
       // Rejected state
       .addCase(addLikeOrRemoveLikeComment.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(addLikeOrRemoveLikeReply.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addLikeOrRemoveLikeReply.fulfilled, (state, action) => {
+        state.loading = false;
+        state.discussions = state.discussions.map((discussion) => {
+          if (discussion._id === action.payload.topicId) {
+            return {
+              ...discussion,
+              comments: discussion.comments.map((comment) => {
+                if (comment._id === action.payload.commentId) {
+                  return {
+                    ...comment,
+                    replies: comment.replies.map((reply) => {
+                      if (reply._id === action.payload.replyId) {
+                        const userId = JSON.parse(
+                          localStorage.getItem("user")
+                        )._id;
+                        const userHasLiked = reply.likes.includes(userId);
+                        if (!userHasLiked) {
+                          // Add the like
+                          return {
+                            ...reply,
+                            likes: [userId, ...reply.likes],
+                          };
+                        } else {
+                          // Remove the like
+                          return {
+                            ...reply,
+                            likes: reply.likes.filter(
+                              (likeId) => likeId !== userId
+                            ),
+                          };
+                        }
+                      }
+                      return reply;
+                    }),
+                  };
+                }
+                return comment;
+              }),
+            };
+          }
+          return discussion;
+        });
+      })
+      .addCase(addLikeOrRemoveLikeReply.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
