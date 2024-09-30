@@ -22,10 +22,13 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import CloseIcon from "@mui/icons-material/Close";
-import { deleteReply, editReply } from "../../Api/Discuss/replyApi";
+import { editReply } from "../../Api/Discuss/replyApi";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { addLikeOrRemoveLikeReply } from "../../features/discuss/discussReplyaction";
+import {
+  addLikeOrRemoveLikeReply,
+  deleteReply,
+} from "../../features/discuss/discussReplyAction";
 
 const Reply = (props) => {
   const [reply, setReply] = useState(props.reply);
@@ -76,24 +79,15 @@ const Reply = (props) => {
     }
   };
 
-  const handleDeleteComment = async () => {
-    try {
-      const response = await deleteReply(props.commentId, reply._id);
-      if (response && response.status === 200) {
-        props.setComment((prevTopic) => ({
-          ...prevTopic,
-          replies: prevTopic.replies.filter((reply) => reply._id !== reply._id),
-        }));
-        setAnchorEl(null);
-      } else {
-        console.error("Invalid response data:", response);
-      }
-    } catch (error) {
-      toast.error(error.response.data.message);
-      console.error("Error deleting comment:", error);
-    }
+  const handleDeleteComment = () => {
+    dispatch(
+      deleteReply({
+        topicId: props.topicId,
+        commentId: props.commentId,
+        replyId: reply._id,
+      })
+    );
   };
-
   const handleCloseEdit = () => {
     setIsEdit(true);
     setAnchorEl(null);
