@@ -25,7 +25,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { deleteReply, editReply } from "../../Api/Discuss/replyApi";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { addLikeOrRemoveLikeReply } from "../../features/discuss/discussReplyAction";
+import { addLikeOrRemoveLikeReply } from "../../features/discuss/discussReplyaction";
 
 const Reply = (props) => {
   const [reply, setReply] = useState(props.reply);
@@ -49,7 +49,11 @@ const Reply = (props) => {
 
   const handleLikeReply = async (topicId) => {
     dispatch(
-      addLikeOrRemoveLikeReply({ topicId: props?.topicId, commentId: props?.commentId, replyId: props?.reply?._id })
+      addLikeOrRemoveLikeReply({
+        topicId: props?.topicId,
+        commentId: props?.commentId,
+        replyId: props?.reply?._id,
+      })
     );
   };
 
@@ -115,8 +119,8 @@ const Reply = (props) => {
         <Box display="flex" gap={1} width="100%">
           <ListItemAvatar>
             <Avatar
-              alt={reply.author.userName}
-              src={getCuteAvatar(reply.author.userName)}
+              alt={props.reply.author.userName}
+              src={getCuteAvatar(props.reply.author.userName)}
               sx={{
                 width: 30,
                 height: 30,
@@ -144,7 +148,7 @@ const Reply = (props) => {
                 color="text.secondary"
                 component="span"
               >
-                {reply.author.userName}
+                {props.reply.author.userName}
               </Typography>
               <Typography
                 variant="body2"
@@ -152,7 +156,7 @@ const Reply = (props) => {
                 component="span"
               >
                 <ReactTimeAgo
-                  date={new Date(reply.createdAt).getTime()}
+                  date={new Date(props.reply.createdAt).getTime()}
                   locale="en-US"
                 />
               </Typography>
@@ -220,7 +224,7 @@ const Reply = (props) => {
               color={"text.primary"}
               mb={1}
             >
-              {reply.content}
+              {props.reply.content}
             </Typography>
 
             <Box
@@ -231,7 +235,7 @@ const Reply = (props) => {
             >
               <ThumbUpIcon
                 cursor="pointer"
-                onClick={() => handleLikeReply(reply?._id)}
+                onClick={() => handleLikeReply(props.reply._id)}
                 fontSize="small"
                 sx={{
                   color: props?.reply?.likes?.includes(userData?._id)

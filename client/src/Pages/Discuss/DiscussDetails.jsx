@@ -40,7 +40,6 @@ const DiscussDetails = () => {
   const topic = useSelector((state) => state?.discussions?.discussions).find(
     (item) => item._id === id
   );
-
   const [topic1, setTopic] = useState();
   const [update, setUpdate] = useState({});
   const [newComment, setNewComment] = useState("");

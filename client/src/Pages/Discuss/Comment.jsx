@@ -29,13 +29,14 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import IsLogin from "../../Component/IsLogin";
 import CommentLoading from "./Loading/CommentLoading";
 import { useNavigate } from "react-router-dom";
-import { addReplyToComment } from "../../Api/Discuss/replyApi";
+
 import {
   addLikeOrRemoveLikeComment,
   deleteComment,
   editComment,
 } from "../../features/discuss/discussCommentAction";
 import { useDispatch } from "react-redux";
+import { addReplyToComment } from "../../features/discuss/discussReplyaction";
 
 const Comment = (props) => {
   const [comment, setComment] = React.useState(props?.comment);
@@ -65,11 +66,21 @@ const Comment = (props) => {
     setAnchorEl(null);
     setIsReplying(false);
   };
+  useEffect(() => {
+    setComment(props.comment);
+  }, [props.comment]);
 
   const handleLikeComment = (commentId) => {
-    dispatch(addLikeOrRemoveLikeComment({ topicId: props?.topicId, commentId }))
+    dispatch(
+      addLikeOrRemoveLikeComment({
+        topicId: props?.topicId,
+        commentId: commentId,
+        content: replyContent,
+      })
+    );
+    setIsReplying(false);
+    setReplyContent("");
   };
-
 
   const handleReplyClick = () => {
     if (!userData) {
@@ -82,33 +93,17 @@ const Comment = (props) => {
     setReplyContent(""); // Clear content on toggle
   };
 
-  const handleReplyToComment = async (commentId) => {
-    try {
-      const response = await addReplyToComment(commentId, {
+  const handleReplyToComment = () => {
+    dispatch(
+      addReplyToComment({
+        topicId: props.topicId,
+        commentId: props.comment._id,
         content: replyContent,
-      });
-      if (response && response.data) {
-        const newCommentData = {
-          ...response.data.reply,
-          author: {
-            _id: userData?._id,
-            userName: userData?.userName,
-          },
-        };
-        // Create a new array with the new comment added
-        const updatedComments = [...(comment?.replies || []), newCommentData];
-        // Update the topic state with the new comments array
-        setComment((prevTopic) => ({
-          ...prevTopic,
-          replies: updatedComments,
-        }));
-      }
-      setReplyContent("");
-      setIsReplying(false);
-      setShowReplies(true);
-    } catch (error) {
-      console.error("Error replying to comment:", error);
-    }
+      })
+    );
+
+    setIsReplying(false);
+    setReplyContent("");
   };
 
   const handleEdit = () => {
@@ -289,9 +284,13 @@ const Comment = (props) => {
                     onClick={() => handleLikeComment(comment?._id)}
                     fontSize="small"
                     sx={{
-                      color: props?.comment?.likes?.includes(userData?._id) ? "#0247FE" : "gray",
+                      color: props?.comment?.likes?.includes(userData?._id)
+                        ? "#0247FE"
+                        : "gray",
                       "&:hover": {
-                        color: props?.comment?.likes?.includes(userData?._id) ? "gray" : "#0247FE",
+                        color: props?.comment?.likes?.includes(userData?._id)
+                          ? "gray"
+                          : "#0247FE",
                       },
                     }}
                     color="action"
@@ -302,7 +301,8 @@ const Comment = (props) => {
                     color="text.secondary"
                     component="span"
                   >
-                    {props?.comment?.likes?.length > 0 && props?.comment?.likes?.length}
+                    {props?.comment?.likes?.length > 0 &&
+                      props?.comment?.likes?.length}
                   </Typography>
                   <Button
                     onClick={handleReplyClick}
@@ -338,10 +338,12 @@ const Comment = (props) => {
                       }
                     >
                       {showReplies
-                        ? `Hide ${comment?.replies?.length} ${comment?.replies?.length > 1 ? "Replies" : "Reply"
-                        }`
-                        : `Show ${comment?.replies?.length} ${comment?.replies?.length > 1 ? "Replies" : "Reply"
-                        }`}
+                        ? `Hide ${comment?.replies?.length} ${
+                            comment?.replies?.length > 1 ? "Replies" : "Reply"
+                          }`
+                        : `Show ${comment?.replies?.length} ${
+                            comment?.replies?.length > 1 ? "Replies" : "Reply"
+                          }`}
                     </Button>
                   )}
                 </Box>
