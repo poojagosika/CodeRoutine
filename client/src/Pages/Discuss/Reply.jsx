@@ -150,7 +150,7 @@ const Reply = ({ topicId, commentId, reply }) => {
                   locale="en-US"
                 />
               </Typography>
-              {userData ? (
+              {userData?._id === reply?.author._id ? (
                 <>
                   <MoreVertIcon
                     onClick={handleClick}
