@@ -28,7 +28,7 @@ import { useDispatch } from "react-redux";
 import {
   addLikeOrRemoveLikeReply,
   deleteReply,
-} from "../../features/discuss/discussReplyaction";
+} from "../../features/discuss/discussReplyAction";
 
 const Reply = (props) => {
   const [reply, setReply] = useState(props.reply);
@@ -76,24 +76,6 @@ const Reply = (props) => {
     } catch (error) {
       toast.error(error.response.data.message);
       console.error("Error editing comment:", error);
-    }
-  };
-
-  const handleDeleteComment1 = async () => {
-    try {
-      const response = await deleteReply(props.commentId, reply._id);
-      if (response && response.status === 200) {
-        props.setComment((prevTopic) => ({
-          ...prevTopic,
-          replies: prevTopic.replies.filter((reply) => reply._id !== reply._id),
-        }));
-        setAnchorEl(null);
-      } else {
-        console.error("Invalid response data:", response);
-      }
-    } catch (error) {
-      toast.error(error.response.data.message);
-      console.error("Error deleting comment:", error);
     }
   };
 

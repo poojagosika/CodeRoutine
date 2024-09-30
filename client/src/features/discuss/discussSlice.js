@@ -14,7 +14,8 @@ import {
     deleteComment,
     editComment,
 } from "./discussCommentAction";
-import { addReplyToComment, addLikeOrRemoveLikeReply, deleteReply } from "./discussReplyaction";
+
+import { addReplyToComment, addLikeOrRemoveLikeReply, deleteReply } from "./discussReplyAction";
 const discussSlice = createSlice({
     name: "discussions",
     initialState: {

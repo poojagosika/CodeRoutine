@@ -23,13 +23,6 @@ export const addLikeOrRemoveLikeReply = createAsyncThunk(
     }
 );
 
-
-// export const addReplyToComment = async (id, data) => {
-//     return await axiosInstance.post(`/api/discuss/comments/${id}/replies`, data);
-//   };
-
-
-
 export const addReplyToComment = createAsyncThunk(
     "comments/addReplyToComment",
     async ({ topicId, commentId, content }, { rejectWithValue }) => {
@@ -47,16 +40,36 @@ export const addReplyToComment = createAsyncThunk(
         }
     }
 );
+
+// export const editReply = async (id, data) => {
+//     return await axiosInstance.put(`/api/discuss/replies/${id}/edit`, data);
+//   };
+
+export const editReply = createAsyncThunk(
+    "comments/editReply",
+    async ({ replyId, content }, { rejectWithValue }) => {
+        try {
+            const response = await axiosInstance.put(
+                `/api/discuss/replies/${replyId}/edit`,
+                { content }
+            );
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
+
+
+
 export const deleteReply = createAsyncThunk(
     "comments/deleteReply",
     async ({ topicId, commentId, replyId }, { rejectWithValue }) => {
-
         try {
             const response = await axiosInstance.delete(
                 `/api/discuss/replies/${commentId}/${replyId}/delete`
             );
-
-            return { topicId, commentId, replyId }; // Return the IDs to update the state
+            return { replyId, topicId, commentId };
         } catch (error) {
             return rejectWithValue(error.response.data);
         }
