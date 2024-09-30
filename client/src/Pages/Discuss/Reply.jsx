@@ -25,7 +25,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { deleteReply, editReply } from "../../Api/Discuss/replyApi";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { addLikeOrRemoveLikeReply } from "../../features/discuss/discussReplyaction";
+import { addLikeOrRemoveLikeReply } from "../../features/discuss/discussReplyAction";
 
 const Reply = (props) => {
   const [reply, setReply] = useState(props.reply);
