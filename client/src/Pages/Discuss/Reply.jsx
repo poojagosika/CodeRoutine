@@ -22,10 +22,13 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import CloseIcon from "@mui/icons-material/Close";
-import { deleteReply, editReply } from "../../Api/Discuss/replyApi";
+import { editReply } from "../../Api/Discuss/replyApi";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { addLikeOrRemoveLikeReply } from "../../features/discuss/discussReplyaction";
+import {
+  addLikeOrRemoveLikeReply,
+  deleteReply,
+} from "../../features/discuss/discussReplyaction";
 
 const Reply = (props) => {
   const [reply, setReply] = useState(props.reply);
@@ -76,7 +79,7 @@ const Reply = (props) => {
     }
   };
 
-  const handleDeleteComment = async () => {
+  const handleDeleteComment1 = async () => {
     try {
       const response = await deleteReply(props.commentId, reply._id);
       if (response && response.status === 200) {
@@ -94,6 +97,15 @@ const Reply = (props) => {
     }
   };
 
+  const handleDeleteComment = () => {
+    dispatch(
+      deleteReply({
+        topicId: props.topicId,
+        commentId: props.commentId,
+        replyId: reply._id,
+      })
+    );
+  };
   const handleCloseEdit = () => {
     setIsEdit(true);
     setAnchorEl(null);
