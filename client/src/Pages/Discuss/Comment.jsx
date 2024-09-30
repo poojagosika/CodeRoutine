@@ -36,7 +36,7 @@ import {
   editComment,
 } from "../../features/discuss/discussCommentAction";
 import { useDispatch } from "react-redux";
-import { addReplyToComment } from "../../features/discuss/discussReplyaction";
+import { addReplyToComment } from "../../features/discuss/discussReplyAction";
 
 const Comment = (props) => {
   const [comment, setComment] = React.useState(props?.comment);
