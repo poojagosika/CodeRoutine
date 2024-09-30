@@ -14,7 +14,6 @@ import CommentIcon from "@mui/icons-material/ChatBubble";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import SendIcon from "@mui/icons-material/Send";
-
 import getCuteAvatar from "../../Config/getCuteAvatar";
 import DiscussEdit from "./DiscussEdit";
 import { ContextStore } from "../../Context/ContextStore";
@@ -40,12 +39,10 @@ const DiscussDetails = () => {
   const topic = useSelector((state) => state?.discussions?.discussions).find(
     (item) => item._id === id
   );
-  const [topic1, setTopic] = useState();
   const [update, setUpdate] = useState({});
   const [newComment, setNewComment] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
   const [loginDialogOpen, setLoginDialogOpen] = useState(false); // New state
-  const [isLiked, setIsLiked] = useState(null);
   const [likeorComment, setisLikeorComment] = useState(null);
 
   const navigate = useNavigate();
@@ -56,11 +53,7 @@ const DiscussDetails = () => {
     document.title = "CodeRoutine | Discuss Details";
   }, []);
 
-  useEffect(() => {
-    if (topic) {
-      setIsLiked(topic?.likes?.includes(userData?._id));
-    }
-  }, [topic, userData]);
+ 
 
   const handleDelete = () => {
     dispatch(deleteDiscussById(id));
@@ -264,7 +257,6 @@ const DiscussDetails = () => {
             setUpdate={setUpdate}
             handleCloseDialog={handleCloseDialog}
             handleContentChange={handleContentChange}
-            setTopic={setTopic}
             setOpenDialog={setOpenDialog}
           />
 

@@ -60,3 +60,17 @@ export const editReply = createAsyncThunk(
     }
   }
 );
+
+export const deleteReply = createAsyncThunk(
+  "comments/deleteReply",
+  async ({ topicId, commentId, replyId }, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.delete(
+        `/api/discuss/replies/${commentId}/${replyId}/delete`
+      );
+      return { replyId, topicId, commentId };
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
