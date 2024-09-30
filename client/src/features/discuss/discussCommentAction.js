@@ -46,10 +46,10 @@ export const deleteComment = createAsyncThunk(
 
 export const editComment = createAsyncThunk(
   "comments/editComment",
-  async ({ id, content, topicId }, { rejectWithValue }) => {
+  async ({ topicId, commentId, content }, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.put(
-        `/api/discuss/comments/${id}/edit`,
+        `/api/discuss/comments/${commentId}/edit`,
         { content }
       );
       const data = response.data.comment;
@@ -72,7 +72,7 @@ export const addLikeOrRemoveLikeComment = createAsyncThunk(
       const response = await axiosInstance.put(
         `/api/discuss/comments/${commentId}/like`
       );
-    //   toast.success(response.data.message);
+      //   toast.success(response.data.message);
       return { topicId, commentId };
     } catch (error) {
       return rejectWithValue(error.response.data);

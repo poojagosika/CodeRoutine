@@ -3,7 +3,6 @@ import {
   addLikeOrRemoveLike,
   addLikeOrRemoveLikeComment,
   addLikeOrRemoveLikeReply,
-  addReplyToComment,
   deleteDiscussById,
   getDiscuss,
   getDiscussById,
@@ -16,6 +15,7 @@ import { tokenVerify } from "../Middleware/tokenVerify.js";
 import { createDiscuss } from "../Controllers/discuss/createDiscuss.js";
 import { addCommentOnTopic } from "../Controllers/discuss/addCommentOnTopic.js";
 import { editCommentOnTopic } from "../Controllers/discuss/editCommentOnTopic.js";
+import { addReplyToComment } from "../Controllers/discuss/addReplyToComment.js";
 const discussRouter = express.Router();
 
 discussRouter.post("/", tokenVerify, createDiscuss);

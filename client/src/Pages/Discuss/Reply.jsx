@@ -22,21 +22,20 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import CloseIcon from "@mui/icons-material/Close";
-import { deleteReply, editReply } from "../../Api/Discuss/replyApi";
+import { editReply } from "../../Api/Discuss/replyApi";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { addLikeOrRemoveLikeReply } from "../../features/discuss/discussReplyAction";
+import {
+  addLikeOrRemoveLikeReply,
+  deleteReply,
+} from "../../features/discuss/discussReplyActions";
 
-const Reply = (props) => {
-  const [reply, setReply] = useState(props.reply);
-  const [isLiked, setIsLiked] = useState(null);
+const Reply = ({ topicId, commentId, reply }) => {
   const [loginDialogOpen, setLoginDialogOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
-  const [content, setContent] = useState(props.reply.content);
-
+  const [content, setContent] = useState(reply.content);
   const { userData } = ContextStore();
-  const userId = userData?._id;
   const dispatch = useDispatch();
 
   const handleClick = (event) => {
@@ -50,9 +49,9 @@ const Reply = (props) => {
   const handleLikeReply = async (topicId) => {
     dispatch(
       addLikeOrRemoveLikeReply({
-        topicId: props?.topicId,
-        commentId: props?.commentId,
-        replyId: props?.reply?._id,
+        topicId: topicId,
+        commentId: commentId,
+        replyId: reply?._id,
       })
     );
   };
@@ -76,24 +75,15 @@ const Reply = (props) => {
     }
   };
 
-  const handleDeleteComment = async () => {
-    try {
-      const response = await deleteReply(props.commentId, reply._id);
-      if (response && response.status === 200) {
-        props.setComment((prevTopic) => ({
-          ...prevTopic,
-          replies: prevTopic.replies.filter((reply) => reply._id !== reply._id),
-        }));
-        setAnchorEl(null);
-      } else {
-        console.error("Invalid response data:", response);
-      }
-    } catch (error) {
-      toast.error(error.response.data.message);
-      console.error("Error deleting comment:", error);
-    }
+  const handleDeleteComment = () => {
+    dispatch(
+      deleteReply({
+        topicId: topicId,
+        commentId: commentId,
+        replyId: reply._id,
+      })
+    );
   };
-
   const handleCloseEdit = () => {
     setIsEdit(true);
     setAnchorEl(null);
@@ -119,8 +109,8 @@ const Reply = (props) => {
         <Box display="flex" gap={1} width="100%">
           <ListItemAvatar>
             <Avatar
-              alt={props.reply.author.userName}
-              src={getCuteAvatar(props.reply.author.userName)}
+              alt={reply.author.userName}
+              src={getCuteAvatar(reply.author.userName)}
               sx={{
                 width: 30,
                 height: 30,
@@ -148,7 +138,7 @@ const Reply = (props) => {
                 color="text.secondary"
                 component="span"
               >
-                {props.reply.author.userName}
+                {reply.author.userName}
               </Typography>
               <Typography
                 variant="body2"
@@ -156,7 +146,7 @@ const Reply = (props) => {
                 component="span"
               >
                 <ReactTimeAgo
-                  date={new Date(props.reply.createdAt).getTime()}
+                  date={new Date(reply.createdAt).getTime()}
                   locale="en-US"
                 />
               </Typography>
@@ -224,7 +214,7 @@ const Reply = (props) => {
               color={"text.primary"}
               mb={1}
             >
-              {props.reply.content}
+              {reply.content}
             </Typography>
 
             <Box
@@ -235,14 +225,14 @@ const Reply = (props) => {
             >
               <ThumbUpIcon
                 cursor="pointer"
-                onClick={() => handleLikeReply(props.reply._id)}
+                onClick={() => handleLikeReply(reply._id)}
                 fontSize="small"
                 sx={{
-                  color: props?.reply?.likes?.includes(userData?._id)
+                  color: reply?.likes?.includes(userData?._id)
                     ? "#0247FE"
                     : "gray",
                   "&:hover": {
-                    color: props?.reply?.likes?.includes(userData?._id)
+                    color: reply?.likes?.includes(userData?._id)
                       ? "gray"
                       : "#0247FE",
                   },
@@ -255,7 +245,7 @@ const Reply = (props) => {
                 color="text.secondary"
                 component="span"
               >
-                {props?.reply?.likes?.length > 0 && props?.reply?.likes?.length}
+                {reply?.likes?.length > 0 && reply?.likes?.length}
               </Typography>
             </Box>
             {isEdit && (

@@ -20,7 +20,6 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import SendIcon from "@mui/icons-material/Send";
-
 import { ContextStore } from "../../Context/ContextStore";
 import Reply from "./Reply";
 import ReplyIcon from "@mui/icons-material/Reply";
@@ -29,29 +28,26 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import IsLogin from "../../Component/IsLogin";
 import CommentLoading from "./Loading/CommentLoading";
 import { useNavigate } from "react-router-dom";
-
 import {
   addLikeOrRemoveLikeComment,
   deleteComment,
   editComment,
 } from "../../features/discuss/discussCommentAction";
 import { useDispatch } from "react-redux";
-import { addReplyToComment } from "../../features/discuss/discussReplyAction";
+import { addReplyToComment } from "../../features/discuss/discussReplyActions";
 
-const Comment = (props) => {
-  const [comment, setComment] = React.useState(props?.comment);
+const Comment = ({ comment, topicId }) => {
   const [replyContent, setReplyContent] = React.useState("");
-  const [isLiked, setIsLiked] = React.useState(null);
   const [isReplying, setIsReplying] = React.useState(false);
   const [isEdit, setIsEdit] = React.useState(false);
   const [showReplies, setShowReplies] = React.useState(false);
   const [loginDialogOpen, setLoginDialogOpen] = useState(false); // New state
   const [isMessageDialog, setisMessageDialog] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [content, setContent] = React.useState(props?.comment?.content);
+  const [content, setContent] = React.useState(comment?.content);
 
   const { userData } = ContextStore();
-  const userId = userData?._id;
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleClick = (event) => {
@@ -66,14 +62,11 @@ const Comment = (props) => {
     setAnchorEl(null);
     setIsReplying(false);
   };
-  useEffect(() => {
-    setComment(props.comment);
-  }, [props.comment]);
 
   const handleLikeComment = (commentId) => {
     dispatch(
       addLikeOrRemoveLikeComment({
-        topicId: props?.topicId,
+        topicId: topicId,
         commentId: commentId,
         content: replyContent,
       })
@@ -96,8 +89,8 @@ const Comment = (props) => {
   const handleReplyToComment = () => {
     dispatch(
       addReplyToComment({
-        topicId: props.topicId,
-        commentId: props.comment._id,
+        topicId: topicId,
+        commentId: comment._id,
         content: replyContent,
       })
     );
@@ -109,18 +102,16 @@ const Comment = (props) => {
   const handleEdit = () => {
     dispatch(
       editComment({
-        id: props.comment?._id,
+        topicId: topicId,
+        commentId: comment?._id,
         content: content,
-        topicId: props.topicId,
       })
     );
     setIsEdit(false);
   };
 
   const handleDeleteComment = () => {
-    dispatch(
-      deleteComment({ topicId: props.topicId, commentId: props.comment._id })
-    ); // Ensures proper error handling from createAsyncThunk
+    dispatch(deleteComment({ topicId: topicId, commentId: comment._id })); // Ensures proper error handling from createAsyncThunk
   };
 
   const handleCancel = () => {
@@ -284,11 +275,11 @@ const Comment = (props) => {
                     onClick={() => handleLikeComment(comment?._id)}
                     fontSize="small"
                     sx={{
-                      color: props?.comment?.likes?.includes(userData?._id)
+                      color: comment?.likes?.includes(userData?._id)
                         ? "#0247FE"
                         : "gray",
                       "&:hover": {
-                        color: props?.comment?.likes?.includes(userData?._id)
+                        color: comment?.likes?.includes(userData?._id)
                           ? "gray"
                           : "#0247FE",
                       },
@@ -301,8 +292,7 @@ const Comment = (props) => {
                     color="text.secondary"
                     component="span"
                   >
-                    {props?.comment?.likes?.length > 0 &&
-                      props?.comment?.likes?.length}
+                    {comment?.likes?.length > 0 && comment?.likes?.length}
                   </Typography>
                   <Button
                     onClick={handleReplyClick}
@@ -373,8 +363,8 @@ const Comment = (props) => {
                         Cancel
                       </Button>
                       <Button
-                        onClick={() => handleEdit(props.comment?._id)}
-                        disabled={props.comment?.content === content}
+                        onClick={() => handleEdit(comment?._id)}
+                        disabled={comment?.content === content}
                         variant="contained"
                         color="primary"
                         size="small"
@@ -433,13 +423,13 @@ const Comment = (props) => {
       )}
       {showReplies && (
         <List>
-          {props?.comment?.replies
+          {comment?.replies
             .map((reply) => (
               <Reply
                 key={reply?._id || index}
                 reply={reply}
-                topicId={props?.topicId}
-                commentId={props.comment?._id}
+                topicId={topicId}
+                commentId={comment?._id}
               />
             ))
             .reverse()}
