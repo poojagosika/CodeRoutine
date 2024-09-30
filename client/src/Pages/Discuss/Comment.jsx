@@ -96,6 +96,7 @@ const Comment = ({ comment, topicId }) => {
     );
 
     setIsReplying(false);
+    setShowReplies(true);
     setReplyContent("");
   };
 
@@ -197,7 +198,7 @@ const Comment = ({ comment, topicId }) => {
                     locale="en-US"
                   />
                 </Typography>
-                {userData?._id === comment.author._id ? (
+                {userData?._id === comment?.author?._id ? (
                   <>
                     <MoreVertIcon
                       onClick={handleClick}
