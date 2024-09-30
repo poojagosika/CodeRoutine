@@ -70,7 +70,7 @@ const Comment = (props) => {
     setComment(props.comment);
   }, [props.comment]);
 
-  const handleLikeComment = () => {
+  const handleLikeComment = (commentId) => {
     dispatch(
       addLikeOrRemoveLikeComment({
         topicId: props?.topicId,
@@ -433,13 +433,13 @@ const Comment = (props) => {
       )}
       {showReplies && (
         <List>
-          {comment.replies
+          {props?.comment?.replies
             .map((reply) => (
               <Reply
-                key={reply._id}
+                key={reply?._id || index}
                 reply={reply}
-                commentId={comment?._id}
-                setComment={setComment}
+                topicId={props?.topicId}
+                commentId={props.comment?._id}
               />
             ))
             .reverse()}

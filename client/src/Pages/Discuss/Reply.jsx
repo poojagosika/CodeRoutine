@@ -22,12 +22,10 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import CloseIcon from "@mui/icons-material/Close";
-import {
-  addLikeOrRemoveLikeReply,
-  deleteReply,
-  editReply,
-} from "../../Api/Discuss/replyApi";
+import { deleteReply, editReply } from "../../Api/Discuss/replyApi";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { addLikeOrRemoveLikeReply } from "../../features/discuss/discussReplyaction";
 
 const Reply = (props) => {
   const [reply, setReply] = useState(props.reply);
@@ -39,6 +37,7 @@ const Reply = (props) => {
 
   const { userData } = ContextStore();
   const userId = userData?._id;
+  const dispatch = useDispatch();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -48,34 +47,14 @@ const Reply = (props) => {
     setAnchorEl(null);
   };
 
-  const handleLikeReply = async (replyId) => {
-    if (!userData) {
-      setLoginDialogOpen(true);
-      return;
-    }
-    try {
-      const response = await addLikeOrRemoveLikeReply(replyId);
-      const userLikes = reply.likes.includes(userId);
-      if (response && response.data) {
-        if (!userLikes) {
-          setReply((prevReply) => ({
-            ...prevReply,
-            likes: [...(reply.likes || []), userId],
-          }));
-          setIsLiked(true);
-        } else {
-          setReply((prevReply) => ({
-            ...prevReply,
-            likes: prevReply.likes.filter((like) => like !== userId),
-          }));
-          setIsLiked(false);
-        }
-      } else {
-        console.error("Invalid response data:", response);
-      }
-    } catch (error) {
-      console.error("Error liking reply:", error);
-    }
+  const handleLikeReply = async (topicId) => {
+    dispatch(
+      addLikeOrRemoveLikeReply({
+        topicId: props?.topicId,
+        commentId: props?.commentId,
+        replyId: props?.reply?._id,
+      })
+    );
   };
 
   const handleEdit = async () => {
@@ -119,12 +98,6 @@ const Reply = (props) => {
     setIsEdit(true);
     setAnchorEl(null);
   };
-
-  useEffect(() => {
-    if (reply) {
-      setIsLiked(reply.likes.includes(userData?._id));
-    }
-  }, [reply, userData]);
 
   return (
     <ListItem
@@ -265,9 +238,13 @@ const Reply = (props) => {
                 onClick={() => handleLikeReply(props.reply._id)}
                 fontSize="small"
                 sx={{
-                  color: isLiked ? "#0247FE" : "gray",
+                  color: props?.reply?.likes?.includes(userData?._id)
+                    ? "#0247FE"
+                    : "gray",
                   "&:hover": {
-                    color: isLiked ? "gray" : "#0247FE",
+                    color: props?.reply?.likes?.includes(userData?._id)
+                      ? "gray"
+                      : "#0247FE",
                   },
                 }}
                 color="action"
@@ -278,7 +255,7 @@ const Reply = (props) => {
                 color="text.secondary"
                 component="span"
               >
-                {reply.likes.length > 0 && reply.likes.length}
+                {props?.reply?.likes?.length > 0 && props?.reply?.likes?.length}
               </Typography>
             </Box>
             {isEdit && (

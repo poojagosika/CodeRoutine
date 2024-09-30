@@ -14,8 +14,7 @@ import {
     deleteComment,
     editComment,
 } from "./discussCommentAction";
-import { addReplyToComment } from "./discussReplyaction";
-
+import { addReplyToComment, addLikeOrRemoveLikeReply } from "./discussReplyaction";
 const discussSlice = createSlice({
     name: "discussions",
     initialState: {
@@ -295,8 +294,6 @@ const discussSlice = createSlice({
                             ...discussion,
                             comments: discussion.comments.map((comment) => {
                                 if (comment._id === action.payload.commentId) {
-                                    console.log(action.payload, "action.payload");
-                                    console.log(comment.replies, "comment.replies");
                                     return {
                                         ...comment,
                                         replies: [...(comment.replies || []), action.payload.reply],
@@ -312,10 +309,64 @@ const discussSlice = createSlice({
             .addCase(addReplyToComment.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload || "Failed to add reply"; // Set error message
+            })
+
+
+
+            // Rejected state
+            .addCase(addLikeOrRemoveLikeReply.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(addLikeOrRemoveLikeReply.fulfilled, (state, action) => {
+                state.loading = false;
+                state.discussions = state.discussions.map((discussion) => {
+                    if (discussion._id === action.payload.topicId) {
+                        return {
+                            ...discussion,
+                            comments: discussion.comments.map((comment) => {
+                                if (comment._id === action.payload.commentId) {
+                                    return {
+                                        ...comment,
+                                        replies: comment.replies.map((reply) => {
+                                            if (reply._id === action.payload.replyId) {
+                                                const userId = JSON.parse(
+                                                    localStorage.getItem("user")
+                                                )._id;
+                                                const userHasLiked = reply.likes.includes(userId);
+                                                if (!userHasLiked) {
+                                                    // Add the like
+                                                    return {
+                                                        ...reply,
+                                                        likes: [userId, ...reply.likes],
+                                                    };
+                                                } else {
+                                                    // Remove the like
+                                                    return {
+                                                        ...reply,
+                                                        likes: reply.likes.filter(
+                                                            (likeId) => likeId !== userId
+                                                        ),
+                                                    };
+                                                }
+                                            }
+                                            return reply;
+                                        }),
+                                    };
+                                }
+                                return comment;
+                            }),
+                        };
+                    }
+                    return discussion;
+                });
+            })
+            .addCase(addLikeOrRemoveLikeReply.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
             });
-
-
     },
+
 });
 
 export default discussSlice.reducer;
