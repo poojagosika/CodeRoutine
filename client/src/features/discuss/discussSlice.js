@@ -14,7 +14,8 @@ import {
     deleteComment,
     editComment,
 } from "./discussCommentAction";
-import { addReplyToComment, addLikeOrRemoveLikeReply } from "./discussReplyAction";
+
+import { addReplyToComment, addLikeOrRemoveLikeReply, deleteReply } from "./discussReplyAction";
 const discussSlice = createSlice({
     name: "discussions",
     initialState: {
@@ -362,6 +363,39 @@ const discussSlice = createSlice({
                 });
             })
             .addCase(addLikeOrRemoveLikeReply.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            })
+
+            // handle  pending  fulfilled and rejected of deleteReply
+
+            .addCase(deleteReply.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(deleteReply.fulfilled, (state, action) => {
+                state.loading = false;
+                state.discussions = state.discussions.map((discussion) => {
+                    if (discussion._id === action.payload.topicId) {
+                        return {
+                            ...discussion,
+                            comments: discussion.comments.map((comment) => {
+                                if (comment._id === action.payload.commentId) {
+                                    return {
+                                        ...comment,
+                                        replies: comment.replies.filter(
+                                            (reply) => reply._id !== action.payload.replyId
+                                        ),
+                                    };
+                                }
+                                return comment;
+                            }),
+                        };
+                    }
+                    return discussion;
+                });
+            })
+            .addCase(deleteReply.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
             });
