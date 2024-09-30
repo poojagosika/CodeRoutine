@@ -13,7 +13,7 @@ import {
 import getCuteAvatar from "../../Config/getCuteAvatar";
 import { ContextStore } from "../../Context/ContextStore";
 import IsLogin from "../../Component/IsLogin";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addLikeOrRemoveLike } from "../../features/discuss/discussAction";
 const DiscussList = (props) => {
   const navagate = useNavigate();

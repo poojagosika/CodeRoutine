@@ -23,8 +23,6 @@ const DiscussEdit = ({
   setUpdate,
   handleCloseDialog,
   handleContentChange,
-  setOpenDialog,
-  setTopic,
 }) => {
   const [postLoading, setPostLoading] = React.useState(false);
   const [error, setError] = React.useState(null);

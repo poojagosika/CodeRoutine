@@ -30,16 +30,12 @@ import {
   deleteReply,
 } from "../../features/discuss/discussReplyAction";
 
-const Reply = (props) => {
-  const [reply, setReply] = useState(props.reply);
-  const [isLiked, setIsLiked] = useState(null);
+const Reply = ({ topicId, commentId, reply }) => {
   const [loginDialogOpen, setLoginDialogOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
-  const [content, setContent] = useState(props.reply.content);
-
+  const [content, setContent] = useState(reply.content);
   const { userData } = ContextStore();
-  const userId = userData?._id;
   const dispatch = useDispatch();
 
   const handleClick = (event) => {
@@ -53,9 +49,9 @@ const Reply = (props) => {
   const handleLikeReply = async (topicId) => {
     dispatch(
       addLikeOrRemoveLikeReply({
-        topicId: props?.topicId,
-        commentId: props?.commentId,
-        replyId: props?.reply?._id,
+        topicId: topicId,
+        commentId: commentId,
+        replyId: reply?._id,
       })
     );
   };
@@ -82,8 +78,8 @@ const Reply = (props) => {
   const handleDeleteComment = () => {
     dispatch(
       deleteReply({
-        topicId: props.topicId,
-        commentId: props.commentId,
+        topicId: topicId,
+        commentId: commentId,
         replyId: reply._id,
       })
     );
@@ -113,8 +109,8 @@ const Reply = (props) => {
         <Box display="flex" gap={1} width="100%">
           <ListItemAvatar>
             <Avatar
-              alt={props.reply.author.userName}
-              src={getCuteAvatar(props.reply.author.userName)}
+              alt={reply.author.userName}
+              src={getCuteAvatar(reply.author.userName)}
               sx={{
                 width: 30,
                 height: 30,
@@ -142,7 +138,7 @@ const Reply = (props) => {
                 color="text.secondary"
                 component="span"
               >
-                {props.reply.author.userName}
+                {reply.author.userName}
               </Typography>
               <Typography
                 variant="body2"
@@ -150,7 +146,7 @@ const Reply = (props) => {
                 component="span"
               >
                 <ReactTimeAgo
-                  date={new Date(props.reply.createdAt).getTime()}
+                  date={new Date(reply.createdAt).getTime()}
                   locale="en-US"
                 />
               </Typography>
@@ -218,7 +214,7 @@ const Reply = (props) => {
               color={"text.primary"}
               mb={1}
             >
-              {props.reply.content}
+              {reply.content}
             </Typography>
 
             <Box
@@ -229,14 +225,14 @@ const Reply = (props) => {
             >
               <ThumbUpIcon
                 cursor="pointer"
-                onClick={() => handleLikeReply(props.reply._id)}
+                onClick={() => handleLikeReply(reply._id)}
                 fontSize="small"
                 sx={{
-                  color: props?.reply?.likes?.includes(userData?._id)
+                  color: reply?.likes?.includes(userData?._id)
                     ? "#0247FE"
                     : "gray",
                   "&:hover": {
-                    color: props?.reply?.likes?.includes(userData?._id)
+                    color: reply?.likes?.includes(userData?._id)
                       ? "gray"
                       : "#0247FE",
                   },
@@ -249,7 +245,7 @@ const Reply = (props) => {
                 color="text.secondary"
                 component="span"
               >
-                {props?.reply?.likes?.length > 0 && props?.reply?.likes?.length}
+                {reply?.likes?.length > 0 && reply?.likes?.length}
               </Typography>
             </Box>
             {isEdit && (

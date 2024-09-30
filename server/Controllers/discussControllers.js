@@ -293,45 +293,6 @@ export const deleteComment = async (req, res) => {
   }
 };
 
-export const addReplyToComment = async (req, res) => {
-  try {
-    const { id: commentId } = req.params;
-    const { content } = req.body;
-    const userId = req.id;
-
-    // Validate the commentId
-    if (!mongoose.Types.ObjectId.isValid(commentId)) {
-      return res.status(400).json({ message: "Invalid comment ID" });
-    }
-
-    // Find the comment
-    const comment = await Comment.findById(commentId);
-    if (!comment) {
-      return res.status(404).json({ message: "Comment not found" });
-    }
-
-    // Create a new reply
-    const newReply = new Reply({
-      content,
-      author: userId,
-    });
-
-    // Save the reply
-    const savedReply = await newReply.save();
-
-    // Add the reply to the comment
-    comment.replies.push(savedReply._id);
-    await comment.save();
-
-    res.status(201).json({
-      message: "Reply added successfully",
-      reply: savedReply,
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error", error: error.message });
-  }
-};
 
 export const addLikeOrRemoveLikeReply = async (req, res) => {
   try {
