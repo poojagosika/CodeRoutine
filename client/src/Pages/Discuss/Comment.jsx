@@ -63,7 +63,6 @@ const Comment = ({ comment, topicId }) => {
     setIsReplying(false);
   };
 
-
   const handleLikeComment = (commentId) => {
     dispatch(
       addLikeOrRemoveLikeComment({
@@ -112,9 +111,7 @@ const Comment = ({ comment, topicId }) => {
   };
 
   const handleDeleteComment = () => {
-    dispatch(
-      deleteComment({ topicId: topicId, commentId: comment._id })
-    ); // Ensures proper error handling from createAsyncThunk
+    dispatch(deleteComment({ topicId: topicId, commentId: comment._id })); // Ensures proper error handling from createAsyncThunk
   };
 
   const handleCancel = () => {
@@ -200,7 +197,7 @@ const Comment = ({ comment, topicId }) => {
                     locale="en-US"
                   />
                 </Typography>
-                {userData ? (
+                {userData?._id === comment.author._id ? (
                   <>
                     <MoreVertIcon
                       onClick={handleClick}
@@ -295,8 +292,7 @@ const Comment = ({ comment, topicId }) => {
                     color="text.secondary"
                     component="span"
                   >
-                    {comment?.likes?.length > 0 &&
-                      comment?.likes?.length}
+                    {comment?.likes?.length > 0 && comment?.likes?.length}
                   </Typography>
                   <Button
                     onClick={handleReplyClick}
@@ -332,10 +328,12 @@ const Comment = ({ comment, topicId }) => {
                       }
                     >
                       {showReplies
-                        ? `Hide ${comment?.replies?.length} ${comment?.replies?.length > 1 ? "Replies" : "Reply"
-                        }`
-                        : `Show ${comment?.replies?.length} ${comment?.replies?.length > 1 ? "Replies" : "Reply"
-                        }`}
+                        ? `Hide ${comment?.replies?.length} ${
+                            comment?.replies?.length > 1 ? "Replies" : "Reply"
+                          }`
+                        : `Show ${comment?.replies?.length} ${
+                            comment?.replies?.length > 1 ? "Replies" : "Reply"
+                          }`}
                     </Button>
                   )}
                 </Box>
