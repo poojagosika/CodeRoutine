@@ -15,7 +15,8 @@ import {
     editComment,
 } from "./discussCommentAction";
 
-import { addReplyToComment, addLikeOrRemoveLikeReply, deleteReply } from "./discussReplyAction";
+import { addReplyToComment, addLikeOrRemoveLikeReply, deleteReply, editReply } from "./discussReplyActions";
+
 const discussSlice = createSlice({
     name: "discussions",
     initialState: {
@@ -368,7 +369,42 @@ const discussSlice = createSlice({
             })
 
             // handle  pending  fulfilled and rejected of deleteReply
-
+			.addCase(editReply.pending, (state) => {
+				state.loading = true;
+				state.error = null;
+			})
+			.addCase(editReply.fulfilled, (state, action) => {
+				state.loading = false;
+				state.discussions = state.discussions.map((discussion) => {
+					if (discussion._id === action.payload.topicId) {
+						return {
+							...discussion,
+							comments: discussion.comments.map((comment) => {
+								if (comment._id === action.payload.commentId) {
+									return {
+										...comment,
+										replies: comment.replies.map((reply) => {
+											if (reply._id === action.payload.replyId) {
+												return {
+													...reply,
+													content: action.payload.content,
+												};
+											}
+											return reply;
+										}),
+									};
+								}
+								return comment;
+							}),
+						};
+					}
+					return discussion;
+				});
+			})
+			.addCase(editReply.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload;
+			})
             .addCase(deleteReply.pending, (state) => {
                 state.loading = true;
                 state.error = null;

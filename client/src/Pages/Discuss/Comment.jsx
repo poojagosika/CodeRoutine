@@ -34,7 +34,7 @@ import {
   editComment,
 } from "../../features/discuss/discussCommentAction";
 import { useDispatch } from "react-redux";
-import { addReplyToComment } from "../../features/discuss/discussReplyAction";
+import { addReplyToComment } from "../../features/discuss/discussReplyActions";
 
 const Comment = ({ comment, topicId }) => {
   const [replyContent, setReplyContent] = React.useState("");

@@ -22,13 +22,12 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import CloseIcon from "@mui/icons-material/Close";
-import { editReply } from "../../Api/Discuss/replyApi";
-import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import {
   addLikeOrRemoveLikeReply,
+  editReply,
   deleteReply,
-} from "../../features/discuss/discussReplyAction";
+} from "../../features/discuss/discussReplyActions";
 
 const Reply = ({ topicId, commentId, reply }) => {
   const [loginDialogOpen, setLoginDialogOpen] = useState(false);
@@ -46,7 +45,7 @@ const Reply = ({ topicId, commentId, reply }) => {
     setAnchorEl(null);
   };
 
-  const handleLikeReply = async (topicId) => {
+  const handleLikeReply = async () => {
     dispatch(
       addLikeOrRemoveLikeReply({
         topicId: topicId,
@@ -57,22 +56,15 @@ const Reply = ({ topicId, commentId, reply }) => {
   };
 
   const handleEdit = async () => {
-    try {
-      console.log(reply._id, content);
-      const response = await editReply(reply._id, { content });
-      if (response && response.data) {
-        setReply((prevReply) => ({
-          ...prevReply,
-          content,
-        }));
-        setIsEdit(false);
-      } else {
-        console.error("Invalid response data:", response);
-      }
-    } catch (error) {
-      toast.error(error.response.data.message);
-      console.error("Error editing comment:", error);
-    }
+    dispatch(
+      editReply({
+        topicId: topicId,
+        commentId: commentId,
+        replyId: reply?._id,
+        content: content,
+      })
+    );
+    setIsEdit(false);
   };
 
   const handleDeleteComment = () => {
