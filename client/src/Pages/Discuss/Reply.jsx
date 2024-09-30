@@ -22,10 +22,10 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import CloseIcon from "@mui/icons-material/Close";
-import { deleteReply, editReply } from "../../Api/Discuss/replyApi";
+import { deleteReply } from "../../Api/Discuss/replyApi";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { addLikeOrRemoveLikeReply } from "../../features/discuss/discussReplyAction";
+import { addLikeOrRemoveLikeReply, editReply } from "../../features/discuss/discussReplyAction";
 
 const Reply = (props) => {
   const [reply, setReply] = useState(props.reply);
@@ -58,22 +58,15 @@ const Reply = (props) => {
   };
 
   const handleEdit = async () => {
-    try {
-      console.log(reply._id, content);
-      const response = await editReply(reply._id, { content });
-      if (response && response.data) {
-        setReply((prevReply) => ({
-          ...prevReply,
-          content,
-        }));
-        setIsEdit(false);
-      } else {
-        console.error("Invalid response data:", response);
-      }
-    } catch (error) {
-      toast.error(error.response.data.message);
-      console.error("Error editing comment:", error);
-    }
+    dispatch(editReply(
+      {
+        topicId: props?.topicId,
+        commentId: props?.commentId,
+        replyId: props?.reply?._id,
+        content: content,
+      })
+    );
+    setIsEdit(false);
   };
 
   const handleDeleteComment = async () => {

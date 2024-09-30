@@ -47,13 +47,14 @@ export const addReplyToComment = createAsyncThunk(
 
 export const editReply = createAsyncThunk(
   "comments/editReply",
-  async ({ replyId, content }, { rejectWithValue }) => {
+  async ({ topicId, commentId, replyId, content }, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.put(
         `/api/discuss/replies/${replyId}/edit`,
         { content }
       );
-      return response.data;
+      toast.success(response.data.message);
+      return { topicId, commentId, replyId, content };
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
