@@ -18,6 +18,7 @@ import { useDispatch } from "react-redux";
 import { updateDiscussById } from "../../features/discuss/discussAction";
 
 const DiscussEdit = ({
+  topic,
   openDialog,
   update,
   setUpdate,
@@ -57,7 +58,7 @@ const DiscussEdit = ({
           label="Title"
           type="text"
           fullWidth
-          value={update.title}
+          value={update.title || topic.title}
           onChange={(e) => setUpdate({ ...update, title: e.target.value })}
           required
           InputProps={{
@@ -72,7 +73,7 @@ const DiscussEdit = ({
           id="tags"
           margin="dense"
           type="text"
-          value={update.tags}
+          value={update.tags || topic.tags}
           onChange={(e) => setUpdate({ ...update, tags: e.target.value })}
           required
           InputProps={{
@@ -82,7 +83,7 @@ const DiscussEdit = ({
           }}
         />
         <ReactQuill
-          value={update.content}
+          value={update.content || topic.content}
           onChange={handleContentChange}
           theme="snow"
           placeholder="Edit your post here..."

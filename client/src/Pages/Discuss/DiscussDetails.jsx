@@ -253,6 +253,7 @@ const DiscussDetails = () => {
 
           <DiscussEdit
             openDialog={openDialog}
+            topic={topic}
             update={update}
             setUpdate={setUpdate}
             handleCloseDialog={handleCloseDialog}
