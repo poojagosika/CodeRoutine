@@ -11,7 +11,7 @@ const handleThunkError = (error, rejectWithValue) => {
 export const addCommentToTopic = createAsyncThunk(
   "discussions/addCommentToTopic",
 
-  async ({ id, content }, { rejectWithValue }) => {
+  async ({ id, content }) => {
     try {
       const response = await axiosInstance.post(
         `/api/discuss/topics/${id}/comments`,
@@ -21,7 +21,8 @@ export const addCommentToTopic = createAsyncThunk(
       data.topic_id = id;
       return data;
     } catch (error) {
-      return handleThunkError(error, rejectWithValue); // Handle error
+      toast.error(error.message)
+      return error.message
     }
   }
 );
