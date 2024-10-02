@@ -82,7 +82,7 @@ const Discuss = () => {
   }
 
   if (error) {
-    return <Error error={error}/>;
+    return <Error error={error} />;
   }
 
   return (
