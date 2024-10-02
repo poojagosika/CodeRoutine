@@ -5,8 +5,8 @@ import axiosInstance from "../../Api/axiosConfig";
 
 // Helper function to handle errors
 const handleThunkError = (error, rejectWithValue) => {
-    const message = error.response?.data?.message || "An error occurred";
-    toast.error(message); // Show error notification
+    const message = error || "An error occurred";
+    console.log(message)
     return rejectWithValue(message); // Return the error message to be handled in the slice
 };
 
@@ -20,7 +20,7 @@ export const fetchDiscussions = createAsyncThunk(
             });
             return response.data; // Return fetched discussions
         } catch (error) {
-            return handleThunkError(error, rejectWithValue); // Handle error
+            return handleThunkError(error?.message, rejectWithValue); // Handle error
         }
     }
 );

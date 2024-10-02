@@ -14,10 +14,11 @@ import DiscussList from "./DiscussList";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import DiscussLoading from "./Loading/DiscussLoading";
 import NewPost from "./NewPost";
+import Error from "../../Component/Error";
 
 const Discuss = () => {
   const dispatch = useDispatch();
-  const { discussions, loading, totalPages } = useSelector(
+  const { discussions, loading, totalPages, error } = useSelector(
     (state) => state.discussions
   );
 
@@ -75,6 +76,14 @@ const Discuss = () => {
     }
     setPage(1); // Reset to first page on sort change
   };
+
+  if (loading) {
+    return <DiscussLoading />;
+  }
+
+  if (error) {
+    return <Error error={error}/>;
+  }
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4, minHeight: "100vh" }}>
