@@ -45,6 +45,7 @@ export const createDiscuss = createAsyncThunk(
     async (data, { rejectWithValue }) => {
         try {
             const response = await axiosInstance.post("/api/discuss", data);
+            toast.success(response.data.message);
             return response.data.newTopic; // Return created discussion
         } catch (error) {
             return handleThunkError(error, rejectWithValue); // Handle error
@@ -57,6 +58,7 @@ export const deleteDiscussById = createAsyncThunk(
     async (id, { rejectWithValue }) => {
         try {
             const response = await axiosInstance.delete(`/api/discuss/${id}`);
+            toast.error(response.data.message);
             const data = response.data
             data.deletedTopic = id;
             return data; // Return deleted discussion
