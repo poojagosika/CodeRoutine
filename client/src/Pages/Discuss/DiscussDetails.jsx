@@ -27,6 +27,7 @@ import {
   getDiscussById,
 } from "../../features/discuss/discussAction";
 import { addCommentToTopic } from "../../features/discuss/discussCommentAction";
+import Error from "../../Component/Error";
 
 const DiscussDetails = () => {
   const { id } = useParams();
@@ -39,6 +40,7 @@ const DiscussDetails = () => {
   const topic = useSelector((state) => state?.discussions?.discussions).find(
     (item) => item._id === id
   );
+  const { loading, error } = useSelector((state) => state?.discussions);
   const [update, setUpdate] = useState({});
   const [newComment, setNewComment] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
@@ -52,8 +54,6 @@ const DiscussDetails = () => {
   React.useEffect(() => {
     document.title = "CodeRoutine | Discuss Details";
   }, []);
-
- 
 
   const handleDelete = () => {
     dispatch(deleteDiscussById(id));
@@ -83,6 +83,13 @@ const DiscussDetails = () => {
       content: value,
     });
   };
+  if (loading) {
+    return <TopicLoadig />;
+  }
+
+  if (error) {
+    return <Error error={error} />;
+  }
 
   return (
     <Container maxWidth="lg" sx={{ mt: 5, minHeight: "100vh" }}>

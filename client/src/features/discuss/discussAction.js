@@ -33,7 +33,7 @@ export const getDiscussById = createAsyncThunk(
             const response = await axiosInstance.get(`/api/discuss/${id}`);
             return response.data; // Return discussion data
         } catch (error) {
-            return handleThunkError(error, rejectWithValue); // Handle error
+            return handleThunkError(error?.message, rejectWithValue); // Handle error
         }
     }
 );
