@@ -20,6 +20,7 @@ const jobSlice = createSlice({
       title: "",
       location: "",
       employmentTypes: [],
+      jobLevel: [],
     },
     selectedTab: 0,
   },
