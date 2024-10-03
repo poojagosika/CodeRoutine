@@ -67,6 +67,13 @@ const Jobs = () => {
           ? [...newFilters.employmentTypes, value]
           : newFilters.employmentTypes.filter((type) => type !== value),
       };
+    } else if (name === "jobLevel") {
+      newFilters = {
+        ...newFilters,
+        jobLevel: checked
+          ? [...newFilters.jobLevel, value]
+          : newFilters.jobLevel.filter((type) => type !== value),
+      };
     } else {
       newFilters = {
         ...newFilters,
@@ -98,11 +105,9 @@ const Jobs = () => {
   };
 
   const filterJobs = (job) => {
-    const { title, location, employmentTypes, salaryRange } = filters;
-
+    const { title, location, employmentTypes, jobLevel,salaryRange } = filters;
     const isSaved = job.saved;
     const isApplied = job.applied;
-
     const isTabMatch =
       selectedTab === 0 || // All Jobs
       (selectedTab === 1 && isSaved) || // Saved Jobs
@@ -119,6 +124,7 @@ const Jobs = () => {
         job.location.toLowerCase().includes(location.toLowerCase())) &&
       (employmentTypes.length === 0 ||
         employmentTypes.includes(job.employmentType)) &&
+      (jobLevel.length === 0 || jobLevel.includes(job.jobLevel)) &&
       isSalaryRangeMatch
     );
   };
@@ -200,6 +206,7 @@ const Jobs = () => {
                 </Box>
               </Box>
               <FormGroup>
+                <Typography variant="body1">Employment Type</Typography>
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -232,6 +239,41 @@ const Jobs = () => {
                     />
                   }
                   label="Contract"
+                />
+                <Typography variant="body1">Job Level </Typography>
+
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      name="jobLevel"
+                      value="Entry-Level"
+                      checked={filters?.jobLevel?.includes("Entry-Level")}
+                      onChange={handleFilterChange}
+                    />
+                  }
+                  label="Entry-Level"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      name="jobLevel"
+                      value="Mid-Level"
+                      checked={filters.jobLevel.includes("Mid-Level")}
+                      onChange={handleFilterChange}
+                    />
+                  }
+                  label="Mid-Level"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      name="jobLevel"
+                      value="Senior-Level"
+                      checked={filters.jobLevel.includes("Senior-Level")}
+                      onChange={handleFilterChange}
+                    />
+                  }
+                  label="Senior-Level"
                 />
               </FormGroup>
             </Paper>
