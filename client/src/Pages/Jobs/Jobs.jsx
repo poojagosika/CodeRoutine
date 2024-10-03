@@ -105,7 +105,7 @@ const Jobs = () => {
   };
 
   const filterJobs = (job) => {
-    const { title, location, employmentTypes, jobLevel,salaryRange } = filters;
+    const { title, location, employmentTypes, jobLevel, salaryRange } = filters;
     const isSaved = job.saved;
     const isApplied = job.applied;
     const isTabMatch =
@@ -153,7 +153,7 @@ const Jobs = () => {
         <Grid item xs={12} sm={12} md={4}>
           <Box mb={3}>
             <Paper elevation={3} sx={{ padding: 2 }}>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant="h5" gutterBottom>
                 Filter Jobs
               </Typography>
               <Box sx={{ marginBottom: 2 }}>
@@ -177,7 +177,7 @@ const Jobs = () => {
                 />
               </Box>
               <Box sx={{ marginBottom: 2 }}>
-                <Typography variant="subtitle1">Salary Range</Typography>
+                <Typography variant="h6">Salary Range</Typography>
                 <Slider
                   value={[
                     filters.salaryRange.min !== null &&
@@ -206,7 +206,9 @@ const Jobs = () => {
                 </Box>
               </Box>
               <FormGroup>
-                <Typography variant="body1">Employment Type</Typography>
+                <Typography variant="h6" gutterBottom>
+                  Employment Type
+                </Typography>
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -240,7 +242,9 @@ const Jobs = () => {
                   }
                   label="Contract"
                 />
-                <Typography variant="body1">Job Level </Typography>
+                <Typography variant="h6" gutterBottom>
+                  Job Level{" "}
+                </Typography>
 
                 <FormControlLabel
                   control={
@@ -251,7 +255,7 @@ const Jobs = () => {
                       onChange={handleFilterChange}
                     />
                   }
-                  label="Entry-Level"
+                  label="Entry Level"
                 />
                 <FormControlLabel
                   control={
@@ -262,7 +266,7 @@ const Jobs = () => {
                       onChange={handleFilterChange}
                     />
                   }
-                  label="Mid-Level"
+                  label="Mid Level"
                 />
                 <FormControlLabel
                   control={
@@ -273,7 +277,7 @@ const Jobs = () => {
                       onChange={handleFilterChange}
                     />
                   }
-                  label="Senior-Level"
+                  label="Senior Level"
                 />
               </FormGroup>
             </Paper>
