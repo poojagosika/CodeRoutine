@@ -14,6 +14,7 @@ import {
   Tabs,
   Tab,
   TablePagination,
+  Slider,
 } from "@mui/material";
 import {
   selectJobs,
@@ -32,14 +33,20 @@ import Error from "../../Component/Shared/Error";
 
 const Jobs = () => {
   const dispatch = useDispatch();
-  const jobs = useSelector((state) => state.jobs.jobs);
+  const jobs = useSelector(selectJobs);
   const loading = useSelector(selectLoading);
   const error = useSelector(selectError);
   const filters = useSelector(selectFilters);
   const selectedTab = useSelector(selectSelectedTab);
 
+  const salaryValues = jobs
+    .map((job) => parseFloat(job.salary))
+    .filter((salary) => !isNaN(salary));
+
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const minSalary = salaryValues.length > 0 && Math.min(...salaryValues);
+  const maxSalary = salaryValues.length > 0 && Math.max(...salaryValues);
 
   React.useEffect(() => {
     document.title = "CodeRoutine | Jobs";
@@ -67,7 +74,22 @@ const Jobs = () => {
       };
     }
 
-    dispatch(setFilters(newFilters));
+    dispatch(setFilters({ ...newFilters }));
+    setPage(0);
+  };
+
+  const handleSalaryRangeChange = (event, newValue) => {
+    const [min, max] = newValue;
+
+    dispatch(
+      setFilters({
+        ...filters,
+        salaryRange: {
+          min: min !== null && !isNaN(min) ? min : minSalary,
+          max: max !== null && !isNaN(max) ? max : maxSalary,
+        },
+      })
+    );
     setPage(0);
   };
 
@@ -76,7 +98,7 @@ const Jobs = () => {
   };
 
   const filterJobs = (job) => {
-    const { title, location, employmentTypes } = filters;
+    const { title, location, employmentTypes, salaryRange } = filters;
 
     const isSaved = job.saved;
     const isApplied = job.applied;
@@ -86,13 +108,18 @@ const Jobs = () => {
       (selectedTab === 1 && isSaved) || // Saved Jobs
       (selectedTab === 2 && isApplied); // Applied Jobs
 
+    const isSalaryRangeMatch =
+      (salaryRange.min === null || job.salary >= salaryRange.min) &&
+      (salaryRange.max === null || job.salary <= salaryRange.max);
+
     return (
       isTabMatch &&
       (!title || job.title.toLowerCase().includes(title.toLowerCase())) &&
       (!location ||
         job.location.toLowerCase().includes(location.toLowerCase())) &&
       (employmentTypes.length === 0 ||
-        employmentTypes.includes(job.employmentType))
+        employmentTypes.includes(job.employmentType)) &&
+      isSalaryRangeMatch
     );
   };
 
@@ -142,6 +169,35 @@ const Jobs = () => {
                   onChange={handleFilterChange}
                   fullWidth
                 />
+              </Box>
+              <Box sx={{ marginBottom: 2 }}>
+                <Typography variant="subtitle1">Salary Range</Typography>
+                <Slider
+                  value={[
+                    filters.salaryRange.min !== null &&
+                    filters.salaryRange.min !== undefined
+                      ? filters.salaryRange.min
+                      : minSalary,
+                    filters.salaryRange.max !== null &&
+                    filters.salaryRange.max !== undefined
+                      ? filters.salaryRange.max
+                      : maxSalary,
+                  ]}
+                  onChange={handleSalaryRangeChange}
+                  valueLabelDisplay="auto"
+                  min={minSalary}
+                  max={maxSalary}
+                  step={10000}
+                  name="salaryRange"
+                />
+                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                  <Typography variant="body1">
+                    ₹{filters.salaryRange.min || minSalary}
+                  </Typography>
+                  <Typography variant="body1">
+                    ₹{filters.salaryRange.max || maxSalary}
+                  </Typography>
+                </Box>
               </Box>
               <FormGroup>
                 <FormControlLabel

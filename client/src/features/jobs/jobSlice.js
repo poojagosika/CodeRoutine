@@ -20,6 +20,7 @@ const jobSlice = createSlice({
       title: "",
       location: "",
       employmentTypes: [],
+      salaryRange: { min: null, max: null },
     },
     selectedTab: 0,
   },
