@@ -28,6 +28,7 @@ import CoursesPage from "../Pages/Courses/CoursesPage";
 import CreateCourse from "../Pages/Courses/CreateCourse";
 import CourseDetailPage from "../Pages/Courses/CourseDetailPage";
 import ProgressPage from "../Pages/Courses/ProgressPage";
+import Hiretalent from "../Pages/Jobs/HireTalent/Hiretalent";
 
 const AppRoutes = () => {
   return (
@@ -47,6 +48,8 @@ const AppRoutes = () => {
       <Route path="/explore" element={<Explore />} />
       <Route path="/jobs" element={<Jobs />} />
       <Route path="/jobs/postjobs" element={<PostNewJob />} />
+      <Route path="/jobs/hiretalent/*" element={<Hiretalent />} />
+
       <Route path="/jobs/:id" element={<JobsDetails />} />
       <Route path="/job/edit/:id" element={<EditJob />} />
       <Route path="/store/redeem" element={<Redeem />} />

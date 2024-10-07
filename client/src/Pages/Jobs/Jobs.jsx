@@ -286,10 +286,10 @@ const Jobs = () => {
             variant="contained"
             color="primary"
             component={Link}
-            to={"/jobs/postjobs"}
+            to={"/jobs/hiretalent"}
             sx={{ marginBottom: 2 }}
           >
-            Post a New Job
+            Hire Talent
           </Button>
         </Grid>
         <Grid item xs={12} md={8}>
