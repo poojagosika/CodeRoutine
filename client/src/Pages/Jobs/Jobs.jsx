@@ -29,7 +29,7 @@ import JobsLoader from "./Loading/JobsLoading";
 import JobCard from "./JobCard";
 import { Link } from "react-router-dom";
 import { fetchJobs } from "../../features/jobs/jobActions";
-import Error from "../../Component/Shared/Error";
+import Error from "../../Component/Error";
 
 const Jobs = () => {
   const dispatch = useDispatch();

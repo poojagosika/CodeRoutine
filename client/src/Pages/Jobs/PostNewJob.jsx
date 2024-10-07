@@ -12,10 +12,13 @@ import {
   Stepper,
   Step,
   StepLabel,
+  CircularProgress,
 } from "@mui/material";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { postNewJob } from "../../features/jobs/jobActions";
+import { selectError, selectLoading } from "../../features/jobs/jobSlice";
+import Error from "../../Component/Error";
 
 const steps = ["Basic Information", "Job Details", "Skills & Requirements", "Responsibilities & Benefits", "Additional Information"];
 
@@ -55,6 +58,8 @@ const PostNewJob = () => {
   const [requirementError, setRequirementError] = useState("");
   const [responsibilityError, setResponsibilityError] = useState("");
   const [benefitError, setBenefitError] = useState("");
+  const loading = useSelector(selectLoading);
+  const error = useSelector(selectError)
 
   useEffect(() => {
     document.title = "CodeRoutine | Post New Job";
@@ -131,6 +136,26 @@ const PostNewJob = () => {
 
   const nextStep = () => setCurrentStep((prevStep) => prevStep + 1);
   const prevStep = () => setCurrentStep((prevStep) => prevStep - 1);
+
+  if (loading) {
+    return (
+      <Container maxWidth="md">
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          height="100vh"
+        >
+          <CircularProgress />
+        </Box>
+      </Container>
+    );
+  }
+
+  if(error){
+    return <Error error={error}/>
+  }
+
 
   const renderStepContent = (step) => {
     switch (step) {

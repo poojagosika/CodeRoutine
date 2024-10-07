@@ -33,6 +33,7 @@ import {
   removeJob,
 } from "../../features/jobs/jobActions";
 import ShareButtons from "../../Component/Shared/ShareButtons";
+import Error from "../../Component/Error";
 
 const JobDetails = () => {
   const { id } = useParams();
@@ -75,13 +76,7 @@ const JobDetails = () => {
   }
 
   if (error) {
-    return (
-      <Container maxWidth="md">
-        <Typography variant="h4" component="h1" gutterBottom>
-          {error}
-        </Typography>
-      </Container>
-    );
+    return <Error error={error} />
   }
 
   const JobExpiry = (applicationDeadline) => {

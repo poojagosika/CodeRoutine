@@ -16,8 +16,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { formatDateWithYearMonth } from "../../Config/FormatDate";
 import { editJob } from "../../features/jobs/jobActions";
-import { selectJobById, selectLoading } from "../../features/jobs/jobSlice";
+import { selectError, selectJobById, selectLoading } from "../../features/jobs/jobSlice";
 import CloseIcon from "@mui/icons-material/Close";
+import Error from "../../Component/Error";
 
 const employmentTypes = ["Full-Time", "Part-Time", "Contract"];
 const jobLevels = ["Entry-Level", "Mid-Level", "Senior-Level"];
@@ -29,6 +30,7 @@ const EditJob = () => {
 
   const job = useSelector((state) => selectJobById(state, id));
   const loading = useSelector(selectLoading);
+  const error = useSelector(selectError)
 
   const [formData, setFormData] = useState({
     title: "",
@@ -149,6 +151,11 @@ const EditJob = () => {
         </Box>
       </Container>
     );
+  }
+
+  if(error)
+  {
+    return <Error error={error}/>
   }
 
   return (
