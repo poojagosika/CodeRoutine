@@ -18,7 +18,6 @@ function Hiretalent() {
         sx={{
           flexGrow: 1,
           overflow: "scroll",
-          p: 3,
         }}
       >
         <Routes>
