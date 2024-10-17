@@ -29,6 +29,7 @@ import CreateCourse from "../Pages/Courses/CreateCourse";
 import CourseDetailPage from "../Pages/Courses/CourseDetailPage";
 import ProgressPage from "../Pages/Courses/ProgressPage";
 import Hiretalent from "../Pages/Jobs/HireTalent/Hiretalent";
+import Dashboard from "../Pages/Courses/Instructor/Dashboard";
 
 const AppRoutes = () => {
   return (
@@ -61,6 +62,7 @@ const AppRoutes = () => {
       <Route path="/courses" element={<CoursesPage />} />
       <Route path="/courses/add" element={<CreateCourse />} />
       <Route path="/courses/:id" element={<CourseDetailPage />} />
+      <Route path="/courses/instructor/*" element={<Dashboard />} />
       <Route path="/progress" element={<ProgressPage />} />
     </Routes>
   );
