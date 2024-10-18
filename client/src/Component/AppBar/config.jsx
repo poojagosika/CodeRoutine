@@ -8,7 +8,6 @@ export const pages = [
   { name: "Jobs", path: "/jobs", role: "user", login: false },
   { name: "Courses", path: "/courses", role: "user", login: false },
   { name: "Problems", path: "/problems", role: "user", login: false },
-  { name: "Add Problems", path: "/addProblems", role: "admin", login: true },
   { name: "Contest", path: "/contest", role: "user", login: false },
   { name: "Discuss", path: "/discuss", role: "user", login: true },
   { name: "Interview", path: "/interview", role: "user", login: false },
