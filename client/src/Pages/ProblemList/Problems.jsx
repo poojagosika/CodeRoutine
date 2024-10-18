@@ -11,16 +11,16 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import DeleteIcon from "@mui/icons-material/Delete";
-import Link from "@mui/material/Link";
 import { Link as RouterLink } from "react-router-dom";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import EditIcon from "@mui/icons-material/Edit";
 import Skeleton from "@mui/material/Skeleton";
 import { ContextStore } from "../../Context/ContextStore";
-import { Container } from "@mui/material";
+import { Button, Container, Link } from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProblems } from "../../features/problems/problemActions";
+
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -98,7 +98,9 @@ export default function Problems() {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const { userData } = ContextStore();
   const dispatch = useDispatch();
-  const { problems: questions, loading } = useSelector((state) => state?.problems);
+  const { problems: questions, loading } = useSelector(
+    (state) => state?.problems
+  );
 
   React.useEffect(() => {
     document.title = "CodeRoutine | Problems";
@@ -222,7 +224,10 @@ export default function Problems() {
                   <SkeletonTable />
                 ) : (
                   stableSort(questions, getComparator(order, orderBy))
-                    ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    ?.slice(
+                      page * rowsPerPage,
+                      page * rowsPerPage + rowsPerPage
+                    )
                     ?.map((row, index) => {
                       const isItemSelected = isSelected(row?._id);
                       const labelId = `enhanced-table-checkbox-${index}`;
@@ -326,6 +331,15 @@ export default function Problems() {
           />
         </Paper>
       </Box>
+      <Button
+        variant="contained"
+        color="primary"
+        component={RouterLink}
+        to={"/problems/protalent"}
+        sx={{ marginBottom: 2 }}
+      >
+        ProTalent
+      </Button>
     </Container>
   );
 }

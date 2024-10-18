@@ -29,6 +29,7 @@ import CreateCourse from "../Pages/Courses/CreateCourse";
 import CourseDetailPage from "../Pages/Courses/CourseDetailPage";
 import ProgressPage from "../Pages/Courses/ProgressPage";
 import Hiretalent from "../Pages/Jobs/HireTalent/Hiretalent";
+import Protalent from "../Pages/ProblemList/Protalent/Protalent";
 
 const AppRoutes = () => {
   return (
@@ -36,6 +37,7 @@ const AppRoutes = () => {
       <Route path="/" element={<Home />} />
       <Route path="/underconstruction" element={<UnderConstruction />} />
       <Route path="/problems" element={<Problems />} />
+      <Route path="/problems/protalent/*" element={<Protalent />} />
       <Route path="/problems/:id" element={<Problem />} />
       <Route path="/login" element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />
@@ -49,7 +51,6 @@ const AppRoutes = () => {
       <Route path="/jobs" element={<Jobs />} />
       <Route path="/jobs/postjobs" element={<PostNewJob />} />
       <Route path="/jobs/hiretalent/*" element={<Hiretalent />} />
-
       <Route path="/jobs/:id" element={<JobsDetails />} />
       <Route path="/job/edit/:id" element={<EditJob />} />
       <Route path="/store/redeem" element={<Redeem />} />
