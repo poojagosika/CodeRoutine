@@ -189,7 +189,7 @@ const CoursesPage = () => {
             variant="outlined"
             color="inherit"
             size="large"
-            onClick={() => navigate("/courses/add")}
+            onClick={() => navigate("/courses/instructor")}
           >
             Are you an Instructor?
           </Button>

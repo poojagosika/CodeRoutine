@@ -1,0 +1,68 @@
+const CoursesData = [
+  {
+    title: "JavaScript Essentials",
+    instructor: "John Doe",
+    duration: "2h 34m",
+    level: "Beginner",
+    image: "https://via.placeholder.com/150?text=JavaScript",
+    rating: 4.5,
+  },
+  {
+    title: "React for Beginners",
+    instructor: "Jane Smith",
+    duration: "3h 10m",
+    level: "Beginner",
+    image: "https://via.placeholder.com/150?text=React",
+    rating: 4.8,
+  },
+  {
+    title: "Advanced Node.js",
+    instructor: "Michael Brown",
+    duration: "5h 15m",
+    level: "Advanced",
+    image: "https://via.placeholder.com/150?text=Node.js",
+    rating: 4.7,
+  },
+  {
+    title: "CSS Flexbox & Grid",
+    instructor: "Emily White",
+    duration: "1hr 45m",
+    level: "Intermediate",
+    image: "https://via.placeholder.com/150?text=CSS+Flexbox",
+    rating: 4.9,
+  },
+  {
+    title: "Fullstack Web Development",
+    instructor: "Chris Black",
+    duration: "6h 20m",
+    level: "Advanced",
+    image: "https://via.placeholder.com/150?text=Fullstack+Web+Dev",
+    rating: 5.0,
+  },
+  {
+    title: "Python Data Science Bootcamp",
+    instructor: "Sarah Johnson",
+    duration: "4h 50m",
+    level: "Intermediate",
+    image: "https://via.placeholder.com/150?text=Python+Data+Science",
+    rating: 4.8,
+  },
+  {
+    title: "UI/UX Design for Beginners",
+    instructor: "Mark Lee",
+    duration: "2h 30m",
+    level: "Beginner",
+    image: "https://via.placeholder.com/150?text=UI+UX+Design",
+    rating: 4.6,
+  },
+  {
+    title: "DevOps Crash Course for Intermediate",
+    instructor: "Anna Davis",
+    duration: "3h 45m",
+    level: "Intermediate",
+    image: "https://via.placeholder.com/150?text=DevOps",
+    rating: 4.7,
+  },
+];
+
+export default CoursesData;
