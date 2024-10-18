@@ -31,6 +31,7 @@ import ProgressPage from "../Pages/Courses/ProgressPage";
 import Hiretalent from "../Pages/Jobs/HireTalent/Hiretalent";
 import Dashboard from "../Pages/Courses/Instructor/Dashboard";
 import Protalent from "../Pages/ProblemList/Protalent/Protalent";
+import AdminRoute from "../Config/AdminRoute";
 
 const AppRoutes = () => {
   return (
@@ -38,7 +39,14 @@ const AppRoutes = () => {
       <Route path="/" element={<Home />} />
       <Route path="/underconstruction" element={<UnderConstruction />} />
       <Route path="/problems" element={<Problems />} />
-      <Route path="/problems/protalent/*" element={<Protalent />} />
+      <Route
+        path="/problems/protalent/*"
+        element={
+          <AdminRoute>
+            <Protalent />
+          </AdminRoute>
+        }
+      />
       <Route path="/problems/:id" element={<Problem />} />
       <Route path="/login" element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />
@@ -51,7 +59,14 @@ const AppRoutes = () => {
       <Route path="/explore" element={<Explore />} />
       <Route path="/jobs" element={<Jobs />} />
       <Route path="/jobs/postjobs" element={<PostNewJob />} />
-      <Route path="/jobs/hiretalent/*" element={<Hiretalent />} />
+      <Route
+        path="/jobs/hiretalent/*"
+        element={
+          <AdminRoute>
+            <Hiretalent />
+          </AdminRoute>
+        }
+      />
       <Route path="/jobs/:id" element={<JobsDetails />} />
       <Route path="/job/edit/:id" element={<EditJob />} />
       <Route path="/store/redeem" element={<Redeem />} />
@@ -63,7 +78,14 @@ const AppRoutes = () => {
       <Route path="/courses" element={<CoursesPage />} />
       <Route path="/courses/add" element={<CreateCourse />} />
       <Route path="/courses/:id" element={<CourseDetailPage />} />
-      <Route path="/courses/instructor/*" element={<Dashboard />} />
+      <Route
+        path="/courses/instructor/*"
+        element={
+          <AdminRoute>
+            <Dashboard />
+          </AdminRoute>
+        }
+      />
       <Route path="/progress" element={<ProgressPage />} />
     </Routes>
   );
