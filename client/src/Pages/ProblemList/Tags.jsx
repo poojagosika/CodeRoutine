@@ -1,4 +1,4 @@
-import { Box, Chip, Typography, IconButton, Button } from "@mui/material";
+import { Box, Chip, Typography, Button } from "@mui/material";
 import React, { useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"; // Icon for view more
 import ExpandLessIcon from "@mui/icons-material/ExpandLess"; // Icon for view less
@@ -17,6 +17,9 @@ const Tags = ({ questions }) => {
     tag,
     count,
   }));
+
+  const capitalizeWords = (str) =>
+    str.replace(/\b\w/g, (char) => char.toUpperCase());
 
   // Function to handle expanding/collapsing
   const toggleExpand = () => {
@@ -37,7 +40,11 @@ const Tags = ({ questions }) => {
         {uniqueTags
           .slice(0, expanded ? uniqueTags.length : 5)
           .map(({ tag, count }) => (
-            <Chip key={tag} label={`${tag} (${count})`} variant="outlined" />
+            <Chip
+              key={tag}
+              label={`${capitalizeWords(tag)} (${count})`}
+              variant="outlined"
+            />
           ))}
       </Box>
 
