@@ -8,7 +8,6 @@ import { ContextStore } from "../../../../Context/ContextStore";
 function Welcome() {
   const navigate = useNavigate();
   const { userData } = ContextStore();
-  console.log(userData);
 
   const buttonStyle = {
     borderRadius: "40px",
