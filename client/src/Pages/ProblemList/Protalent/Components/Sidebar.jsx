@@ -6,7 +6,6 @@ import {
   ListItemText,
   Divider,
   Box,
-  Collapse,
   IconButton,
 } from "@mui/material";
 import DashboardIcon from "@mui/icons-material/Dashboard";
@@ -21,6 +20,18 @@ const Sidebar = () => {
   const toggleSidebar = () => {
     setOpen(!open); // Toggle sidebar open/close state
   };
+  const sideMenu = [
+    {
+      name: "Dashboard",
+      icon: <DashboardIcon />,
+      link: "/problems/protalent",
+    },
+    {
+      name: "AllProblems",
+      icon: <WorkIcon />,
+      link: "/problems/protalent/all-problems",
+    },
+  ];
   return (
     <Box
       sx={{
@@ -32,35 +43,38 @@ const Sidebar = () => {
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        transition: "width 0.3s", // Smooth transition for width change
+        transition: "width 0.3s ease", // Smooth transition for width change
       }}
     >
-      <Collapse in={open}>
-        <List>
-          {/* Dashboard Link */}
-          <ListItem button component={Link} to="/problems/protalent">
-            <ListItemIcon>
-              <DashboardIcon />
-            </ListItemIcon>
-            <ListItemText primary="Dashboard" />
-          </ListItem>
-
-          {/* Divider for better grouping */}
-          <Divider />
-
-          {/* Virtual Hiring Link */}
+      <List>
+        {sideMenu.map((item, index) => (
           <ListItem
             button
+            key={index}
             component={Link}
-            to="/problems/protalent/all-problems"
+            to={item.link}
+            sx={{
+              backgroundColor:
+                window.location.pathname === item.link ? "#f0f0f0" : "",
+              height: "60px",
+              display: "flex",
+              alignItems: "center",
+              flexWrap: "wrap",
+              transition: "padding 0.3s ease", // Optional: smooth transition for padding
+            }}
           >
-            <ListItemIcon>
-              <WorkIcon />
-            </ListItemIcon>
-            <ListItemText primary="All Problems" />
+            <ListItemIcon>{item.icon}</ListItemIcon>
+            <Box
+              sx={{
+                opacity: open ? 1 : 0, // Show/hide text with transition
+                transition: "opacity 0.3s ease", // Smooth transition for text
+              }}
+            >
+              {open && <ListItemText primary={item.name} />}
+            </Box>
           </ListItem>
-        </List>
-      </Collapse>
+        ))}
+      </List>
       <Box
         sx={{
           textAlign: "right",

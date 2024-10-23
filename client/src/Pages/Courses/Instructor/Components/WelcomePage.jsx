@@ -29,7 +29,6 @@ const WelcomePage = () => {
       alignItems="center"
       sx={{
         border: "1px solid #f0f0f0", // Light background for contrast
-        mt: 2,
         padding: 2,
       }}
       borderRadius="20px"
