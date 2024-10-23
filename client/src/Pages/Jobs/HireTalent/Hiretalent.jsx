@@ -17,7 +17,9 @@ function Hiretalent() {
         component="main"
         sx={{
           flexGrow: 1,
-          overflow: "scroll",
+          height: "100%",
+          overflowY: "auto",
+          overflowX: "hidden",
         }}
       >
         <Routes>

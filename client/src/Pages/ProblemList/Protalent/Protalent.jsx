@@ -17,7 +17,9 @@ function Protalent() {
         component="main"
         sx={{
           flexGrow: 1,
-          overflow: "scroll",
+          height: "100%",
+          overflowX: "hidden",
+          overflowY: "auto",
         }}
       >
         <Routes>
