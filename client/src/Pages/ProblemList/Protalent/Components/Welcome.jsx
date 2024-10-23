@@ -52,7 +52,12 @@ function Welcome() {
 
       <Button
         variant="contained"
-        sx={buttonStyle}
+        sx={{
+          ...buttonStyle,
+          whiteSpace: "nowrap",
+          minWidth: "150px",
+          maxWidth: "auto",
+        }}
         component={Link}
         to="/addProblems"
       >

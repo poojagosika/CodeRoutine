@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Table,
@@ -10,6 +10,7 @@ import {
   Paper,
   Typography,
   Rating,
+  TablePagination,
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -17,6 +18,26 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import CoursesData from "../CoursesData";
 
 const AllCourses = () => {
+  // Pagination state
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  // Handlers for pagination
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0); // Reset to the first page on rows per page change
+  };
+
+  // Slicing the courses data based on pagination
+  const paginatedCourses = CoursesData.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
+
   return (
     <Box mt={2} mb={4}>
       <Typography variant="h4" gutterBottom sx={{ fontWeight: "bold" }}>
@@ -54,7 +75,7 @@ const AllCourses = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {CoursesData.map((course, index) => (
+            {paginatedCourses.map((course, index) => (
               <TableRow key={index}>
                 {/* Course Title */}
                 <TableCell>{course.title}</TableCell>
@@ -102,6 +123,16 @@ const AllCourses = () => {
             ))}
           </TableBody>
         </Table>
+
+        {/* Pagination controls */}
+        <TablePagination
+          component="div"
+          count={CoursesData.length}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={rowsPerPage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
       </TableContainer>
     </Box>
   );
