@@ -10,12 +10,15 @@ import {
   Paper,
   Typography,
   Rating,
+  IconButton,
   TablePagination,
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import CoursesData from "../CoursesData";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 
 const AllCourses = () => {
   // Pagination state
@@ -72,6 +75,11 @@ const AllCourses = () => {
                   Rating
                 </Typography>
               </TableCell>
+              <TableCell>
+                <Typography variant="h6" fontWeight="bold">
+                  Actions
+                </Typography>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -117,6 +125,17 @@ const AllCourses = () => {
                     <Typography variant="body2" sx={{ ml: 0.5 }}>
                       {course.rating}
                     </Typography>
+                  </Box>
+                </TableCell>
+                
+                <TableCell>
+                  <Box display="flex" flexDirection="row">
+                    <IconButton color="primary">
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton color="secondary">
+                      <DeleteIcon />
+                    </IconButton>
                   </Box>
                 </TableCell>
               </TableRow>
