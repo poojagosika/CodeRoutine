@@ -7,7 +7,6 @@ import {
   Divider,
   Box,
   IconButton,
-  Collapse,
 } from "@mui/material";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import WorkIcon from "@mui/icons-material/Work";
@@ -22,6 +21,23 @@ const Sidebar = () => {
   const toggleSidebar = () => {
     setOpen(!open); // Toggle sidebar open/close state
   };
+  const sideMenu = [
+    {
+      name: "Home",
+      icon: <DashboardIcon />,
+      link: "/jobs/hiretalent",
+    },
+    {
+      name: "Virtual Hiring",
+      icon: <WorkIcon />,
+      link: "/jobs/hiretalent/virtual-hiring",
+    },
+    {
+      name: "Schedule",
+      icon: <SchoolIcon />,
+      link: "/jobs/hiretalent/campus-hiring",
+    },
+  ];
 
   return (
     <Box
@@ -35,43 +51,40 @@ const Sidebar = () => {
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between", // Place toggle button at the bottom
-        transition: "width 0.3s ease",
+        transition: "width 0.3s ease ",
       }}
     >
       {/* Sidebar Menu */}
-      <Collapse in={open}>
-        <List>
-          {/* Dashboard Link */}
-          <ListItem button component={Link} to="/jobs/hiretalent">
-            <ListItemIcon>
-              <DashboardIcon />
-            </ListItemIcon>
-            {open && <ListItemText primary="Dashboard" />}
-          </ListItem>
-
-          <Divider />
-
-          {/* Virtual Hiring Link */}
+      <List>
+        {sideMenu.map((item, index) => (
           <ListItem
             button
+            key={index}
             component={Link}
-            to="/jobs/hiretalent/virtual-hiring"
+            to={item.link}
+            sx={{
+              backgroundColor:
+                window.location.pathname === item.link ? "#f0f0f0" : "",
+              height: "60px",
+              display: "flex",
+              alignContent: "center",
+              flexWrap: "wrap",
+              transition: "padding 0.3s ease", // Optional: smooth transition for padding
+            }}
           >
-            <ListItemIcon>
-              <WorkIcon />
-            </ListItemIcon>
-            {open && <ListItemText primary="Virtual Hiring" />}
+            <ListItemIcon>{item.icon}</ListItemIcon>
+            <Box
+              sx={{
+                opacity: open ? 1 : 0, // Show/hide text with transition
+                transition: "opacity 0.3s ease", // Smooth transition for text
+              }}
+            >
+              {open && <ListItemText primary={item.name} />}
+            </Box>
           </ListItem>
-
-          {/* Campus Hiring Link */}
-          <ListItem button component={Link} to="/jobs/hiretalent/campus-hiring">
-            <ListItemIcon>
-              <SchoolIcon />
-            </ListItemIcon>
-            {open && <ListItemText primary="Campus Hiring" />}
-          </ListItem>
-        </List>
-      </Collapse>
+        ))}
+        {/* Dashboard Link */}
+      </List>
 
       {/* Toggle Button */}
       <Box

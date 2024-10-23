@@ -6,7 +6,6 @@ import {
   ListItemText,
   Box,
   IconButton,
-  Collapse,
   Divider,
 } from "@mui/material";
 import DashboardIcon from "@mui/icons-material/Dashboard";
@@ -21,8 +20,31 @@ const Sidebar = () => {
   const [open, setOpen] = useState(true); // State to manage sidebar visibility
 
   const toggleSidebar = () => {
-    setOpen(!open); // Toggle sidebar open/close state
+    setOpen((prevOpen) => !prevOpen); // Toggle sidebar open/close state
   };
+
+  const sideMenu = [
+    {
+      name: "Home",
+      icon: <HomeIcon />,
+      link: "/courses/instructor",
+    },
+    {
+      name: "All Courses",
+      icon: <WorkIcon />,
+      link: "/courses/instructor/all",
+    },
+    {
+      name: "Tasks",
+      icon: <WorkIcon />,
+      link: "/courses/instructor/tasks",
+    },
+    {
+      name: "Schedule",
+      icon: <SchoolIcon />,
+      link: "/courses/instructor/schedule",
+    },
+  ];
 
   return (
     <Box
@@ -35,53 +57,54 @@ const Sidebar = () => {
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        transition: "width 0.3s", // Smooth transition for width change
+        transition: "width 0.3s ease", // Add smooth transition to width
       }}
     >
       {/* Collapsible List */}
-      <Collapse in={open}>
-        <List>
-          <ListItem button component={Link} to="/courses/instructor">
-            <ListItemIcon>
-              <HomeIcon />
-            </ListItemIcon>
-            <ListItemText primary="Home" />
+      <List>
+        {sideMenu.map((item, index) => (
+          <ListItem
+            button
+            key={index}
+            component={Link}
+            to={item.link}
+            sx={{
+              backgroundColor:
+                window.location.pathname === item.link ? "#f0f0f0" : "",
+              height: "60px",
+              display: "flex",
+              alignItems: "center",
+              flexWrap: "wrap",
+              transition: "padding 0.3s ease", // Optional: smooth transition for padding
+            }}
+          >
+            <ListItemIcon>{item.icon}</ListItemIcon>
+            <Box
+              sx={{
+                opacity: open ? 1 : 0, // Show/hide text with transition
+                transition: "opacity 0.3s ease", // Smooth transition for text
+              }}
+            >
+              {open && <ListItemText primary={item.name} />}
+            </Box>
           </ListItem>
-
-          <ListItem button component={Link} to="/courses/instructor/all">
-            <ListItemIcon>
-              <DashboardIcon />
-            </ListItemIcon>
-            <ListItemText primary="All Courses" />
-          </ListItem>
-
-          <ListItem button component={Link} to="/courses/instructor/tasks">
-            <ListItemIcon>
-              <WorkIcon />
-            </ListItemIcon>
-            <ListItemText primary="Tasks" />
-          </ListItem>
-
-          <ListItem button component={Link} to="/courses/instructor/schedule">
-            <ListItemIcon>
-              <SchoolIcon />
-            </ListItemIcon>
-            <ListItemText primary="Schedule" />
-          </ListItem>
-        </List>
-      </Collapse>
-
+        ))}
+      </List>
       <Box
         sx={{
           textAlign: "right",
-          position: "sticky ", // Fix the position
+          position: "sticky", // Fix the position
           bottom: 0, // Stick to the bottom
           width: open ? 240 : 60,
+          transition: "width 0.3s ease", // Add smooth transition to width
         }}
       >
         <Divider />
 
-        <IconButton onClick={toggleSidebar}>
+        <IconButton
+          onClick={toggleSidebar}
+          aria-label={open ? "Close Sidebar" : "Open Sidebar"}
+        >
           {open ? (
             <ChevronLeftIcon sx={{ fontSize: "40px" }} />
           ) : (
