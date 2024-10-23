@@ -386,7 +386,7 @@ const EditJob = () => {
                   Add
                 </Button>
               </Box>
-              {formData.requirements.map((requirement, index) => (
+              {formData?.requirements?.map((requirement, index) => (
                 <Box key={index} sx={{ display: "flex", alignItems: "center" }}>
                   <Typography
                     component="li"
@@ -448,7 +448,7 @@ const EditJob = () => {
                   Add
                 </Button>
               </Box>
-              {formData.responsibilities.map((responsibility, index) => (
+              {formData?.responsibilities?.map((responsibility, index) => (
                 <Box key={index} sx={{ display: "flex", alignItems: "center" }}>
                   <Typography
                     component="li"
@@ -512,7 +512,7 @@ const EditJob = () => {
                   Add
                 </Button>
               </Box>
-              {formData.benefits.map((benefit, index) => (
+              {formData?.benefits?.map((benefit, index) => (
                 <Box key={index} sx={{ display: "flex", alignItems: "center" }}>
                   <Typography
                     component="li"
