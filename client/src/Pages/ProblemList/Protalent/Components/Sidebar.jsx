@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   List,
   ListItem,
@@ -15,11 +15,29 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 const Sidebar = () => {
-  const [open, setOpen] = useState(true); // State to manage sidebar visibility
+  const [open, setOpen] = useState(false); // State to manage sidebar visibility
 
   const toggleSidebar = () => {
     setOpen(!open); // Toggle sidebar open/close state
   };
+
+  const handleResize = () => {
+    if (window.innerWidth <= 1024) {
+      setOpen(false); // Collapse sidebar if window width is less than 1024px
+    } else {
+      setOpen(true); // Expand sidebar if window width is 1024px or more
+    }
+  };
+
+  useEffect(() => {
+    handleResize(); // Check initial size on mount
+    window.addEventListener("resize", handleResize); // Add resize listener
+
+    return () => {
+      window.removeEventListener("resize", handleResize); // Cleanup listener on unmount
+    };
+  }, []);
+
   const sideMenu = [
     {
       name: "Dashboard",
