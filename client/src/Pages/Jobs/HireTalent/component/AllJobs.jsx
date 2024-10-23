@@ -9,25 +9,43 @@ import {
   TableRow,
   Paper,
   IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import React from "react";
-import { JobsData } from "./JobsData";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { selectJobs } from "../../../../features/jobs/jobSlice";
+import { fetchJobs, removeJob } from "../../../../features/jobs/jobActions";
+import { useNavigate } from "react-router-dom";
 
 function AllJobs() {
-  // Handle Edit action (for now just a console log)
-  const handleEdit = (index) => {
-    console.log(`Edit job at index: ${index}`);
+  const dispatch = useDispatch();
+  const jobs = useSelector(selectJobs);
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    dispatch(fetchJobs());
+  }, [dispatch]);
+
+  const handleDelete = (id) => {
+    dispatch(removeJob(id));
+    setOpen(false);
   };
 
-  // Handle Delete action (for now just a console log)
-  const handleDelete = (index) => {
-    console.log(`Delete job at index: ${index}`);
+  const DeleteJob = (id) => {
+    setOpen(true);
+    handleDelete(id);
   };
 
   return (
-    <div>
+    <Box>
       <TableContainer
         component={Paper}
         sx={{
@@ -76,22 +94,25 @@ function AllJobs() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {JobsData.map((job, index) => (
+            {jobs.map((job, index) => (
               <TableRow key={index}>
                 <TableCell component="th" scope="row">
-                  {job.jobTitle}
+                  {job.title}
                 </TableCell>
-                <TableCell>{job.companyName}</TableCell>
-                <TableCell>{job.salary}</TableCell>
+                <TableCell>{job.company}</TableCell>
+                <TableCell>₹{job.salary}</TableCell>
                 <TableCell>{job.location}</TableCell>
-                <TableCell>{job.level}</TableCell>
+                <TableCell>{job.jobLevel}</TableCell>
                 <TableCell>
-                  <IconButton color="primary" onClick={() => handleEdit(index)}>
+                  <IconButton
+                    color="primary"
+                    onClick={() => navigate(`/job/edit/${job._id}`)}
+                  >
                     <EditIcon />
                   </IconButton>
                   <IconButton
                     color="secondary"
-                    onClick={() => handleDelete(index)}
+                    onClick={() => DeleteJob(job._id)}
                   >
                     <DeleteIcon />
                   </IconButton>
@@ -101,7 +122,43 @@ function AllJobs() {
           </TableBody>
         </Table>
       </TableContainer>
-    </div>
+
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle id="alert-dialog-title" sx={{ fontWeight: "bold" }}>
+          Delete Job
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Do you really want to delete this job listing? Once deleted, it
+            cannot be recovered.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => setOpen(false)}
+            variant="contained"
+            color="inherit"
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleDelete}
+            variant="contained"
+            color="error"
+            autoFocus
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
   );
 }
 
