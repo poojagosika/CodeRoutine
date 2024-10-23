@@ -15,6 +15,7 @@ import {
   DialogContentText,
   DialogActions,
   Button,
+  TablePagination,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -30,6 +31,10 @@ function AllJobs() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
+  // Pagination states
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+
   useEffect(() => {
     dispatch(fetchJobs());
   }, [dispatch]);
@@ -43,6 +48,22 @@ function AllJobs() {
     setOpen(true);
     handleDelete(id);
   };
+
+  // Pagination handlers
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  // Slice the jobs array for pagination
+  const paginatedJobs = jobs.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
 
   return (
     <Box>
@@ -94,7 +115,7 @@ function AllJobs() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {jobs.map((job, index) => (
+            {paginatedJobs.map((job, index) => (
               <TableRow key={index}>
                 <TableCell component="th" scope="row">
                   {job.title}
@@ -104,23 +125,35 @@ function AllJobs() {
                 <TableCell>{job.location}</TableCell>
                 <TableCell>{job.jobLevel}</TableCell>
                 <TableCell>
-                  <IconButton
-                    color="primary"
-                    onClick={() => navigate(`/job/edit/${job._id}`)}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton
-                    color="secondary"
-                    onClick={() => DeleteJob(job._id)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
+                  <Box display="flex" flexDirection="row" alignItems="center">
+                    <IconButton
+                      color="primary"
+                      onClick={() => navigate(`/job/edit/${job._id}`)}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      color="secondary"
+                      onClick={() => DeleteJob(job._id)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Box>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
+
+        {/* Pagination controls */}
+        <TablePagination
+          component="div"
+          count={jobs.length}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={rowsPerPage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
       </TableContainer>
 
       <Dialog
