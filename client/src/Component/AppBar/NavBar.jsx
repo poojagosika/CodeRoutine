@@ -345,39 +345,49 @@ function NavBar() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                {settings.map((setting) => (
-                  <MenuItem
-                    key={setting.name}
-                    onClick={
-                      setting?.name === "Sign Out"
-                        ? handleLogout
-                        : () =>
-                            handleProfileNavigation(
-                              setting.name === "Profile"
-                                ? `${setting.path}/${userData.userName}`
-                                : setting.path
-                            )
+                {settings
+                  .filter((setting) => {
+                    if (
+                      setting.name === "Dashboard" &&
+                      userData.role !== "admin"
+                    ) {
+                      return false; // Hide the dashboard for non-admin users
                     }
-                  >
-                    <Typography textAlign="center">
-                      <Button
-                        component={Link}
-                        to={
-                          setting.name === "Profile"
-                            ? `${setting.path}/${userData.userName}`
-                            : setting.path
-                        }
-                      >
-                        {setting?.icon && (
-                          <span style={{ marginRight: "8px" }}>
-                            {setting.icon}
-                          </span>
-                        )}
-                        {setting?.name}
-                      </Button>
-                    </Typography>
-                  </MenuItem>
-                ))}
+                    return true; // Show all other settings
+                  })
+                  .map((setting) => (
+                    <MenuItem
+                      key={setting.name}
+                      onClick={
+                        setting?.name === "Sign Out"
+                          ? handleLogout
+                          : () =>
+                              handleProfileNavigation(
+                                setting.name === "Profile"
+                                  ? `${setting.path}/${userData.userName}`
+                                  : setting.path
+                              )
+                      }
+                    >
+                      <Typography textAlign="center">
+                        <Button
+                          component={Link}
+                          to={
+                            setting.name === "Profile"
+                              ? `${setting.path}/${userData.userName}`
+                              : setting.path
+                          }
+                        >
+                          {setting?.icon && (
+                            <span style={{ marginRight: "8px" }}>
+                              {setting.icon}
+                            </span>
+                          )}
+                          {setting?.name}
+                        </Button>
+                      </Typography>
+                    </MenuItem>
+                  ))}
               </Menu>
             </Box>
           ) : (

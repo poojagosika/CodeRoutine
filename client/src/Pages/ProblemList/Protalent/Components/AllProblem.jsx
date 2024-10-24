@@ -74,8 +74,8 @@ function EnhancedTableHead(props) {
         <TableCell>Difficulty</TableCell>
         <TableCell>Frequency</TableCell>
         <TableCell>Actions</TableCell>
-        {userData?.role === "admin" && <TableCell />}
-        {userData?.role === "admin" && <TableCell />}
+        {/* {userData?.role === "admin" && <TableCell />}
+        {userData?.role === "admin" && <TableCell />} */}
       </TableRow>
     </TableHead>
   );
