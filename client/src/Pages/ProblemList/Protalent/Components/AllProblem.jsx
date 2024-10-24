@@ -74,8 +74,6 @@ function EnhancedTableHead(props) {
         <TableCell>Difficulty</TableCell>
         <TableCell>Frequency</TableCell>
         <TableCell>Actions</TableCell>
-        {/* {userData?.role === "admin" && <TableCell />}
-        {userData?.role === "admin" && <TableCell />} */}
       </TableRow>
     </TableHead>
   );
@@ -185,8 +183,9 @@ export default function AllProblem() {
           <TableCell>
             <Skeleton animation="wave" variant="text" />
           </TableCell>
-          {userData?.role === "admin" && <TableCell />}
-          {userData?.role === "admin" && <TableCell />}
+          <TableCell>
+            <Skeleton animation="wave" variant="text" />
+          </TableCell>
         </TableRow>
       ))}
       {emptyRows > 0 && (

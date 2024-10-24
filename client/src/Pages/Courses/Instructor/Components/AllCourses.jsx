@@ -12,6 +12,7 @@ import {
   Rating,
   IconButton,
   TablePagination,
+  Skeleton,
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -24,6 +25,7 @@ const AllCourses = () => {
   // Pagination state
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [loading, setLoading] = useState(false); // Loading state
 
   // Handlers for pagination
   const handleChangePage = (event, newPage) => {
@@ -40,6 +42,17 @@ const AllCourses = () => {
     page * rowsPerPage,
     page * rowsPerPage + rowsPerPage
   );
+
+  const SkeletonTable = () =>
+    Array.from({ length: rowsPerPage }).map((_, index) => (
+      <TableRow key={index}>
+        {Array.from({ length: 6 }).map((_, cellIndex) => (
+          <TableCell key={cellIndex}>
+            <Skeleton animation="wave" variant="text" />
+          </TableCell>
+        ))}
+      </TableRow>
+    ));
 
   return (
     <Box mt={2} mb={4}>
@@ -83,63 +96,76 @@ const AllCourses = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedCourses.map((course, index) => (
-              <TableRow key={index}>
-                {/* Course Title */}
-                <TableCell>{course.title}</TableCell>
+            {loading ? (
+              <>
+                {" "}
+                <SkeletonTable />
+              </>
+            ) : (
+              <>
+                {paginatedCourses.map((course, index) => (
+                  <TableRow key={index}>
+                    {/* Course Title */}
+                    <TableCell>{course.title}</TableCell>
 
-                {/* Instructor with Icon */}
-                <TableCell>
-                  <Box display="flex" alignItems="center">
-                    <PersonIcon
-                      sx={{ fontSize: "1rem", color: "gray", mr: 0.5 }}
-                    />
-                    {course.instructor}
-                  </Box>
-                </TableCell>
+                    {/* Instructor with Icon */}
+                    <TableCell>
+                      <Box display="flex" alignItems="center">
+                        <PersonIcon
+                          sx={{ fontSize: "1rem", color: "gray", mr: 0.5 }}
+                        />
+                        {course.instructor}
+                      </Box>
+                    </TableCell>
 
-                {/* Duration with Icon */}
-                <TableCell>
-                  <Box display="flex" alignItems="center">
-                    <AccessTimeIcon
-                      sx={{ fontSize: "1rem", color: "gray", mr: 0.5 }}
-                    />
-                    {course.duration}
-                  </Box>
-                </TableCell>
+                    {/* Duration with Icon */}
+                    <TableCell>
+                      <Box display="flex" alignItems="center">
+                        <AccessTimeIcon
+                          sx={{ fontSize: "1rem", color: "gray", mr: 0.5 }}
+                        />
+                        {course.duration}
+                      </Box>
+                    </TableCell>
 
-                {/* Level with Icon */}
-                <TableCell>
-                  <Box display="flex" alignItems="center">
-                    <BarChartIcon
-                      sx={{ fontSize: "1rem", color: "gray", mr: 0.5 }}
-                    />
-                    {course.level}
-                  </Box>
-                </TableCell>
+                    {/* Level with Icon */}
+                    <TableCell>
+                      <Box display="flex" alignItems="center">
+                        <BarChartIcon
+                          sx={{ fontSize: "1rem", color: "gray", mr: 0.5 }}
+                        />
+                        {course.level}
+                      </Box>
+                    </TableCell>
 
-                {/* Rating */}
-                <TableCell>
-                  <Box display="flex" alignItems="center">
-                    <Rating name="read-only" value={course.rating} readOnly />
-                    <Typography variant="body2" sx={{ ml: 0.5 }}>
-                      {course.rating}
-                    </Typography>
-                  </Box>
-                </TableCell>
-                
-                <TableCell>
-                  <Box display="flex" flexDirection="row">
-                    <IconButton color="primary">
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton color="secondary">
-                      <DeleteIcon />
-                    </IconButton>
-                  </Box>
-                </TableCell>
-              </TableRow>
-            ))}
+                    {/* Rating */}
+                    <TableCell>
+                      <Box display="flex" alignItems="center">
+                        <Rating
+                          name="read-only"
+                          value={course.rating}
+                          readOnly
+                        />
+                        <Typography variant="body2" sx={{ ml: 0.5 }}>
+                          {course.rating}
+                        </Typography>
+                      </Box>
+                    </TableCell>
+
+                    <TableCell>
+                      <Box display="flex" flexDirection="row">
+                        <IconButton color="primary">
+                          <EditIcon />
+                        </IconButton>
+                        <IconButton color="secondary">
+                          <DeleteIcon />
+                        </IconButton>
+                      </Box>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </>
+            )}
           </TableBody>
         </Table>
 
