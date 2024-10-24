@@ -39,7 +39,6 @@ function Problems() {
     (state) => state.problems
   );
 
-
   useEffect(() => {
     document.title = "CodeRoutine | Problems";
     dispatch(fetchProblems());
@@ -61,13 +60,11 @@ function Problems() {
   const SkeletonTable = () =>
     Array.from({ length: rowsPerPage }).map((_, index) => (
       <TableRow key={index}>
-        {Array.from({ length: userData?.role === "admin" ? 8 : 6 }).map(
-          (_, cellIndex) => (
-            <TableCell key={cellIndex}>
-              <Skeleton animation="wave" variant="text" />
-            </TableCell>
-          )
-        )}
+        {Array.from({ length: 7 }).map((_, cellIndex) => (
+          <TableCell key={cellIndex}>
+            <Skeleton animation="wave" variant="text" />
+          </TableCell>
+        ))}
       </TableRow>
     ));
 
@@ -99,8 +96,7 @@ function Problems() {
                   <TableCell>Acceptance</TableCell>
                   <TableCell>Difficulty</TableCell>
                   <TableCell>Frequency</TableCell>
-                  {userData?.role === "admin" && <TableCell />}
-                  {userData?.role === "admin" && <TableCell />}
+                  <TableCell>Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -148,28 +144,29 @@ function Problems() {
                         <TableCell>
                           <SyncLockIcon />
                         </TableCell>
-                        {userData?.role === "admin" && (
-                          <TableCell>
-                            <Link
-                              component={CombinedLink}
-                              to={row?.edit}
-                              variant="body2"
-                            >
-                              <EditIcon style={{ color: "green" }} />
-                            </Link>
-                          </TableCell>
-                        )}
-                        {userData?.role === "admin" && (
-                          <TableCell>
-                            <Link
-                              component={CombinedLink}
-                              to={row?.delete}
-                              variant="body2"
-                            >
-                              <DeleteIcon style={{ color: "red" }} />
-                            </Link>
-                          </TableCell>
-                        )}
+
+                        <TableCell>
+                          <Box display="flex" flexDirection="row" gap="10px">
+                            {userData?.role === "admin" && (
+                              <Link
+                                component={CombinedLink}
+                                to={row?.edit}
+                                variant="body2"
+                              >
+                                <EditIcon style={{ color: "green" }} />
+                              </Link>
+                            )}
+                            {userData?.role === "admin" && (
+                              <Link
+                                component={CombinedLink}
+                                to={row?.delete}
+                                variant="body2"
+                              >
+                                <DeleteIcon style={{ color: "red" }} />
+                              </Link>
+                            )}
+                          </Box>
+                        </TableCell>
                       </TableRow>
                     ))
                 )}
