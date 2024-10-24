@@ -345,39 +345,45 @@ function NavBar() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                {settings.map((setting) => (
-                  <MenuItem
-                    key={setting.name}
-                    onClick={
-                      setting?.name === "Sign Out"
-                        ? handleLogout
-                        : () =>
-                            handleProfileNavigation(
-                              setting.name === "Profile"
-                                ? `${setting.path}/${userData.userName}`
-                                : setting.path
-                            )
-                    }
-                  >
-                    <Typography textAlign="center">
-                      <Button
-                        component={Link}
-                        to={
-                          setting.name === "Profile"
-                            ? `${setting.path}/${userData.userName}`
-                            : setting.path
-                        }
-                      >
-                        {setting?.icon && (
-                          <span style={{ marginRight: "8px" }}>
-                            {setting.icon}
-                          </span>
-                        )}
-                        {setting?.name}
-                      </Button>
-                    </Typography>
-                  </MenuItem>
-                ))}
+                {settings
+                  .filter((setting) => {
+                    setting.name === "Dashboard" && userData.role !== "admin"
+                      ? false
+                      : true;
+                  })
+                  .map((setting) => (
+                    <MenuItem
+                      key={setting.name}
+                      onClick={
+                        setting?.name === "Sign Out"
+                          ? handleLogout
+                          : () =>
+                              handleProfileNavigation(
+                                setting.name === "Profile"
+                                  ? `${setting.path}/${userData.userName}`
+                                  : setting.path
+                              )
+                      }
+                    >
+                      <Typography textAlign="center">
+                        <Button
+                          component={Link}
+                          to={
+                            setting.name === "Profile"
+                              ? `${setting.path}/${userData.userName}`
+                              : setting.path
+                          }
+                        >
+                          {setting?.icon && (
+                            <span style={{ marginRight: "8px" }}>
+                              {setting.icon}
+                            </span>
+                          )}
+                          {setting?.name}
+                        </Button>
+                      </Typography>
+                    </MenuItem>
+                  ))}
               </Menu>
             </Box>
           ) : (

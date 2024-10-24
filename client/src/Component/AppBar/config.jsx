@@ -3,6 +3,8 @@ import ListAltIcon from "@mui/icons-material/ListAlt";
 import ImportantDevicesIcon from "@mui/icons-material/ImportantDevices";
 import LogoutIcon from "@mui/icons-material/Logout";
 import SettingsIcon from "@mui/icons-material/Settings";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+
 export const pages = [
   { name: "Explore", path: "/explore", role: "user", login: false },
   { name: "Jobs", path: "/jobs", role: "user", login: false },
@@ -25,6 +27,7 @@ export const interviewSubmenuItems = [
 
 export const settings = [
   { name: "Profile", path: "/profile", icon: <AccountCircleIcon /> },
+  { name: "Dashboard", path: "/admin-dashboard", icon: <DashboardIcon /> },
   { name: "Orders", path: "/settings/orders", icon: <ListAltIcon /> },
   {
     name: "My Playgrounds",
