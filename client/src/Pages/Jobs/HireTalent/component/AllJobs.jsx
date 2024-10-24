@@ -16,6 +16,7 @@ import {
   DialogActions,
   Button,
   TablePagination,
+  Skeleton,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -24,12 +25,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectJobs } from "../../../../features/jobs/jobSlice";
 import { fetchJobs, removeJob } from "../../../../features/jobs/jobActions";
 import { useNavigate } from "react-router-dom";
+import { ContextStore } from "../../../../Context/ContextStore";
 
 function AllJobs() {
   const dispatch = useDispatch();
   const jobs = useSelector(selectJobs);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const { userData } = ContextStore();
 
   // Pagination states
   const [page, setPage] = useState(0);
@@ -38,6 +41,8 @@ function AllJobs() {
   useEffect(() => {
     dispatch(fetchJobs());
   }, [dispatch]);
+
+  const { loading } = useSelector((state) => state.jobs);
 
   const handleDelete = (id) => {
     dispatch(removeJob(id));
@@ -64,13 +69,21 @@ function AllJobs() {
     page * rowsPerPage,
     page * rowsPerPage + rowsPerPage
   );
-
+  const SkeletonTable = () =>
+    Array.from({ length: rowsPerPage }).map((_, index) => (
+      <TableRow key={index}>
+        {Array.from({ length: 6 }).map((_, cellIndex) => (
+          <TableCell key={cellIndex}>
+            <Skeleton animation="wave" variant="text" />
+          </TableCell>
+        ))}
+      </TableRow>
+    ));
   return (
     <Box>
       <TableContainer
         component={Paper}
         sx={{
-          backgroundColor: "lightgray",
           padding: 2,
           marginBottom: 2,
         }}
@@ -115,33 +128,46 @@ function AllJobs() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedJobs.map((job, index) => (
-              <TableRow key={index}>
-                <TableCell component="th" scope="row">
-                  {job.title}
-                </TableCell>
-                <TableCell>{job.company}</TableCell>
-                <TableCell>₹{job.salary}</TableCell>
-                <TableCell>{job.location}</TableCell>
-                <TableCell>{job.jobLevel}</TableCell>
-                <TableCell>
-                  <Box display="flex" flexDirection="row" alignItems="center">
-                    <IconButton
-                      color="primary"
-                      onClick={() => navigate(`/job/edit/${job._id}`)}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton
-                      color="secondary"
-                      onClick={() => DeleteJob(job._id)}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </Box>
-                </TableCell>
-              </TableRow>
-            ))}
+            {loading ? (
+              <>
+                {" "}
+                <SkeletonTable />
+              </>
+            ) : (
+              <>
+                {paginatedJobs.map((job, index) => (
+                  <TableRow key={index}>
+                    <TableCell component="th" scope="row">
+                      {job.title}
+                    </TableCell>
+                    <TableCell>{job.company}</TableCell>
+                    <TableCell>₹{job.salary}</TableCell>
+                    <TableCell>{job.location}</TableCell>
+                    <TableCell>{job.jobLevel}</TableCell>
+                    <TableCell>
+                      <Box
+                        display="flex"
+                        flexDirection="row"
+                        alignItems="center"
+                      >
+                        <IconButton
+                          color="primary"
+                          onClick={() => navigate(`/job/edit/${job._id}`)}
+                        >
+                          <EditIcon />
+                        </IconButton>
+                        <IconButton
+                          color="secondary"
+                          onClick={() => DeleteJob(job._id)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </Box>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </>
+            )}
           </TableBody>
         </Table>
 
