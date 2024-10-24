@@ -347,13 +347,9 @@ function NavBar() {
               >
                 {settings
                   .filter((setting) => {
-                    if (
-                      setting.name === "Dashboard" &&
-                      userData.role !== "admin"
-                    ) {
-                      return false; // Hide the dashboard for non-admin users
-                    }
-                    return true; // Show all other settings
+                    setting.name === "Dashboard" && userData.role !== "admin"
+                      ? false
+                      : true;
                   })
                   .map((setting) => (
                     <MenuItem
